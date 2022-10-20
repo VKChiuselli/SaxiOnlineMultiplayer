@@ -1,43 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Tile : MonoBehaviour {
-    [SerializeField] private Material _baseColor, _deployStartColor;
-    [SerializeField] private MeshRenderer _meshRenderer;
-    [SerializeField] private GameObject _highlight;
-
+public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+{
+    [SerializeField] private Color _baseColor, _deployStartColor;
+    [SerializeField] private Image _renderer;
+    PlaceManager placeManager;
     public float variabile_x;
     public float variabile_y;
     public float risoluzione_x;
     public float risoluzione_y;
 
-    private void Start() {
+    private void Start()
+    {
+        placeManager = FindObjectOfType<PlaceManager>();
         risoluzione_x = Screen.width;
         risoluzione_y = Screen.height;
     }
 
-    public void Init(bool isDeployStart) {
-        _meshRenderer.material = isDeployStart ? _deployStartColor : _baseColor;
+    public void Init(bool isDeployStart)
+    {
+        _renderer.color = isDeployStart ? _deployStartColor : _baseColor;
     }
 
-    void OnMouseEnter() {
-        _highlight.SetActive(true);
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        transform.GetComponent<Image>().color = Color.red;
     }
 
-    void OnMouseExit() {
-        _highlight.SetActive(false);
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        transform.GetComponent<Image>().color = Color.white;
     }
 
- 
 
-    private void Update() {
-        resolution_control();
+
+    private void Update()
+    {
+        //  resolution_control();
     }
 
-    private void resolution_control() {
+    private void resolution_control()
+    {
         risoluzione_x = Screen.width;
         risoluzione_y = Screen.height;
-        transform.localScale = new Vector3(0.0004f * risoluzione_x, 0.0005f * risoluzione_y, 1f);
+        transform.localScale = new Vector3(variabile_x * risoluzione_x, variabile_y * risoluzione_y);
     }
+
+
 }

@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnCard : MonoBehaviour
+public class SpawnCard : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public override void OnNetworkSpawn()
     {
-        
+        base.OnNetworkSpawn();
+        transform.localScale = new Vector3(1f, 1f, 1f);
+        transform.localPosition = new Vector3(1f, 1f, 1f);
+       // GetComponent < NetworkTransform > = new Vector3(1f, 1f, 1f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

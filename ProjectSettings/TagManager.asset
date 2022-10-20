@@ -8,6 +8,11 @@ TagManager:
   - GameTile
   - DeployTileLeft
   - DeployTileRight
+  - HandPlayer
+  - RPCT
+  - LPCT
+  - RPCH
+  - LPCH
   layers:
   - Default
   - TransparentFX
@@ -15,10 +20,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - PlayerLeft
+  - PlayerRight
+  - RPT
+  - LPT
   - 
   - 
   - 

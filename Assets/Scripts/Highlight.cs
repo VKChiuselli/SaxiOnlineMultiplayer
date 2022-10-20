@@ -1,20 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Highlight : MonoBehaviour
+public class Highlight : NetworkBehaviour
 {
-    [SerializeField] private MeshRenderer _highlight;
-    [SerializeField] private Material rosso;
-    [SerializeField] private Material verde;
-    void OnMouseEnter()
+    [SerializeField] private Image _highlight;
+    private Color trasparency;
+
+    private void Start()
     {
-        _highlight.material = rosso;
+        trasparency = _highlight.color;
     }
 
-    void OnMouseExit()
+    public void ResetColorTile()
     {
-        _highlight.material = verde;
+        gameObject.GetComponent<CoordinateSystem>().isDeployable = 0;
+        _highlight.color = trasparency;
     }
 
+    public void ShowTileCanDeploy()
+    {
+        gameObject.GetComponent<CoordinateSystem>().isDeployable = 1;
+        _highlight.color = Color.red;
+        _highlight.color = new Color(1f, 1f, 1f, 0.3f);
+    }
 }

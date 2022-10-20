@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class EventsManager : MonoBehaviour {
@@ -15,12 +16,19 @@ public class EventsManager : MonoBehaviour {
         }
         current = this;
     }
-
+     
     public event Action<GameObject> onPickCardFromHand;
 
     public void PickCardFromHand(GameObject cardPicked) {
-        if (onPickCardFromHand != null)
-            onPickCardFromHand(cardPicked);
+        if (NetworkManager.Singleton.IsClient)
+        {
+            if (onPickCardFromHand != null)
+            {
+                onPickCardFromHand(cardPicked);
+            }
+        
+        }
+     
     }  
     public event Action<GameObject> onPickCardSpellFromHand;
 

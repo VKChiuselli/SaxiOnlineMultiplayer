@@ -4,45 +4,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GridManager : MonoBehaviour {
-    [SerializeField] private int _width, _height;
+public class GridManager : MonoBehaviour
+{
+    [SerializeField] int row, column;
+    public float square_offset;
+    public GameObject grid_square;
+    public Vector2 start_position = new Vector2(0f,0f);
+    public float square_scale = 1f;
 
-    [SerializeField] private Tile _tilePrefab;
+    private List<GameObject> grid_squares = new List<GameObject>();
 
-    [SerializeField] private Transform _cam;
+
+    [SerializeField] Transform whereToSpawn;
 
     private Dictionary<Vector2, Tile> _tiles;
- 
-    void Start() {
-    
-        GenerateGrid();
+
+    void Start()
+    {
+        CreateGrid();
     }
 
-    void GenerateGrid() {
-        _tiles = new Dictionary<Vector2, Tile>();
-        for (int x = 0; x < _width; x++) {
-            for (int y = 0; y < _height; y++) {
-                var spawnedTile = Instantiate(_tilePrefab, new Vector3(x, y, 1f), Quaternion.identity);
-                spawnedTile.name = $"Tile {x} {y}";
-         //       spawnedTile.transform.localScale = new Vector3(variabile_x * risoluzione_x , variabile_y * risoluzione_y);
-                var isOffset = (y == 0) || (y == 1) || (y == 8) || (y == 9);
-                spawnedTile.Init(isOffset);
-                isOffset = ((y == 0) || (y == 1));
-                spawnedTile.tag = isOffset ? "PlayerDeployTile" : "GameTile";
+    private void CreateGrid()
+    {
+        SpawnGridSquares();
+        SetSquarePosition();
+    }
+    private void SpawnGridSquares()
+    {
+        for (int x = 0; x < row; x++)
+        {
+            for (int y = 0; y < column; y++)
+            {
+                grid_squares.Add(Instantiate(grid_square) as GameObject);
+                grid_squares[grid_squares.Count - 1].transform.parent = whereToSpawn;
+         //       grid_squares[grid_squares.Count - 1].transform.localScale = new Vector3(square_scale, square_scale, square_scale);
 
-                var tempMaterial = spawnedTile.GetComponent<MeshRenderer>().material;
-             
-
-
-                spawnedTile.GetComponent<MeshRenderer>().material = tempMaterial;
-                _tiles[new Vector2(x, y)] = spawnedTile;
             }
         }
-
-        _cam.transform.position = new Vector3((float)_width / 2 - 0.5f, (float)_height / 2 - 0.5f, -10);
     }
 
-    public Tile GetTileAtPosition(Vector2 pos) {
+    private void SetSquarePosition()
+    {
+        var square_rect = grid_squares[0].GetComponent<RectTransform>();
+        Vector2 offset = new Vector2();
+        offset.x = square_rect.rect.width * square_rect.transform.localScale.x * square_offset;
+        offset.y = square_rect.rect.height * square_rect.transform.localScale.y * square_offset;
+
+
+        int column_number = 0;
+        int row_number = 0;
+
+
+        foreach (GameObject square in grid_squares)
+        {
+            if (column_number+1<column)
+            {
+                row_number++;
+                column_number = 0;
+            }
+
+            var pos_x_offset = offset.x * column_number;
+            var pos_y_offset = offset.y * row_number;
+
+            square.GetComponent<RectTransform>().anchoredPosition = new Vector2(start_position.x + pos_x_offset, start_position.y - pos_y_offset);
+            column_number++;
+        }       
+
+    }
+
+    public Tile GetTileAtPosition(Vector2 pos)
+    {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;
     }
