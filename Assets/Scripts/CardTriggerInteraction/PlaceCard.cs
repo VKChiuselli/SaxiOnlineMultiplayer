@@ -67,20 +67,30 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         {
             if (placeManager.GetCardSelectedFromHand() != null && (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                DeployCardFromHandRightPlayer();
+                DeployCardFromHand("DeployTileRight", "RPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             }
             else if (placeManager.GetCardSelectedFromTable() != null && (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                MoveCardFromTableRightPlayer();
+                MoveCardFromTableRightPlayer("RPCT");
+                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            }
+            else if (placeManager.GetCardSelectedFromHand() != null && (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            {
+                DeployCardFromHand("DeployTileLeft", "LPCT");
+                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            }
+            else if (placeManager.GetCardSelectedFromTable() != null && (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            {
+                MoveCardFromTableRightPlayer("LPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             }
         }
     }
 
-    private void DeployCardFromHandRightPlayer()
+    private void DeployCardFromHand(string deploy, string cardTableTag)
     {
-        if (gameObject.tag == "DeployTileRight")
+        if (gameObject.tag == deploy)
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
@@ -91,7 +101,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Speed.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
-          "RPCT", //RPT Right player Table
+          cardTableTag, //RPT Right player Table
           false, //it means that we have to destroy the game object when we move
           gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
@@ -106,7 +116,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         }
     }
 
-    private void MoveCardFromTableRightPlayer()
+    private void MoveCardFromTableRightPlayer(string cardTableTag)
     {
         if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
@@ -120,7 +130,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
           placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
           placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
           placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
-          "RPCT", //RPT Right player Table
+          cardTableTag, //RPT Right player Table
           true, //it means that we have to destroy the old game object when we move
              gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
@@ -151,7 +161,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
     {
         Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
         Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
-
+        CardTableToSpawn.tag = tag;
         NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
            transform.position, Quaternion.identity);
 

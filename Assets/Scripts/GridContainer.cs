@@ -15,23 +15,23 @@ public class GridContainer : NetworkBehaviour
             gridTiles.Add(child.gameObject);
         }
     }
-
-    public List<GameObject> GetDeployTilesRight()
+  
+    public List<GameObject> GetDeployTiles(string deployTagTile)
     {
-        List<GameObject> DeployTileRight = new List<GameObject>();
+        List<GameObject> DeployTile = new List<GameObject>();
 
         foreach (GameObject deployTile in gridTiles)
         {
-            if (deployTile.tag == "DeployTileRight")
+            if (deployTile.tag == deployTagTile)
             {
-                DeployTileRight.Add(deployTile);
+                DeployTile.Add(deployTile);
             }
         }
-        if (DeployTileRight == null)
+        if (DeployTile == null)
         {
             Debug.Log("Class GridContainer, method GetDeployTilesRight, no deploy tiles found, null expection");
         }
-        return DeployTileRight;
+        return DeployTile;
     }
 
     public void ResetShowTiles() //ClientRpc

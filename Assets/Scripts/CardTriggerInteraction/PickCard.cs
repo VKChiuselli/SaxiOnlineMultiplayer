@@ -53,46 +53,32 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         {
             if ((NetworkManager.Singleton.LocalClientId % 2) == 1 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
             {
-                PickCardFromHandRightPlayer();
+                PickCardFromHand("DeployTileRight");
             }
             else if ((NetworkManager.Singleton.LocalClientId % 2) == 1 && gameObject.tag == "RPCT")// RPCT stands for right player card table
             {
-                PickCardFromTableRightPlayer();
+                PickCardFromTable();
             }
             else if ((NetworkManager.Singleton.LocalClientId % 2) == 0 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
             {
-                PickCardFromHandLeftPlayer();
+                PickCardFromHand("DeployTileLeft");
             }
             else if ((NetworkManager.Singleton.LocalClientId % 2) == 0 && gameObject.tag == "LPCT")// LPCT stands for left player card table
             {
-                PickCardFromTableLeftPlayer();
+                PickCardFromTable();
             }
         }
 
     }
 
-    private void PickCardFromTableLeftPlayer()
+    private void PickCardFromTable()
     {
         ResetShowTilesClientRpc();
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-        EventsManager.current.PickCardFromTable(gameObject);
-        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-        Debug.Log("Card selected from table: " + gameObject.name);
-    }
-
-
-
-    private void PickCardFromTableRightPlayer()
-    {
-        ResetShowTilesClientRpc();
-        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
         EventsManager.current.PickCardFromTable(gameObject);
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         Debug.Log("Card selected from table: " + gameObject.name);
         ShowTilesAround(false); //turn false to gameobject.component<card>().isSpecial, to check if cards have special movements
-
     }
 
     private void ShowTilesAround(bool v)
@@ -107,27 +93,16 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    private void PickCardFromHandLeftPlayer()
-    {
+ 
 
-        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-        EventsManager.current.PickCardFromHand(gameObject);
-        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-        Debug.Log("Card selected from hand: " + gameObject.name);
-        ShowTilesToDeployClientRpc();
-
-    }
-
-    private void PickCardFromHandRightPlayer()
+    private void PickCardFromHand(string DeployTile)
     {
         ResetShowTilesClientRpc();
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
         EventsManager.current.PickCardFromHand(gameObject);
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         Debug.Log("Card selected from hand: " + gameObject.name);
-        ShowTilesToDeployClientRpc();
+        ShowTilesToDeployClientRpc(DeployTile);
 
     }
 
@@ -144,11 +119,11 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
      
     }
 
-    private void ShowTilesToDeployClientRpc()
+    private void ShowTilesToDeployClientRpc(string DeployTile)
     {
         if (gridContainer.GetComponent<GridContainer>().gridTiles != null)
         {
-            foreach (GameObject a in gridContainer.GetComponent<GridContainer>().GetDeployTilesRight())
+            foreach (GameObject a in gridContainer.GetComponent<GridContainer>().GetDeployTiles(DeployTile))
             {
                 a.GetComponent<Highlight>().ShowTileCanDeploy();
             }
