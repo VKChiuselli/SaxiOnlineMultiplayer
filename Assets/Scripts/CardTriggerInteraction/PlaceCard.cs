@@ -81,7 +81,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                 {
                     MoveCardFromTableRightPlayer("RPCT");
-                    gameManager.GetComponent<GameManager>().PlayerZeroMP.Value = gameManager.GetComponent<GameManager>().PlayerZeroMP.Value - 1;
+                    gameManager.GetComponent<GameManager>().MovePointSpent(1,0);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
@@ -101,7 +101,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                 {
                     MoveCardFromTableRightPlayer("LPCT");
-                    gameManager.GetComponent<GameManager>().PlayerOneMP.Value = gameManager.GetComponent<GameManager>().PlayerOneMP.Value - 1;
+                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 

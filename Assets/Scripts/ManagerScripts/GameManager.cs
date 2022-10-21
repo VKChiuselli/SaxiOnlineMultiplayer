@@ -58,8 +58,29 @@ public class GameManager : NetworkBehaviour
             Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
         }
     }
-
+    
+    public void MovePointSpent(int howMuchPoint, int whichPlayer)
+    {
+        MovePointSpentServerRpc(howMuchPoint, whichPlayer);
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void MovePointSpentServerRpc(int howMuchPoint, int whichPlayer)
+    {
+        if (whichPlayer == 0)
+        {
+            PlayerZeroMP.Value = PlayerZeroMP.Value - howMuchPoint;
+        }
+        else if (whichPlayer == 1)
+        {
+            PlayerOneMP.Value = PlayerOneMP.Value - howMuchPoint;
+        }
+        else
+        {
+            Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
+        }
+    }
+}
 // void Update() {
 //  DisableEnablePlaceManagerKey();
 //   }
