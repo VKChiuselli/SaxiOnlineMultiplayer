@@ -66,12 +66,13 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null )//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
                 if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
                 {
                     DeployCardFromHand("DeployTileRight", "RPCT");
-                    gameManager.GetComponent<GameManager>().PlayerZeroDP.Value = gameManager.GetComponent<GameManager>().PlayerZeroDP.Value-1;
+
+                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
             }
@@ -83,17 +84,17 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     gameManager.GetComponent<GameManager>().PlayerZeroMP.Value = gameManager.GetComponent<GameManager>().PlayerZeroMP.Value - 1;
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
-              
+
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
-                if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0)
+                if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
                 {
                     DeployCardFromHand("DeployTileLeft", "LPCT");
-                    gameManager.GetComponent<GameManager>().PlayerOneDP.Value = gameManager.GetComponent<GameManager>().PlayerOneDP.Value - 1;
+                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
-              
+
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
@@ -103,7 +104,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     gameManager.GetComponent<GameManager>().PlayerOneMP.Value = gameManager.GetComponent<GameManager>().PlayerOneMP.Value - 1;
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
-              
+
             }
         }
     }
@@ -198,7 +199,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         go.GetComponent<NetworkObject>().tag = tag;
         go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-      //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
+        //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
         if (toDestroy)
         {
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);

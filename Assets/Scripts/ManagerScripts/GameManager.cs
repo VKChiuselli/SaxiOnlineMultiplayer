@@ -42,7 +42,7 @@ public class GameManager : NetworkBehaviour
         DeployPointSpentServerRpc(howMuchPoint, whichPlayer);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void DeployPointSpentServerRpc(int howMuchPoint, int whichPlayer)
     {
         if (whichPlayer == 0)
