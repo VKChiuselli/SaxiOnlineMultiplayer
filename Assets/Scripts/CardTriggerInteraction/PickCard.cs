@@ -12,12 +12,14 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
     private float mZCoord;
     GameObject handZone;
     GameObject gridContainer;
+    GameObject gameManager;
     void Start()
     {
 
         PlayerActions.current = FindObjectOfType<PlayerActions>();
         TriggerManager.current = FindObjectOfType<TriggerManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gameManager = GameObject.Find("Managers/GameManager");
     }
 
 
@@ -51,19 +53,19 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
 
         if (NetworkManager.Singleton.IsClient)
         {
-            if ((NetworkManager.Singleton.LocalClientId % 2) == 1 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
             {
                 PickCardFromHand("DeployTileRight");
             }
-            else if ((NetworkManager.Singleton.LocalClientId % 2) == 1 && gameObject.tag == "RPCT")// RPCT stands for right player card table
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCT")// RPCT stands for right player card table
             {
                 PickCardFromTable();
             }
-            else if ((NetworkManager.Singleton.LocalClientId % 2) == 0 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
             {
                 PickCardFromHand("DeployTileLeft");
             }
-            else if ((NetworkManager.Singleton.LocalClientId % 2) == 0 && gameObject.tag == "LPCT")// LPCT stands for left player card table
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCT")// LPCT stands for left player card table
             {
                 PickCardFromTable();
             }
@@ -93,7 +95,7 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         }
     }
 
- 
+
 
     private void PickCardFromHand(string DeployTile)
     {
@@ -116,7 +118,7 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         {
             Debug.Log("ResetShowTilesClientRpc doens't found any Highlight");
         }
-     
+
     }
 
     private void ShowTilesToDeployClientRpc(string DeployTile)

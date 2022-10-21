@@ -19,6 +19,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
     private float mZCoord;
     PlaceManager placeManager;
     GameObject gridContainer;
+    GameObject gameManager;
     [SerializeField] GameObject CardTableToSpawn;
     void Start()
     {
@@ -27,7 +28,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         PlayerActions.current = FindObjectOfType<PlayerActions>();
         TriggerManager.current = FindObjectOfType<TriggerManager>();
-
+        gameManager = GameObject.Find("Managers/GameManager");
     }
 
     public bool IsCardSelected()
@@ -61,29 +62,48 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-
+        //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (placeManager.GetCardSelectedFromHand() != null )//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null )//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                DeployCardFromHand("DeployTileRight", "RPCT");
-                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
+                {
+                    DeployCardFromHand("DeployTileRight", "RPCT");
+                    gameManager.GetComponent<GameManager>().PlayerZeroDP.Value = gameManager.GetComponent<GameManager>().PlayerZeroDP.Value-1;
+                    gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                }
             }
-            else if (placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                MoveCardFromTableRightPlayer("RPCT");
-                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
+                {
+                    MoveCardFromTableRightPlayer("RPCT");
+                    gameManager.GetComponent<GameManager>().PlayerZeroMP.Value = gameManager.GetComponent<GameManager>().PlayerZeroMP.Value - 1;
+                    gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                }
+              
             }
-            else if (placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
-                DeployCardFromHand("DeployTileLeft", "LPCT");
-                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0)
+                {
+                    DeployCardFromHand("DeployTileLeft", "LPCT");
+                    gameManager.GetComponent<GameManager>().PlayerOneDP.Value = gameManager.GetComponent<GameManager>().PlayerOneDP.Value - 1;
+                    gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                }
+              
             }
-            else if (placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
-            {
-                MoveCardFromTableRightPlayer("LPCT");
-                gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            {//check the max move of the card
+                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
+                {
+                    MoveCardFromTableRightPlayer("LPCT");
+                    gameManager.GetComponent<GameManager>().PlayerOneMP.Value = gameManager.GetComponent<GameManager>().PlayerOneMP.Value - 1;
+                    gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                }
+              
             }
         }
     }
@@ -178,42 +198,14 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         go.GetComponent<NetworkObject>().tag = tag;
         go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-
+      //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
         if (toDestroy)
         {
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
         }
     }
 
-    //void OnMouseDown()
-    //{
-    //    if (TriggerManager.current.EnablePlaceManager)
-    //    {
-    //        if (isPlaceable && placeManager.GetCardSelectedFromHand() != null && PlayerActions.current.HasPlaced && PlayerActions.current.PlayerBot)
-    //        {
-    //            PlaceCardBot();
-    //        }
-    //        else if (isPlaceable && placeManager.GetCardSelectedFromTable() != null && PlayerActions.current.HasMoved && PlayerActions.current.PlayerBot)
-    //        {
-    //            MoveCardBot();
-    //        }
-    //        else if (isPlaceable && placeManager.GetCardSelectedFromHand() != null && PlayerActions.current.HasPlaced && PlayerActions.current.PlayerTop)
-    //        {
-    //            PlaceCardTop();
-    //        }
-    //        else if (isPlaceable && placeManager.GetCardSelectedFromTable() != null && PlayerActions.current.HasMoved && PlayerActions.current.PlayerTop)
-    //        {
-    //            MoveCardTop();
-    //        }
-    //        else if (!isPlaceable && placeManager.GetCardSelectedFromTable() != null && PlayerActions.current.HasMoved && PlayerActions.current.PlayerBot)
-    //        {
-    //            MoveAndPushCardBot();
-    //        }
-    //        else if (!isPlaceable && placeManager.GetCardSelectedFromTable() != null && PlayerActions.current.HasMoved && PlayerActions.current.PlayerTop)
-    //        {
-    //            MoveAndPushCardTop();
-    //        }
-    //    }
+
 
     //}
 

@@ -23,12 +23,12 @@ namespace HelloWorld
             {
                 StartButtons();
             }
-            else
-            {
-                StatusLabels();
+            //else
+            //{
+            //    StatusLabels();
 
-                SubmitNewPosition();
-            }
+            //    SubmitNewPosition();
+            //}
 
             GUILayout.EndArea();
         }

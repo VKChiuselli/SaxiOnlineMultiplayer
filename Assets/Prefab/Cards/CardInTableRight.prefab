@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: -1942050297577500492}
   m_Layer: 5
   m_Name: CardInTableRight
-  m_TagString: LPCT
+  m_TagString: RPCT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
