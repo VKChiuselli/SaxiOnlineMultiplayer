@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8267333633513031846}
   - component: {fileID: 7290368066688362183}
   - component: {fileID: -8457030187827294707}
-  - component: {fileID: -3332106346662729792}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -130,23 +129,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Position:
     m_InternalValue: {x: 0, y: 0, z: 0}
---- !u!114 &-3332106346662729792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8267333633513031847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b25d6e5609b25345be402c682babce4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cards:
-  - {fileID: 6403154168061667466, guid: 9788258c5792a1044810d7e4108624a7, type: 3}
-  - {fileID: 6403154168061667466, guid: 0375ebd31c84bae45b5c2e694e12cc51, type: 3}
-  - {fileID: 6403154168061667466, guid: d0012d834b8daee48a2b4bca42b1733d, type: 3}
-  - {fileID: 6403154168061667466, guid: e17708ceba9a82e44b351d12f0eba019, type: 3}
-  cardInHand: []
-  playArea: []
-  handZone: {fileID: 0}

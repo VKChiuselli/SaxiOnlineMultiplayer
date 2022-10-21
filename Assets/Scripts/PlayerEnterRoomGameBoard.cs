@@ -18,13 +18,14 @@ namespace HelloWorld
                     Debug.Log("connessi giocatori: " + NetworkManager.Singleton.ConnectedClients.Count);
                     Position.Value = new Vector3(7f, -3f, -1f);
                     transform.position = Position.Value;
-                }
+                }else
                 if (NetworkManager.Singleton.ConnectedClients.Count == 2)
                 {
                     Debug.Log("connessi giocatori: " + NetworkManager.Singleton.ConnectedClients.Count);
                     Position.Value = new Vector3(-7f, -3f, -1f);
                     transform.position = Position.Value;
                 }
+                Debug.Log("NetworkManager.Singleton.LocalClientId: " + NetworkManager.Singleton.LocalClientId);
             }
     
         }

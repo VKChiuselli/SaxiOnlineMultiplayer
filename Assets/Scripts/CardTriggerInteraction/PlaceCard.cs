@@ -65,22 +65,22 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (placeManager.GetCardSelectedFromHand() != null && (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            if (placeManager.GetCardSelectedFromHand() != null )//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
                 DeployCardFromHand("DeployTileRight", "RPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             }
-            else if (placeManager.GetCardSelectedFromTable() != null && (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            else if (placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
                 MoveCardFromTableRightPlayer("RPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             }
-            else if (placeManager.GetCardSelectedFromHand() != null && (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
                 DeployCardFromHand("DeployTileLeft", "LPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             }
-            else if (placeManager.GetCardSelectedFromTable() != null && (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
                 MoveCardFromTableRightPlayer("LPCT");
                 gridContainer.GetComponent<GridContainer>().ResetShowTiles();
