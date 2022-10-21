@@ -7,14 +7,11 @@ namespace HelloWorld
     public class GameNetworkManager : MonoBehaviour
     {
         public static int playerLogged;
-
-        //private void Start()
-        //{
-        //        playerLogged.Value = 0;
-        //        Debug.Log(" playerLogged.Value: " + playerLogged.Value);
-        //        playerLogged.Value++;
-        //        Debug.Log(" playerLogged.Value: " +  playerLogged.Value);
-        //}
+        static GameObject gameManager;
+         void Start()
+        {
+            gameManager = GameObject.Find("Managers/GameManager");
+        }
 
         void OnGUI()
         {
@@ -23,12 +20,12 @@ namespace HelloWorld
             {
                 StartButtons();
             }
-            //else
-            //{
-            //    StatusLabels();
+            else
+            {
+                StatusLabels();
 
-            //    SubmitNewPosition();
-            //}
+                SubmitNewPosition();
+            }
 
             GUILayout.EndArea();
         }
@@ -74,7 +71,7 @@ namespace HelloWorld
 
         static void SubmitNewPosition()
         {
-            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Request Position Change"))
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Pass Turn"))
             {
                 if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
                 {
@@ -83,7 +80,8 @@ namespace HelloWorld
                 }
                 else
                 {
-                    Debug.Log("se è cliente  e nn server fa questo");
+                    gameManager.GetComponent<GameManager>().EndTurn();
+                    Debug.Log("giocatore corrente: " + gameManager.GetComponent<GameManager>().CurrentTurn.Value);
                     //se è cliente  e nn server fa questo
                 }
             }

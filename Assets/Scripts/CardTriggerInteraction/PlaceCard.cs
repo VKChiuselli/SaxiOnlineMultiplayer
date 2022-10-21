@@ -21,13 +21,14 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
     GameObject gridContainer;
     GameObject gameManager;
     [SerializeField] GameObject CardTableToSpawn;
+    bool isCardSpawned;
     void Start()
     {
         //  Position.Value = new Vector3(1f, 1f, 1f);
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        PlayerActions.current = FindObjectOfType<PlayerActions>();
-        TriggerManager.current = FindObjectOfType<TriggerManager>();
+       // PlayerActions.current = FindObjectOfType<PlayerActions>();
+     //   TriggerManager.current = FindObjectOfType<TriggerManager>();
         gameManager = GameObject.Find("Managers/GameManager");
     }
 
@@ -70,8 +71,8 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
             {
                 if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
                 {
+                    Debug.Log("punto sottratto PlayerZero deploy");
                     DeployCardFromHand("DeployTileRight", "RPCT");
-
                     gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
@@ -80,8 +81,10 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
             {
                 if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                 {
+                    Debug.Log("punto sottratto PlayerZero move");
                     MoveCardFromTableRightPlayer("RPCT");
-                    gameManager.GetComponent<GameManager>().MovePointSpent(1,0);
+
+                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
@@ -90,8 +93,9 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
             {
                 if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
                 {
+                    Debug.Log("punto sottratto PlayerOne deploy");
                     DeployCardFromHand("DeployTileLeft", "LPCT");
-                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
@@ -100,13 +104,17 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
             {//check the max move of the card
                 if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                 {
+                    Debug.Log("punto sottratto PlayerOne move");
                     MoveCardFromTableRightPlayer("LPCT");
-                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
             }
         }
+        placeManager.ResetCardHand();
+        placeManager.ResetCardTable();
+        isCardSpawned = false;
     }
 
     private void DeployCardFromHand(string deploy, string cardTableTag)
@@ -204,6 +212,17 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         {
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
         }
+        if (go != null)
+        {
+            IsCreatedCardClientRpc();
+        }
+
+    }
+
+    [ClientRpc]
+    private void IsCreatedCardClientRpc()
+    {
+        isCardSpawned = true;
     }
 
 

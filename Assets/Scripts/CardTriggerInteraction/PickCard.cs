@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
             {
                 PickCardFromHand("DeployTileRight");
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCT")// RPCT stands for right player card table
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
             {
                 PickCardFromTable();
             }
@@ -65,7 +66,7 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
             {
                 PickCardFromHand("DeployTileLeft");
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCT")// LPCT stands for left player card table
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
             {
                 PickCardFromTable();
             }

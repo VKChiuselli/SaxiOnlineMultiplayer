@@ -28,9 +28,11 @@ public class PlaceManager : MonoBehaviour {
     }
 
     public GameObject GetCardSelectedFromHand() {
+        ResetCardTable();
         return handCard;
     }
     public GameObject GetCardSelectedFromTable() {
+        ResetCardHand();
         return tabledCard;
     }
     public void ResetCardHand() {

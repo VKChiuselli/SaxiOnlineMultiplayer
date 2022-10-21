@@ -26,15 +26,26 @@ public class GameManager : NetworkBehaviour
 
     public void EndTurn()
     {
-        CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1;
+        EndTurnServerRpc();
+    }
 
+    [ServerRpc(RequireOwnership = false)]
+     void EndTurnServerRpc()
+    {
 
-        PlayerActions.current.HasMoved = true;
-        PlayerActions.current.HasPlaced = true;
-        TriggerManager.current.ResetTurn();
-        //   gameBoard.ReadyTableCards();
+        if (CurrentTurn.Value == 0)
+        {
+            PlayerZeroMP.Value = 3;
+            PlayerZeroDP.Value = 2;
+        }
+        else if (CurrentTurn.Value == 1)
+        {
+            PlayerOneMP.Value = 3;
+            PlayerOneDP.Value = 2;
+        }
 
-        (PlayerActions.current.PlayerTop, PlayerActions.current.PlayerBot) = (PlayerActions.current.PlayerBot, PlayerActions.current.PlayerTop);
+        CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
+        //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
     }
 
     public void DeployPointSpent(int howMuchPoint, int whichPlayer)
@@ -58,7 +69,7 @@ public class GameManager : NetworkBehaviour
             Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
         }
     }
-    
+
     public void MovePointSpent(int howMuchPoint, int whichPlayer)
     {
         MovePointSpentServerRpc(howMuchPoint, whichPlayer);
