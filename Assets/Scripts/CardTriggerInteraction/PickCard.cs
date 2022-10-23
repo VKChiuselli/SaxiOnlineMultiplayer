@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PickCard : MonoBehaviour, IPointerDownHandler
+public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler
 {
 
     private Vector3 mOffset;
@@ -48,19 +48,23 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         return isSelected;
     }
 
-    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-    {
-        Debug.Log("piccato1");
 
-        if (NetworkManager.Singleton.IsClient)
+
+
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        Debug.Log("begin drag");
+
+        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value==0)
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
             {
                 PickCardFromHand("DeployTileRight");
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
-            {
-                PickCardFromTable();
+            {//la questione è: io clicco la carta, compare un popup in cui ho due possibilità: il merge o select della carta 
+                    PickCardFromTable();
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
             {
@@ -151,5 +155,15 @@ public class PickCard : MonoBehaviour, IPointerDownHandler
         {
             handZone.transform.GetChild(i).gameObject.transform.GetChild(1).gameObject.SetActive(false);
         }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("dragging");
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        Debug.Log("end drag");
     }
 }

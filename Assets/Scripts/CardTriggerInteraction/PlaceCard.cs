@@ -8,8 +8,8 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using Assets.Scripts;
 using Unity.Collections;
-
-public class PlaceCard : NetworkBehaviour, IPointerDownHandler
+//place card in empty spaces
+public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
 {
     // public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
     bool isPlaceable;
@@ -60,11 +60,11 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
     }
 
 
-    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    public void OnDrop(PointerEventData eventData)
     {
         //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
-        if (NetworkManager.Singleton.IsClient) //bisogna mettere molte più condizioni per mettere la carta
+        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0) //bisogna mettere molte più condizioni per mettere la carta
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
@@ -127,6 +127,12 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         }
 
     }
+
+
+    //void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    //{
+      
+    //}
 
     private bool DeployCardFromHand(string deploy, string cardTableTag)
     {
@@ -338,7 +344,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         return Camera.main.ScreenToWorldPoint(mousePoint);
     }
 
-
+ 
 
     public const byte CustomManualInstantiationEventCode = 1;
 }
