@@ -68,42 +68,53 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 0)
                 {
-                    Debug.Log("punto sottratto PlayerZero deploy");
-                    DeployCardFromHand("DeployTileRight", "RPCT");
-                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
+                    if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
+                    {
+                        Debug.Log("punto sottratto PlayerZero deploy");
+                        DeployCardFromHand("DeployTileRight", "RPCT");
+                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
+                    }
                 }
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
+                if (placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
-                    Debug.Log("punto sottratto PlayerZero move");
-                    MoveCardFromTableRightPlayer("RPCT");
-
-                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                    if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
+                    {
+                            Debug.Log("punto sottratto PlayerZero move");
+                            MoveCardFromTableRightPlayer("RPCT");
+                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                    }
                 }
-
+                 
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
-                if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 1)
                 {
-                    Debug.Log("punto sottratto PlayerOne deploy");
-                    DeployCardFromHand("DeployTileLeft", "LPCT");
-                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                    if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
+                    {
+                        Debug.Log("punto sottratto PlayerOne deploy");
+                        DeployCardFromHand("DeployTileLeft", "LPCT");
+                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                    }
                 }
-
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
-                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
+                if (placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
-                    Debug.Log("punto sottratto PlayerOne move");
-                    MoveCardFromTableRightPlayer("LPCT");
-                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                    if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
+                    {
+                        Debug.Log("punto sottratto PlayerOne move");
+                        MoveCardFromTableRightPlayer("LPCT");
+                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                    }
                 }
+
 
             }
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
@@ -216,7 +227,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
     [ClientRpc]
     private void IsCreatedCardClientRpc()
     {
-       // isCardSpawned = true;
+        // isCardSpawned = true;
     }
 
 
