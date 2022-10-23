@@ -27,8 +27,8 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
         //  Position.Value = new Vector3(1f, 1f, 1f);
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-       // PlayerActions.current = FindObjectOfType<PlayerActions>();
-     //   TriggerManager.current = FindObjectOfType<TriggerManager>();
+        // PlayerActions.current = FindObjectOfType<PlayerActions>();
+        //   TriggerManager.current = FindObjectOfType<TriggerManager>();
         gameManager = GameObject.Find("Managers/GameManager");
     }
 
@@ -84,7 +84,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     Debug.Log("punto sottratto PlayerZero move");
                     MoveCardFromTableRightPlayer("RPCT");
 
-                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
@@ -95,7 +95,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 {
                     Debug.Log("punto sottratto PlayerOne deploy");
                     DeployCardFromHand("DeployTileLeft", "LPCT");
-                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                    gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
@@ -106,14 +106,13 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 {
                     Debug.Log("punto sottratto PlayerOne move");
                     MoveCardFromTableRightPlayer("LPCT");
-                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
                     gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                 }
 
             }
         }
-        placeManager.ResetCardHand();
-        placeManager.ResetCardTable();
+
         isCardSpawned = false;
     }
 
