@@ -73,8 +73,11 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
                     {
                         Debug.Log("punto sottratto PlayerZero deploy");
-                        DeployCardFromHand("DeployTileRight", "RPCT");
-                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
+                        bool isDeployed = DeployCardFromHand("DeployTileRight", "RPCT");
+                        if (isDeployed)
+                        {
+                            gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
+                        }
                     }
                 }
             }
@@ -84,12 +87,12 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
-                            Debug.Log("punto sottratto PlayerZero move");
-                            MoveCardFromTableRightPlayer("RPCT");
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                        Debug.Log("punto sottratto PlayerZero move");
+                        MoveCardFromTable("RPCT");
+                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
                     }
                 }
-                 
+
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
@@ -98,8 +101,11 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
                     {
                         Debug.Log("punto sottratto PlayerOne deploy");
-                        DeployCardFromHand("DeployTileLeft", "LPCT");
-                        gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                        bool isDeployed = DeployCardFromHand("DeployTileLeft", "LPCT");
+                        if (isDeployed)
+                        {
+                            gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
+                        }
                     }
                 }
             }
@@ -110,7 +116,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {
                         Debug.Log("punto sottratto PlayerOne move");
-                        MoveCardFromTableRightPlayer("LPCT");
+                        MoveCardFromTable("LPCT");
                         gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
                     }
                 }
@@ -122,7 +128,7 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
 
     }
 
-    private void DeployCardFromHand(string deploy, string cardTableTag)
+    private bool DeployCardFromHand(string deploy, string cardTableTag)
     {
         if (gameObject.tag == deploy)
         {
@@ -147,10 +153,13 @@ public class PlaceCard : NetworkBehaviour, IPointerDownHandler
                 Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
 
             placeManager.ResetCardHand();
+            return true;
         }
+        else
+            return false;
     }
 
-    private void MoveCardFromTableRightPlayer(string cardTableTag)
+    private void MoveCardFromTable(string cardTableTag)
     {
         if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check

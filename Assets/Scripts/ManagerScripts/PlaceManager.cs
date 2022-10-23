@@ -18,11 +18,19 @@ public class PlaceManager : MonoBehaviour {
     }
 
     public void PickedCard(GameObject cardToPlace) {
+        if (tabledCard != null)
+        {
+            ResetCardTable();
+        }
         handCard = cardToPlace;
         Debug.Log("Passing card to pick it from hand");
     }
 
     public void PickedTableCard(GameObject cardToPlace) {
+        if (handCard != null)
+        {
+            ResetCardHand();
+        }
         tabledCard = cardToPlace;
         Debug.Log("Passing card to pick it from table");
     }
