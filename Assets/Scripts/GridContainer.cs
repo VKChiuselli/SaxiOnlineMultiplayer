@@ -106,7 +106,7 @@ public class GridContainer : NetworkBehaviour
             {
                 Debug.Log("RemoveCardFromTable Found!!");
                 //despawn the last children
-                tile.transform.GetChild(tile.transform.childCount).gameObject.GetComponent<NetworkObject>().Despawn();
+                tile.transform.GetChild(tile.transform.childCount-1).gameObject.GetComponent<NetworkObject>().Despawn();
             }
         }
     }
