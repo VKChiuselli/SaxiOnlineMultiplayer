@@ -165,6 +165,7 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
           gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
           0,
+          0,
           0
           );
             }
@@ -199,7 +200,8 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                  gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.GetComponent<CoordinateSystem>().y,
                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+              0
               );
                 }
                 else
@@ -229,15 +231,16 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
               placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
               cardTableTag, //RPT Right player Table
               true, //it means that we have to destroy the old game object when we move
-                 gameObject.GetComponent<CoordinateSystem>().x,
-              gameObject.GetComponent<CoordinateSystem>().y,
+                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
+              gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+              1
               );
                 }
                 else
                 {
-                    Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
+                    Debug.Log("Class PlaceCard, method OnPointerDown, Errore! CardHand vuota");
                 }
 
                 placeManager.ResetCardHand();
@@ -261,17 +264,31 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int checkTransform) //MyCardStruct cartaDaSpawnare
     {
         Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
         Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        NetworkObject go=null;
+        if (checkTransform == 0)
+        {
+             go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
            transform.position, Quaternion.identity);
-
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform, false);
-
+            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+            go.transform.SetParent(transform, false);
+        }
+        else if (checkTransform == 1)
+        {
+             go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        transform.parent.position, Quaternion.identity);
+            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+            go.transform.SetParent(transform.parent, false);
+        }
+        else
+        {
+            Debug.Log("checkTransform passed wrong!!!");
+        }
+        
         go.GetComponent<CardTable>().IdCard.Value = IdCard;
         go.GetComponent<CardTable>().Weight.Value = Weight;
         go.GetComponent<CardTable>().Speed.Value = Speed;
