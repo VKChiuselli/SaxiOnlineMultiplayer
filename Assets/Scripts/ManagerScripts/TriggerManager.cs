@@ -40,7 +40,8 @@ public class TriggerManager : MonoBehaviour {
         EnableActiveSpellManager = true;
         EnableSelectCardManager = true;
         placeManager.ResetCardHand();
-        placeManager.ResetCardTable();
+        placeManager.ResetMergedCardTable();
+        placeManager.ResetSingleCardTable();
         discardManager.ResetCardHand();
         spellManager.ResetCardSpellHand();
         activeCardManager.ResetActiveCardTable();
