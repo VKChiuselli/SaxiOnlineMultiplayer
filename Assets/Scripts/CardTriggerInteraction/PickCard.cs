@@ -134,12 +134,12 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("dragging");
+       // Debug.Log("dragging");
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("end drag");
+      //  Debug.Log("end drag");
     }
 
     public void OnPointerDown(PointerEventData eventData)

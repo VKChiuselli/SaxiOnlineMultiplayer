@@ -65,7 +65,7 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
         //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0) //bisogna mettere molte più condizioni per mettere la carta
-        {
+        {//IsPopupChoosing vuol dire che se è 0, allora non c'è in corso una scelta di popup, se c'è, allora disabilitiamo tutto
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
                 if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 0)
@@ -87,13 +87,14 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
-                        Debug.Log("punto sottratto PlayerZero move");
+                     
                         bool isPlayed = MoveCardFromTable("RPCT");
                         if (isPlayed)
-                        { 
+                        {
+                            Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
                         }
-
+                        Debug.Log("provo a mettermi nella carta amica");
                     }
                 }
 

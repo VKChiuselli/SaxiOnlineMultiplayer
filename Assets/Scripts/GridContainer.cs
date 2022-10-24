@@ -105,7 +105,8 @@ public class GridContainer : NetworkBehaviour
             if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
             {
                 Debug.Log("RemoveCardFromTable Found!!");
-                tile.transform.GetChild(1).gameObject.GetComponent<NetworkObject>().Despawn();
+                //despawn the last children
+                tile.transform.GetChild(tile.transform.childCount).gameObject.GetComponent<NetworkObject>().Despawn();
             }
         }
     }
