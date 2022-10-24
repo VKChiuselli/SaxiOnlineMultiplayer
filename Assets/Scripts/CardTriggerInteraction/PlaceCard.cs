@@ -11,7 +11,6 @@ using Unity.Collections;
 //place card in empty spaces
 public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
 {
-    // public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
     bool isPlaceable;
     bool isCurrentPlayer;
     bool cardSelected;
@@ -120,7 +119,9 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {
+                    
                         Debug.Log("punto sottratto PlayerOne move");
+
                         bool isPlayed = MoveCardFromTable("LPCT");
                         if (isPlayed)
                         {
@@ -178,38 +179,77 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
     }
 
     private bool MoveCardFromTable(string cardTableTag)
-    {
-        if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
+    {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
+        if(gameObject.transform.parent.name== "GridManager")
         {
-            ChangeOwnerServerRpc();
-            if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+            if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+                                                                               //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
             {
-                SpawnCardFromServerRpc(
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
-          cardTableTag, //RPT Right player Table
-          true, //it means that we have to destroy the old game object when we move
-             gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.GetComponent<CoordinateSystem>().y,
-               placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
-          );
+                ChangeOwnerServerRpc();
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                {
+                    SpawnCardFromServerRpc(
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              cardTableTag, //RPT Right player Table
+              true, //it means that we have to destroy the old game object when we move
+                 gameObject.GetComponent<CoordinateSystem>().x,
+              gameObject.GetComponent<CoordinateSystem>().y,
+                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+              );
+                }
+                else
+                {
+                    Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
+                }
+
+                placeManager.ResetCardHand();
+                return true;
             }
             else
-            {
-                Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
-            }
-
-            placeManager.ResetCardHand();
-            return true;
+                return false;
         }
         else
-            return false;
+        {
+            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+                                                                               //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
+            {
+                ChangeOwnerServerRpc();
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                {
+                    SpawnCardFromServerRpc(
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              cardTableTag, //RPT Right player Table
+              true, //it means that we have to destroy the old game object when we move
+                 gameObject.GetComponent<CoordinateSystem>().x,
+              gameObject.GetComponent<CoordinateSystem>().y,
+                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+              );
+                }
+                else
+                {
+                    Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
+                }
+
+                placeManager.ResetCardHand();
+                return true;
+            }
+            else
+                return false;
+        }
     }
+     
+      
+    
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
@@ -247,19 +287,8 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
         {
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
         }
-        if (go != null)
-        {
-            IsCreatedCardClientRpc();
-        }
-
+    
     }
-
-    [ClientRpc]
-    private void IsCreatedCardClientRpc()
-    {
-        // isCardSpawned = true;
-    }
-
 
 
     //}
