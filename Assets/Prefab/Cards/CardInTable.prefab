@@ -260,9 +260,12 @@ GameObject:
   - component: {fileID: 7586258409382562982}
   - component: {fileID: -1942050297577500492}
   - component: {fileID: -7027368094879481452}
+  - component: {fileID: 8012396393232581035}
+  - component: {fileID: 9136577985858176113}
+  - component: {fileID: 3155717926872911066}
   m_Layer: 5
   m_Name: CardInTable
-  m_TagString: LPCT
+  m_TagString: RPCT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -453,6 +456,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9b2903b2ea77744cbf18c8d61e2f71d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8012396393232581035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403154168061667466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcd25f239a9854458db9240b2e9bd84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardTableToSpawn: {fileID: 6403154168061667466}
+--- !u!114 &9136577985858176113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403154168061667466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a96e59b66e48c54689d9e6491a8decf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardTableToSpawn: {fileID: 6403154168061667466}
+--- !u!114 &3155717926872911066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403154168061667466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31263ab2c245ff14b842efe134068a69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardTableToSpawn: {fileID: 6403154168061667466}
 --- !u!1 &8599944745568524656
 GameObject:
   m_ObjectHideFlags: 0
