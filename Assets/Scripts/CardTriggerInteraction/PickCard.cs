@@ -50,14 +50,22 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
 
 
-
-
-
     private void PickCardFromTable()
     {
         ResetShowTilesClientRpc();
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        EventsManager.current.PickCardFromTable(gameObject);
+        if(gameObject.transform.transform.childCount == 2)
+        {
+            EventsManager.current.PickSingleCardFromTable(gameObject);
+        }
+        else if (gameObject.transform.transform.childCount > 2)
+        {
+            EventsManager.current.PickMergedCardFromTable(gameObject);
+        }
+        else
+        {
+            Debug.Log("Error! Class pick card, method  PickCardFromTable");
+        }
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         Debug.Log("Card selected from table: " + gameObject.name);
         ShowTilesAround(false); //turn false to gameobject.component<card>().isSpecial, to check if cards have special movements

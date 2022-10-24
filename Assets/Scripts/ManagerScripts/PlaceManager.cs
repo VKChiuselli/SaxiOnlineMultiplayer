@@ -5,47 +5,70 @@ using UnityEngine;
 
 public class PlaceManager : MonoBehaviour {
     GameObject handCard;
-    GameObject tabledCard;
+    GameObject tableSingleCard;
+    GameObject tableMergedCard;
     bool isCardSelected;
 
     void OnEnable() {
-        EventsManager.current.onPickCardFromHand += PickedCard;
-        EventsManager.current.onPickCardFromTable += PickedTableCard;
+        EventsManager.current.onPickCardFromHand += PickedHandCard;
+        EventsManager.current.onPickMergedCardFromTable += PickedMergedTableCard;
+        EventsManager.current.onPickSingleCardFromTable += PickedSingleTableCard;
     }
     void OnDisable() {
-        EventsManager.current.onPickCardFromHand -= PickedCard;
-        EventsManager.current.onPickCardFromTable -= PickedTableCard;
+        EventsManager.current.onPickCardFromHand -= PickedHandCard;
+        EventsManager.current.onPickMergedCardFromTable -= PickedMergedTableCard;
+        EventsManager.current.onPickSingleCardFromTable -= PickedSingleTableCard;
     }
 
-    public void PickedCard(GameObject cardToPlace) {
-        if (tabledCard != null)
+    public void PickedHandCard(GameObject cardToPlace) {
+        if (tableSingleCard != null || tableMergedCard != null  )
         {
-            ResetCardTable();
+            ResetSingleCardTable();
+            ResetMergedCardTable();
         }
         handCard = cardToPlace;
         Debug.Log("Passing card to pick it from hand");
     }
 
-    public void PickedTableCard(GameObject cardToPlace) {
+
+    public void PickedMergedTableCard(GameObject cardToPlace) {
         if (handCard != null)
         {
             ResetCardHand();
         }
-        tabledCard = cardToPlace;
-        Debug.Log("Passing card to pick it from table");
+        tableMergedCard = cardToPlace;
+        Debug.Log("Passing merged card to pick it from table");
+    }
+
+    public void PickedSingleTableCard(GameObject cardToPlace) {
+        if (handCard != null)
+        {
+            ResetCardHand();
+        }
+        tableSingleCard = cardToPlace;
+        Debug.Log("Passing single card to pick it from table");
     }
 
     public GameObject GetCardSelectedFromHand() {
         return handCard;
     }
-    public GameObject GetCardSelectedFromTable() {
-        return tabledCard;
+ 
+    public GameObject GetSingleCardSelectedFromTable() {
+        return tableSingleCard;
     }
+    public GameObject GetMergedCardSelectedFromTable() {
+        return tableMergedCard;
+    }
+
     public void ResetCardHand() {
         handCard = null;
     }
-    public void ResetCardTable() {
-        tabledCard = null;
+
+    public void ResetMergedCardTable() {
+        tableMergedCard = null;
+    }
+    public void ResetSingleCardTable() {
+        tableSingleCard = null;
     }
 
 }

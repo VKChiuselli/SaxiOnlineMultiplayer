@@ -36,11 +36,17 @@ public class EventsManager : MonoBehaviour {
         if (onPickCardSpellFromHand != null)
             onPickCardSpellFromHand(cardPicked);
     }
-    public event Action<GameObject> onPickCardFromTable;
+    public event Action<GameObject> onPickSingleCardFromTable;
 
-    public void PickCardFromTable(GameObject cardPicked) {
-        if (onPickCardFromTable != null)
-            onPickCardFromTable(cardPicked);
+    public void PickSingleCardFromTable(GameObject PickSingleCardFromTable) {
+        if (onPickSingleCardFromTable != null)
+            onPickSingleCardFromTable(PickSingleCardFromTable);
+    }
+
+    public event Action<GameObject> onPickMergedCardFromTable;
+    public void PickMergedCardFromTable(GameObject PickMergedCardFromTable) {
+        if (onPickMergedCardFromTable != null)
+            onPickMergedCardFromTable(PickMergedCardFromTable);
     }
 
     public event Action<GameObject> onActiveCardFromTable;

@@ -81,9 +81,9 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                     }
                 }
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetSingleCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
-                if (placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
@@ -114,9 +114,9 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                     }
                 }
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetSingleCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
-                if (placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {
@@ -133,7 +133,8 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
             }
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             placeManager.ResetCardHand();
-            placeManager.ResetCardTable();
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
 
         }
 
@@ -182,20 +183,20 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
-            if (placeManager.GetCardSelectedFromTable().GetComponent<CardTable>() != null)
+            if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
                 SpawnCardFromServerRpc(
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
           cardTableTag, //RPT Right player Table
           true, //it means that we have to destroy the old game object when we move
              gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
-               placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-          placeManager.GetCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+               placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
           );
             }
             else
