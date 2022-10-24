@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 4480384909430820721}
   - component: {fileID: 2304938966528047959}
   - component: {fileID: 7696517770863245242}
+  - component: {fileID: 789849743162151097}
   m_Layer: 5
   m_Name: GridImageTile
   m_TagString: Untagged
@@ -234,3 +235,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highlight: {fileID: 3178539704054398505}
+--- !u!114 &789849743162151097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7846030299938423638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcd25f239a9854458db9240b2e9bd84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardTableToSpawn: {fileID: 6403154168061667466, guid: d1f4557a132ebb3479e1324b90b4351b, type: 3}

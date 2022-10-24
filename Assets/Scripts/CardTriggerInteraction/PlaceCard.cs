@@ -63,7 +63,7 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
     {//we must put a condition that a card can be dropped only where the tile is eligible
         //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
-        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0) //bisogna mettere molte più condizioni per mettere la carta
+        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0 && placeManager.GetMergedCardSelectedFromTable()==null) //bisogna mettere molte più condizioni per mettere la carta
         {//IsPopupChoosing vuol dire che se è 0, allora non c'è in corso una scelta di popup, se c'è, allora disabilitiamo tutto
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetCardSelectedFromHand() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
             {
