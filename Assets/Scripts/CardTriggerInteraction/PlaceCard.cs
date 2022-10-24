@@ -61,7 +61,7 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
 
 
     public void OnDrop(PointerEventData eventData)
-    {
+    {//we must put a condition that a card can be dropped only where the tile is eligible
         //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0) //bisogna mettere molte più condizioni per mettere la carta
@@ -88,8 +88,12 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
                         Debug.Log("punto sottratto PlayerZero move");
-                        MoveCardFromTable("RPCT");
-                        gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                        bool isPlayed = MoveCardFromTable("RPCT");
+                        if (isPlayed)
+                        { 
+                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                        }
+
                     }
                 }
 
@@ -116,14 +120,20 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {
                         Debug.Log("punto sottratto PlayerOne move");
-                        MoveCardFromTable("LPCT");
+                        bool isPlayed = MoveCardFromTable("LPCT");
+                        if (isPlayed)
+                        {
                         gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                        }
                     }
                 }
 
 
             }
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            placeManager.ResetCardHand();
+            placeManager.ResetCardTable();
+
         }
 
     }
@@ -165,7 +175,7 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
             return false;
     }
 
-    private void MoveCardFromTable(string cardTableTag)
+    private bool MoveCardFromTable(string cardTableTag)
     {
         if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
@@ -193,7 +203,10 @@ public class PlaceCard : NetworkBehaviour, IDropHandler//, IPointerDownHandler
             }
 
             placeManager.ResetCardHand();
+            return true;
         }
+        else
+            return false;
     }
 
     [ServerRpc(RequireOwnership = false)]
