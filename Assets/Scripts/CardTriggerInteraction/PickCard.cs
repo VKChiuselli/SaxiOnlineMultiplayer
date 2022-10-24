@@ -54,11 +54,11 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     {
         ResetShowTilesClientRpc();
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        if(gameObject.transform.transform.childCount == 2)
+        if(gameObject.transform.parent.childCount == 2)
         {
             EventsManager.current.PickSingleCardFromTable(gameObject);
         }
-        else if (gameObject.transform.transform.childCount > 2)
+        else if (gameObject.transform.parent.childCount > 2)
         {
             EventsManager.current.PickMergedCardFromTable(gameObject);
         }
