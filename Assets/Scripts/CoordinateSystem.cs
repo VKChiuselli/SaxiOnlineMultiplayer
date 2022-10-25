@@ -8,7 +8,11 @@ public class CoordinateSystem : MonoBehaviour
 
     public int x;
     public int y;
-    public int isDeployable;
+    public int typeOfTile;
+    //type of tile: 1 == empty tile, where deploy or move without enemy
+    //type of tile: 2 == tile filled by at least one friendly card
+    //type of tile: 3 == tile filled by at least one enemy card
+
     void Start()
     {
         SetName();
@@ -159,8 +163,4 @@ public class CoordinateSystem : MonoBehaviour
         this.name = finalString;
     }
 
-    void Update()
-    {
-
-    }
 }

@@ -17,13 +17,13 @@ public class Highlight : NetworkBehaviour
 
     public void ResetColorTile()
     {
-        gameObject.GetComponent<CoordinateSystem>().isDeployable = 0;
+        gameObject.GetComponent<CoordinateSystem>().typeOfTile = 0;
         _highlight.color = trasparency;
     }
 
-    public void ShowTileCanDeploy()
+    public void ShowTileCanInteract(int typeOfTile)
     {
-        gameObject.GetComponent<CoordinateSystem>().isDeployable = 1;
+        gameObject.GetComponent<CoordinateSystem>().typeOfTile = typeOfTile;
         _highlight.color = Color.red;
         _highlight.color = new Color(1f, 1f, 1f, 0.3f);
     }

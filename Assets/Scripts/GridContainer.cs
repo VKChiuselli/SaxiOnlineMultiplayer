@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public class GridContainer : NetworkBehaviour
             gridTiles.Add(child.gameObject);
         }
     }
-  
+
     public List<GameObject> GetDeployTiles(string deployTagTile)
     {
         List<GameObject> DeployTile = new List<GameObject>();
@@ -49,13 +50,13 @@ public class GridContainer : NetworkBehaviour
         }
     }
 
-    public void ShowMovementTilesAroundCard(GameObject gameObject)
+    public void ShowMovementTilesAroundCard(GameObject cardTablePassed)
     {
         if (gridTiles != null)
         {
 
-            int x = gameObject.transform.parent.GetComponent<CoordinateSystem>().x;
-            int y = gameObject.transform.parent.GetComponent<CoordinateSystem>().y;
+            int x = cardTablePassed.transform.parent.GetComponent<CoordinateSystem>().x;
+            int y = cardTablePassed.transform.parent.GetComponent<CoordinateSystem>().y;
 
             int upX = x;
             int upY = y - 1;
@@ -73,22 +74,22 @@ public class GridContainer : NetworkBehaviour
             {
                 if (tile.GetComponent<CoordinateSystem>().x == upX && tile.GetComponent<CoordinateSystem>().y == upY)
                 {
-                    tile.GetComponent<Highlight>().ShowTileCanDeploy();
+                    ShowTile(cardTablePassed, tile);
                 }
                 else
                 if (tile.GetComponent<CoordinateSystem>().x == leftX && tile.GetComponent<CoordinateSystem>().y == leftY)
                 {
-                    tile.GetComponent<Highlight>().ShowTileCanDeploy();
+                    ShowTile(cardTablePassed, tile);
                 }
                 else
                 if (tile.GetComponent<CoordinateSystem>().x == downX && tile.GetComponent<CoordinateSystem>().y == downY)
                 {
-                    tile.GetComponent<Highlight>().ShowTileCanDeploy();
+                    ShowTile(cardTablePassed, tile);
                 }
                 else
                 if (tile.GetComponent<CoordinateSystem>().x == rightX && tile.GetComponent<CoordinateSystem>().y == rightY)
                 {
-                    tile.GetComponent<Highlight>().ShowTileCanDeploy();
+                    ShowTile(cardTablePassed, tile);
                 }
             }
         }
@@ -96,6 +97,26 @@ public class GridContainer : NetworkBehaviour
         {
             Debug.Log("ShowMovementTilesAroundCard doens't found any grid tile");
         }
+    }
+
+    private static void ShowTile(GameObject cardTablePassed, GameObject tile)
+    {
+        if (tile.transform.childCount == 1)
+        {//if has only one child it means that the tile is empty, so i put 1 in ShowTileCanDeploy
+            tile.GetComponent<Highlight>().ShowTileCanInteract(1);
+        }
+        else
+        {
+            if (tile.transform.GetChild(1).gameObject.GetComponent<CardTable>().IdOwner.Value == cardTablePassed.GetComponent<CardTable>().IdOwner.Value)
+            {
+                tile.GetComponent<Highlight>().ShowTileCanInteract(2);
+            }
+            else
+            {
+                tile.GetComponent<Highlight>().ShowTileCanInteract(3);
+            }
+        }
+        cardTablePassed.GetComponent<CardTable>();
     }
 
     public void RemoveCardFromTable(int x, int y)
@@ -106,7 +127,7 @@ public class GridContainer : NetworkBehaviour
             {
                 Debug.Log("RemoveCardFromTable Found!!");
                 //despawn the last children
-                tile.transform.GetChild(tile.transform.childCount-1).gameObject.GetComponent<NetworkObject>().Despawn();
+                tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
             }
         }
     }

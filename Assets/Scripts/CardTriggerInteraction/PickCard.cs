@@ -73,7 +73,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         }
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         Debug.Log("Card selected from table: " + gameObject.GetComponent<CardTable>().IdImageCard.Value);
-        ShowTilesAround(false); //turn false to gameobject.component<card>().isSpecial, to check if cards have special movements
+        ShowTilesAround(false); //turn false to gameobject.component<TableCard>().isSpecial, to check if cards have special movements
     }
 
     private void ShowTilesAround(bool v)
@@ -122,7 +122,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         {
             foreach (GameObject a in gridContainer.GetComponent<GridContainer>().GetDeployTiles(DeployTile))
             {
-                a.GetComponent<Highlight>().ShowTileCanDeploy();
+                a.GetComponent<Highlight>().ShowTileCanInteract(1);
             }
         }
         else

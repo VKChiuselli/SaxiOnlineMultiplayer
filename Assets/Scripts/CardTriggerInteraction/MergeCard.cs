@@ -89,8 +89,8 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
-        if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
+        if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
