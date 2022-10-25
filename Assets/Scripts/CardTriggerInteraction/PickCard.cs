@@ -67,7 +67,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
             Debug.Log("Error! Class pick card, method  PickCardFromTable");
         }
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-        Debug.Log("Card selected from table: " + gameObject.name);
+        Debug.Log("Card selected from table: " + gameObject.GetComponent<CardTable>().IdImageCard.Value);
         ShowTilesAround(false); //turn false to gameobject.component<card>().isSpecial, to check if cards have special movements
     }
 

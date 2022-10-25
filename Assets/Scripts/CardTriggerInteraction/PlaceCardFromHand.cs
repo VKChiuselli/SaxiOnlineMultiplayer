@@ -65,7 +65,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
         //place card from hand to table section
         if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0 && placeManager.GetCardSelectedFromHand()!=null) //bisogna mettere molte più condizioni per mettere la carta
         {//IsPopupChoosing vuol dire che se è 0, allora non c'è in corso una scelta di popup, se c'è, allora disabilitiamo tutto
-            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)//&& (NetworkManager.Singleton.LocalClientId % 2) == 1)
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
                 if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 0)
                 {
@@ -125,6 +125,32 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
           0,
           0,
           0
+          );
+            }
+            else
+                Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
+
+            placeManager.ResetCardHand();
+            return true;
+        }
+        else if(gameObject.transform.parent.tag== deploy)
+        {
+            ChangeOwnerServerRpc();
+            if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
+            {
+                SpawnCardFromServerRpc(
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Speed.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
+          cardTableTag, //RPT Right player Table
+          false, //it means that we have to destroy the game object when we move
+          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
+          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+          0,
+          0,
+          1
           );
             }
             else
