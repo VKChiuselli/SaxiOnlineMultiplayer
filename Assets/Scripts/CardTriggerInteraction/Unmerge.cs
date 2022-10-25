@@ -1,14 +1,12 @@
 using Assets.Scripts;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MergeCard : NetworkBehaviour, IDropHandler
+public class Unmerge :  NetworkBehaviour, IPointerDownHandler
 {
-
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
@@ -21,7 +19,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
         gameManager = GameObject.Find("Managers/GameManager");
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
@@ -31,14 +29,14 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
-                    MoveMergedCard(0);
+                    UnMergedCard(0);
                 }
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
             {//check the max move of the card
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
-                    MoveMergedCard(1);
+                    UnMergedCard(1);
                 }
             }
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
@@ -49,14 +47,14 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     }
 
-    private void MoveMergedCard(int player)
+    private void UnMergedCard(int player)
     {
         int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
         bool IsSingleCard = true;
         //check if the tile chosed is filled by a card or not
         if (gameObject.GetComponent<CardTable>() != null)
         {
-            IsSingleCard = false ;
+            IsSingleCard = false;
         }
 
         if (IsSingleCard)
@@ -121,7 +119,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                                                     //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -161,11 +159,11 @@ indexCard
             return false;
         }
     }
-    
+
     private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                         //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -239,7 +237,7 @@ indexCard
         }
 
     }
-      [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void MoveCardFromTableOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
     {
         CardTableToSpawn.tag = tag;
@@ -265,6 +263,5 @@ indexCard
         }
 
     }
-
 
 }

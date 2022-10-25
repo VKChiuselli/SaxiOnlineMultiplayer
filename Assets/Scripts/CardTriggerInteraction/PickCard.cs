@@ -133,12 +133,6 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     }
 
 
-    // DisableAllHighlight();
-
-    //if (gameObject.transform.GetChild(1) != null)
-    //{
-    //    gameObject.transform.GetChild(1).gameObject.SetActive(true);
-    //}
     private void DisableAllHighlight()
     {
         for (int i = 0; i < handZone.transform.childCount; i++)
