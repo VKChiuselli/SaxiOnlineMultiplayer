@@ -110,4 +110,16 @@ public class GridContainer : NetworkBehaviour
             }
         }
     }
+    public void RemoveFirstMergedCardFromTable(int x, int y, int indexCard)
+    {
+        foreach (GameObject tile in gridTiles)
+        {
+            if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
+            {
+                Debug.Log("RemoveFirstMergedCardFromTable Found!!");
+                //despawn the last children
+                tile.transform.GetChild(indexCard).gameObject.GetComponent<NetworkObject>().Despawn();
+            }
+        }
+    }
 }

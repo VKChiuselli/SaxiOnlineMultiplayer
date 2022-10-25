@@ -25,7 +25,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     }
 
     public void OnDrop(PointerEventData eventData)
-    {   if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0 && placeManager.GetSingleCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
+    {   if (NetworkManager.Singleton.IsClient && placeManager.GetSingleCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetSingleCardSelectedFromTable() != null)
             {

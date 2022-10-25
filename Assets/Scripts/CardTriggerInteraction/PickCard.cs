@@ -161,7 +161,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     {
         Debug.Log("begin drag");
 
-        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)
+        if (NetworkManager.Singleton.IsClient)
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
             {

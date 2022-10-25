@@ -28,7 +28,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (NetworkManager.Singleton.IsClient && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0 && placeManager.GetMergedCardSelectedFromTable() != null)
+        if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
             Debug.Log("dropping merged card");
 
@@ -36,33 +36,14 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
-                        AskMoveOneOrAll();
-                    //if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
-                    //{
-                    //    bool isPlayed = MoveCardFromTable("RPCT");
-                    //    if (isPlayed)
-                    //    {
-                    //        Debug.Log("punti sottratto PlayerZero move");
-                    //        gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
-                    //    }
-                    //    Debug.Log("provo a mettermi nella carta amica");
-                    //}
+                    MoveMergedCard(0);
                 }
-            } 
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 ) 
+            }
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
             {//check the max move of the card
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
-                    //if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
-                    //{
-                    //    Debug.Log("punto sottratto PlayerOne move");
-                    //    bool isPlayed = MoveCardFromTable("LPCT");
-                    //    if (isPlayed)
-                    //    {
-                    //        gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
-                    //    }
-                    //}
-                    AskMoveOneOrAll();
+                    MoveMergedCard(1);
                 }
             }
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
@@ -73,37 +54,67 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     }
 
-    private void AskMoveOneOrAll()
+    private void MoveMergedCard(int player)
     {
-        GenerateUIForClient(); //creiamo classe apposita?
+        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
+        if (player == 0)
+        {//first check, if we have enough Move point to spend.
+            if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
+            {
+
+                if (MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint))
+                {
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                    Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
+                }
+
+            }
+        }
+        else
+        if (player == 1)
+        {//first check, if we have enough Move point to spend.
+            if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
+            {
+                if (MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint))
+                {
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                    Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+                }
+            }
+        }
+
     }
 
-    private void GenerateUIForClient()
-    {
-        Debug.Log("Mostro la UI");
-    }
 
-    private bool MoveCardFromTable(string cardTableTag)
+
+    private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.GetComponent<CoordinateSystem>().isDeployable >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().isDeployable, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
-            if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+            if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                SpawnCardFromServerRpc(
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
-          cardTableTag, //RPT Right player Table
-          true, //it means that we have to destroy the old game object when we move
-             gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.GetComponent<CoordinateSystem>().y,
-               placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
-          );
+                int indexCard = 1;
+                while (numberOfMergedCards != 0)
+                {
+                    SpawnCardFromServerRpc(
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdOwner.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdImageCard.Value.ToString(),
+cardTableTag, //RPT Right player Table
+true, //it means that we have to destroy the old game object when we move
+gameObject.GetComponent<CoordinateSystem>().x,
+gameObject.GetComponent<CoordinateSystem>().y,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+indexCard
+);
+                    numberOfMergedCards--;
+                    indexCard++;
+                }
             }
             else
             {
@@ -126,7 +137,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
     {
         Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
         Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
@@ -149,7 +160,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
         go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
         if (toDestroy)
         {
-            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
+            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
         }
 
     }
