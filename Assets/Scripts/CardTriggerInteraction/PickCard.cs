@@ -14,9 +14,10 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     GameObject handZone;
     GameObject gridContainer;
     GameObject gameManager;
+    PlaceManager placeManager;
     void Start()
     {
-
+        placeManager = FindObjectOfType<PlaceManager>();
         PlayerActions.current = FindObjectOfType<PlayerActions>();
         TriggerManager.current = FindObjectOfType<TriggerManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
@@ -57,10 +58,14 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         if(gameObject.transform.parent.childCount == 2)
         {
             EventsManager.current.PickSingleCardFromTable(gameObject);
+            placeManager.ResetCardHand();
+            placeManager.ResetMergedCardTable();
         }
         else if (gameObject.transform.parent.childCount > 2)
         {
             EventsManager.current.PickMergedCardFromTable(gameObject);
+            placeManager.ResetCardHand();
+            placeManager.ResetSingleCardTable();
         }
         else
         {
@@ -92,6 +97,8 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         EventsManager.current.PickCardFromHand(gameObject);
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         Debug.Log("Card selected from hand: " + gameObject.name);
+        placeManager.ResetMergedCardTable();
+        placeManager.ResetSingleCardTable();
         ShowTilesToDeployClientRpc(DeployTile);
 
     }
