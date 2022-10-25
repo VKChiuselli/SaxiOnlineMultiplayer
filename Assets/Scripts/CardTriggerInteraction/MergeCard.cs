@@ -41,7 +41,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
             {//check the max move of the card
-                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
+                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
                     MoveMergedCard(1);
                 }
@@ -57,36 +57,116 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     private void MoveMergedCard(int player)
     {
         int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
-        if (player == 0)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
-            {
-
-                if (MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint))
-                {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
-                    Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
-                }
-
-            }
+        bool IsSingleCard = true;
+        //check if the tile chosed is filled by a card or not
+        if (gameObject.GetComponent<CardTable>() != null)
+        {
+            IsSingleCard = false ;
         }
-        else
-        if (player == 1)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
-            {
-                if (MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint))
+
+        if (IsSingleCard)
+        {
+            if (player == 0)
+            {//first check, if we have enough Move point to spend.
+                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
                 {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
-                    Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+
+                    if (MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint))
+                    {
+                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                        Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
+                    }
+
                 }
             }
+            else if (player == 1)
+            {//first check, if we have enough Move point to spend.
+                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
+                {
+                    if (MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint))
+                    {
+                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                        Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+                    }
+                }
+            }
         }
+        else if (!IsSingleCard)
+        {
+            if (player == 0)
+            {//first check, if we have enough Move point to spend.
+                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
+                {
+                    if (MoveCardFromTableOnFilledSpace("RPCT", necessaryPoint))
+                    {
+                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                        Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
+                    }
+                }
+            }
+            else if (player == 1)
+            {//first check, if we have enough Move point to spend.
+                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
+                {
+                    if (MoveCardFromTableOnFilledSpace("LPCT", necessaryPoint))
+                    {
+                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                        Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+                    }
+                }
+            }
+        }
+
+
 
     }
 
 
 
+    private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
+    {
+        if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
+                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+        {
+            ChangeOwnerServerRpc();
+            if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
+            {
+                int indexCard = 1;
+                while (numberOfMergedCards != 0)
+                {
+                    SpawnCardOnFilledSpaceFromServerRpc(
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdOwner.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdImageCard.Value.ToString(),
+cardTableTag, //RPT Right player Table
+true, //it means that we have to destroy the old game object when we move
+gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
+gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+indexCard
+);
+                    numberOfMergedCards--;
+                    indexCard++;
+                }
+            }
+            else
+            {
+                Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
+            }
+
+            placeManager.ResetCardHand();
+            return true;
+        }
+        else
+        {
+            Debug.Log("MoveCardFromTableOnFilledSpace type of tile not correct: ");
+            return false;
+        }
+    }
+    
     private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
@@ -98,7 +178,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
                 int indexCard = 1;
                 while (numberOfMergedCards != 0)
                 {
-                    SpawnCardFromServerRpc(
+                    MoveCardFromTableOnEmptySpaceServerRpc(
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
@@ -127,6 +207,8 @@ indexCard
         else
             return false;
     }
+
+
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
@@ -137,10 +219,34 @@ indexCard
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
+    public void SpawnCardOnFilledSpaceFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
     {
-        Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
+        CardTableToSpawn.tag = tag;
+        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+           transform.parent.position, Quaternion.identity);
+
+        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        go.transform.SetParent(transform.parent, false);
+
+        go.GetComponent<CardTable>().IdCard.Value = IdCard;
+        go.GetComponent<CardTable>().Weight.Value = Weight;
+        go.GetComponent<CardTable>().Speed.Value = Speed;
+        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        go.GetComponent<NetworkObject>().tag = tag;
+        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
+        if (toDestroy)
+        {
+            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
+        }
+
+    }
+      [ServerRpc(RequireOwnership = false)]
+    public void MoveCardFromTableOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
+    {
         CardTableToSpawn.tag = tag;
         NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
            transform.position, Quaternion.identity);
