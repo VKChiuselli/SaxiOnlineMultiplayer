@@ -49,11 +49,31 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         return isSelected;
     }
 
+    private void PickCardFromHand(string DeployTile)
+    {
+        ResetShowTilesClientRpc();
+        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+        EventsManager.current.PickCardFromHand(gameObject);
+        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
+        Debug.Log("Card selected from hand: " + gameObject.name);
+        placeManager.ResetMergedCardTable();
+        placeManager.ResetSingleCardTable();
+        ShowTilesToDeployClientRpc(DeployTile);
 
+    }
 
     private void PickCardFromTable()
     {
         ResetShowTilesClientRpc();
+        if (placeManager.GetMergedCardSelectedFromTable() != null)
+        {
+           if( gameObject.transform.parent.name == placeManager.GetMergedCardSelectedFromTable().transform.parent.name)
+            {
+                placeManager.ResetMergedCardTable();
+                return;
+            }
+        }
+       
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         if(gameObject.transform.parent.childCount == 2)
         {
@@ -76,9 +96,9 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         ShowTilesAround(false); //turn false to gameobject.component<TableCard>().isSpecial, to check if cards have special movements
     }
 
-    private void ShowTilesAround(bool v)
+    private void ShowTilesAround(bool cardHasSpecialAbility)
     {
-        if (v)
+        if (cardHasSpecialAbility)
         {
             //TODO special movements card
         }
@@ -88,20 +108,6 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         }
     }
 
-
-
-    private void PickCardFromHand(string DeployTile)
-    {
-        ResetShowTilesClientRpc();
-        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        EventsManager.current.PickCardFromHand(gameObject);
-        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-        Debug.Log("Card selected from hand: " + gameObject.name);
-        placeManager.ResetMergedCardTable();
-        placeManager.ResetSingleCardTable();
-        ShowTilesToDeployClientRpc(DeployTile);
-
-    }
 
     private void ResetShowTilesClientRpc()
     {
