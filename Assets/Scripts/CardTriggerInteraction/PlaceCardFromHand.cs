@@ -67,7 +67,15 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
         {//IsPopupChoosing vuol dire che se è 0, allora non c'è in corso una scelta di popup, se c'è, allora disabilitiamo tutto
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
-                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 0)
+                bool IsOpponentCard = true;
+                if (gameObject.GetComponent<CardTable>() != null)
+                {
+                    if (gameObject.GetComponent<CardTable>().IdOwner.Value == 1)
+                    {
+                        IsOpponentCard = false; //it means that I'm deploying on opponent card where I can't do it.
+                    }
+                }
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 0 && IsOpponentCard)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
                     {
@@ -82,7 +90,15 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {
-                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 1)
+                bool IsOpponentCard = true;
+                if (gameObject.GetComponent<CardTable>() != null)
+                {
+                    if (gameObject.GetComponent<CardTable>().IdOwner.Value == 0)
+                    {
+                        IsOpponentCard = false; //it means that I'm deploying on opponent card where I can't do it.
+                    }
+                }
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value == 1 && IsOpponentCard)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
                     {
