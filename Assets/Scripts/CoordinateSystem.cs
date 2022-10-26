@@ -12,6 +12,7 @@ public class CoordinateSystem : MonoBehaviour
     //type of tile: 1 == empty tile, where deploy or move without enemy
     //type of tile: 2 == tile filled by at least one friendly card
     //type of tile: 3 == tile filled by at least one enemy card
+    //type of tile: 7 == tile selected
 
     void Start()
     {

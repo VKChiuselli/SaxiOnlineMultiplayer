@@ -91,6 +91,11 @@ public class GridContainer : NetworkBehaviour
                 {
                     ShowTile(cardTablePassed, tile);
                 }
+                else
+                if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
+                {
+                    tile.GetComponent<Highlight>().ShowTileCanInteract(7);
+                }
             }
         }
         else
@@ -116,7 +121,6 @@ public class GridContainer : NetworkBehaviour
                 tile.GetComponent<Highlight>().ShowTileCanInteract(3);
             }
         }
-        cardTablePassed.GetComponent<CardTable>();
     }
 
     public void RemoveCardFromTable(int x, int y)

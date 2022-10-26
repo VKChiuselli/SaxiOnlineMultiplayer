@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Unmerge :  NetworkBehaviour, IPointerDownHandler
+public class UnmergeCard :  NetworkBehaviour, IPointerDownHandler
 {
     PlaceManager placeManager;
     GameObject gridContainer;
@@ -21,13 +21,15 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
+        if (NetworkManager.Singleton.IsClient 
+            && placeManager.GetMergedCardSelectedFromTable() != null
+            && placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().typeOfTile==7) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetMergedCardSelectedFromTable() != null)
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
-                    if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
+                    if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0) //instead of 0 put CARD.MOVEMENT_COST
                     {
 
                         bool isPlayed = MoveCardFromTable("RPCT");
@@ -35,13 +37,18 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
                         {
                             Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+
+                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                            placeManager.ResetCardHand();
+                            placeManager.ResetMergedCardTable();
+                            placeManager.ResetSingleCardTable();
                         }
                         Debug.Log("provo a mettermi nella carta amica");
                     }
                 }
 
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetMergedCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
@@ -54,14 +61,17 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
                         if (isPlayed)
                         {
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+
+                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                            placeManager.ResetCardHand();
+                            placeManager.ResetMergedCardTable();
+                            placeManager.ResetSingleCardTable();
                         }
                     }
                 }
             }
-            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-            placeManager.ResetCardHand();
-            placeManager.ResetMergedCardTable();
-            placeManager.ResetSingleCardTable();
+         
+
         }
 
     }
@@ -70,24 +80,24 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
     {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
         if (gameObject.transform.parent.name == "GridManager")
         {
-            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                              //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
-                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
                     SpawnCardFromServerRpc(
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
               cardTableTag, //RPT Right player Table
               true, //it means that we have to destroy the old game object when we move
                  gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                   placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
               0
               );
                 }
@@ -108,20 +118,20 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
                                                                                                          //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
-                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
                     SpawnCardFromServerRpc(
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
               cardTableTag, //RPT Right player Table
               true, //it means that we have to destroy the old game object when we move
                  gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                   placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
               1
               );
                 }
@@ -130,7 +140,7 @@ public class Unmerge :  NetworkBehaviour, IPointerDownHandler
                     Debug.Log("Class PlaceCard, method OnPointerDown, Errore! CardHand vuota");
                 }
 
-                placeManager.ResetCardHand();
+                placeManager.ResetMergedCardTable();
                 return true;
             }
             else

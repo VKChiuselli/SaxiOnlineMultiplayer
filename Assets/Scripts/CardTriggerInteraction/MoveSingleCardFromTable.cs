@@ -73,8 +73,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
         if (gameObject.transform.parent.name == "GridManager")
         {
-            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                               //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+                                                                                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -103,11 +103,14 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 return true;
             }
             else
+            {
+                Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! typeOfTile errato");
                 return false;
+            }
         }
         else
         {
-            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile >= 1) //RPCT stands for RIGHT PLAYER CARD TABLE
+            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
