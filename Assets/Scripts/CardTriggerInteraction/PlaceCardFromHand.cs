@@ -63,7 +63,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
     {//we must put a condition that a card can be dropped only where the tile is eligible
         //in the future we will edit the card: each card has a deploy cost, because if we have a card that doens't cost deploy, we can play it. so we will check below the cost of deploy with the actual deploy.
         //place card from hand to table section
-        if (NetworkManager.Singleton.IsClient && placeManager.GetCardSelectedFromHand()!=null) //bisogna mettere molte più condizioni per mettere la carta
+        if (NetworkManager.Singleton.IsClient && placeManager.GetCardSelectedFromHand() != null) //bisogna mettere molte più condizioni per mettere la carta
         {//IsPopupChoosing vuol dire che se è 0, allora non c'è in corso una scelta di popup, se c'è, allora disabilitiamo tutto
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
@@ -116,19 +116,19 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
         }
-    
 
-        }
 
-      
+    }
+
+
     private bool DeployCardFromHand(string deploy, string cardTableTag)
-    {
+    {//placing into empty space
         if (gameObject.tag == deploy)
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
-                SpawnCardFromServerRpc(
+                DeployCardFromHandServerRpc(
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Speed.Value,
@@ -139,7 +139,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
           gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
           0,
-          0,
           0
           );
             }
@@ -149,12 +148,12 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
             placeManager.ResetCardHand();
             return true;
         }
-        else if(gameObject.transform.parent.tag== deploy)
-        {
+        else if (gameObject.transform.parent.tag == deploy)
+        {//placing into filled space, so it is a merge
             ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
-                SpawnCardFromServerRpc(
+                MergeCardFromHandServerRpc(
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Speed.Value,
@@ -165,8 +164,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
           0,
-          0,
-          1
+          0
           );
             }
             else
@@ -190,31 +188,16 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int checkTransform) //MyCardStruct cartaDaSpawnare
+    public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
         Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
         Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         CardTableToSpawn.tag = tag;
-        NetworkObject go=null;
-        if (checkTransform == 0)
-        {
-             go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
            transform.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform, false);
-        }
-        else if (checkTransform == 1)
-        {
-             go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-        transform.parent.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform.parent, false);
-        }
-        else
-        {
-            Debug.Log("checkTransform passed wrong!!!");
-        }
-        
+        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        go.transform.SetParent(transform, false);
+
         go.GetComponent<CardTable>().IdCard.Value = IdCard;
         go.GetComponent<CardTable>().Weight.Value = Weight;
         go.GetComponent<CardTable>().Speed.Value = Speed;
@@ -230,7 +213,38 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
         {
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
         }
-    
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    {
+        Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
+        Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
+        CardTableToSpawn.tag = tag;
+        NetworkObject go = go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        transform.parent.position, Quaternion.identity);
+
+        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        go.transform.SetParent(transform.parent, false);
+
+
+        go.GetComponent<CardTable>().IdCard.Value = IdCard;
+        go.GetComponent<CardTable>().Weight.Value = Weight;
+        go.GetComponent<CardTable>().Speed.Value = Speed;
+        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        go.GetComponent<NetworkObject>().tag = tag;
+        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
+        //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
+        if (toDestroy)
+        {
+            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
+        }
+
     }
 
 
@@ -331,7 +345,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
         return Camera.main.ScreenToWorldPoint(mousePoint);
     }
 
- 
+
 
     public const byte CustomManualInstantiationEventCode = 1;
 }
