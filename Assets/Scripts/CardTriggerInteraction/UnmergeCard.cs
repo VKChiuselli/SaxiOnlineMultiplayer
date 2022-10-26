@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UnmergeCard :  NetworkBehaviour, IPointerDownHandler
+public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
 {
     PlaceManager placeManager;
     GameObject gridContainer;
@@ -21,9 +21,9 @@ public class UnmergeCard :  NetworkBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (NetworkManager.Singleton.IsClient 
-            && placeManager.GetMergedCardSelectedFromTable() != null
-            && placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().typeOfTile==7) //bisogna mettere molte più condizioni per mettere la carta
+        if (NetworkManager.Singleton.IsClient
+           && placeManager.GetMergedCardSelectedFromTable() != null
+           && gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 1) //bisogna mettere molte più condizioni per mettere la carta
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
@@ -38,12 +38,13 @@ public class UnmergeCard :  NetworkBehaviour, IPointerDownHandler
                             Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
 
-                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                            placeManager.ResetCardHand();
-                            placeManager.ResetMergedCardTable();
-                            placeManager.ResetSingleCardTable();
+                       
                         }
-                        Debug.Log("provo a mettermi nella carta amica");
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
+                        gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
                     }
                 }
 
@@ -62,15 +63,17 @@ public class UnmergeCard :  NetworkBehaviour, IPointerDownHandler
                         {
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
 
-                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                            placeManager.ResetCardHand();
-                            placeManager.ResetMergedCardTable();
-                            placeManager.ResetSingleCardTable();
+                         
                         }
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
+                        gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
                     }
                 }
             }
-         
+
 
         }
 

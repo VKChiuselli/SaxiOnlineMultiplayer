@@ -66,6 +66,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
+            gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
     }
 

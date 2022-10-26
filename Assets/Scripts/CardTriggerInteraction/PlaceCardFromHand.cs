@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using Assets.Scripts;
 using Unity.Collections;
 //place card in empty spaces
-public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownHandler
+public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
 {
     bool isPlaceable;
     bool isCurrentPlayer;
@@ -25,8 +25,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
     {
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        // PlayerActions.current = FindObjectOfType<PlayerActions>();
-        //   TriggerManager.current = FindObjectOfType<TriggerManager>();
         gameManager = GameObject.Find("Managers/GameManager");
     }
 
@@ -115,6 +113,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler//, IPointerDownH
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
+            gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
 

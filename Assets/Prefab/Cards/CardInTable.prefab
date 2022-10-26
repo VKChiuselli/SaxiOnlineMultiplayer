@@ -495,7 +495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a1f685b9021294baf13956e2971103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardTableToSpawn: {fileID: 0}
+  CardTableToSpawn: {fileID: 6403154168061667466}
 --- !u!1 &8599944745568524656
 GameObject:
   m_ObjectHideFlags: 0

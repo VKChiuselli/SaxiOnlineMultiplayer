@@ -20,8 +20,4 @@ public class InteractionCard : MonoBehaviour//, IPointerDownHandler
         
     }
 
-    //public void OnPointerDown(PointerEventData eventData)
-    //{
-    //    throw new System.NotImplementedException();
-    //}
 }
