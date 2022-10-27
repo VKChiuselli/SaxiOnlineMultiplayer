@@ -37,14 +37,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                         {
                             Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
-
-                       
                         }
-                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                        placeManager.ResetCardHand();
-                        placeManager.ResetMergedCardTable();
-                        placeManager.ResetSingleCardTable();
-                        gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
                     }
                 }
 
@@ -62,19 +55,16 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                         if (isPlayed)
                         {
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
-
-                         
                         }
-                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                        placeManager.ResetCardHand();
-                        placeManager.ResetMergedCardTable();
-                        placeManager.ResetSingleCardTable();
-                        gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
+                    
                     }
                 }
             }
-
-
+            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            placeManager.ResetCardHand();
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
+            gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
     }
@@ -135,6 +125,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
+       //             UpdateWeight();
                 }
                 else
                 {
