@@ -401,6 +401,8 @@ MonoBehaviour:
     m_InternalValue: 0
   Weight:
     m_InternalValue: 0
+  MergedWeight:
+    m_InternalValue: 0
   Speed:
     m_InternalValue: 0
   IdOwner:

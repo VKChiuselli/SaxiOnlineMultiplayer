@@ -114,11 +114,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
                 }
             }
         }
-
-
-
     }
-
 
 
     private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
@@ -149,6 +145,7 @@ indexCard
                     numberOfMergedCards--;
                     indexCard++;
                 }
+                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value);
             }
             else
             {
@@ -164,7 +161,33 @@ indexCard
             return false;
         }
     }
-    
+
+    private void UpdateWeightTopCard(int cardWeight)
+    {
+        int finalWeight = cardWeight;
+        CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
+
+        if (cardTable != null)
+        {
+            foreach (Transform singleCard in transform.parent)
+            {
+                if (singleCard.GetComponent<CardTable>() != null)
+                {
+                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
+                }
+                Debug.Log("Final weight: " + finalWeight);
+            }
+            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
+    }
+
     private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE

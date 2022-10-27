@@ -40,7 +40,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                             Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
                         }
-                        Debug.Log("provo a mettermi nella carta amica");
+                 
                     }
                 }
 
@@ -131,6 +131,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
               placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
               1
               );
+                    UpdateWeightTopCard(placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value);
                 }
                 else
                 {
@@ -143,6 +144,31 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
             else
                 return false;
         }
+    }
+    private void UpdateWeightTopCard(int cardWeight)
+    {
+        int finalWeight = cardWeight;
+        CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
+
+        if (cardTable != null)
+        {
+            foreach (Transform singleCard in transform.parent)
+            {
+                if (singleCard.GetComponent<CardTable>() != null)
+                {
+                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
+                }
+            }
+                Debug.Log("Final weight: " + finalWeight);
+            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
 
     [ServerRpc(RequireOwnership = false)]

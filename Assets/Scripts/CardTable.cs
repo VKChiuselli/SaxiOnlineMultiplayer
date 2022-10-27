@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
         public NetworkVariable<int> IdCard = new NetworkVariable<int>();
         public NetworkVariable<int> Weight = new NetworkVariable<int>();
+        public NetworkVariable<int> MergedWeight = new NetworkVariable<int>();
         public NetworkVariable<int> Speed = new NetworkVariable<int>();
         public NetworkVariable<int> IdOwner = new NetworkVariable<int>();
         public NetworkVariable<int> CurrentPositionX = new NetworkVariable<int>();
@@ -44,7 +45,14 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            Testo_Peso.text = Weight.Value.ToString();
+            if (MergedWeight.Value > 0)
+            {
+                Testo_Peso.text = MergedWeight.Value.ToString();
+            }
+            else
+            {
+                Testo_Peso.text = Weight.Value.ToString();
+            }
 
             //TODO caricare immagine corretta
             GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");

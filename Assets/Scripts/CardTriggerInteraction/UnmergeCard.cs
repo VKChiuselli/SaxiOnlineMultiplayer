@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -56,7 +57,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                         {
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
                         }
-                    
+
                     }
                 }
             }
@@ -125,7 +126,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
-       //             UpdateWeight();
+                    UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value);
                 }
                 else
                 {
@@ -140,6 +141,30 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         }
     }
 
+    private void UpdateWeightTopCard(int cardWeight)
+    {
+        int finalWeight = cardWeight;
+        CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
+
+        if (cardTable != null)
+        {
+            foreach (Transform singleCard in transform.parent)
+            {
+                if (singleCard.GetComponent<CardTable>() != null)
+                {
+                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
+                }
+            }
+            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
+    }
 
 
     [ServerRpc(RequireOwnership = false)]
@@ -155,9 +180,9 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         CardTableToSpawn.tag = tag;
         NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
           transform.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform, false);
-    
+        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        go.transform.SetParent(transform, false);
+
 
         go.GetComponent<CardTable>().IdCard.Value = IdCard;
         go.GetComponent<CardTable>().Weight.Value = Weight;
@@ -176,15 +201,15 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         }
 
     }
-        [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnCardOnFilledSpaceFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
         CardTableToSpawn.tag = tag;
         NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
        transform.parent.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform.parent, false);
-    
+        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        go.transform.SetParent(transform.parent, false);
+
 
         go.GetComponent<CardTable>().IdCard.Value = IdCard;
         go.GetComponent<CardTable>().Weight.Value = Weight;
