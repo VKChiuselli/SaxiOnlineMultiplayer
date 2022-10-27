@@ -89,7 +89,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 ChangeOwnerServerRpc();
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
-                    SpawnCardFromServerRpc(
+                    MoveCardFromTableOnEmptySpaceServerRpc(
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
@@ -100,8 +100,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                  gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.GetComponent<CoordinateSystem>().y,
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-              0
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
                 }
                 else
@@ -123,7 +122,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 ChangeOwnerServerRpc();
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
-                    SpawnCardFromServerRpc(
+                    SpawnCardOnFilledSpaceFromServerRpc(
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
@@ -134,8 +133,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                  gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-              1
+              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
                 }
                 else
@@ -156,37 +154,46 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
-        Debug.Log("1OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("1NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int checkTransform) //MyCardStruct cartaDaSpawnare
+    public void MoveCardFromTableOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
-        Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         CardTableToSpawn.tag = tag;
-        NetworkObject go = null;
-        if (checkTransform == 0)
-        {
-            go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
           transform.position, Quaternion.identity);
             go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
             go.transform.SetParent(transform, false);
-        }
-        else if (checkTransform == 1)
+    
+
+        go.GetComponent<CardTable>().IdCard.Value = IdCard;
+        go.GetComponent<CardTable>().Weight.Value = Weight;
+        go.GetComponent<CardTable>().Speed.Value = Speed;
+        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        go.GetComponent<NetworkObject>().tag = tag;
+        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
+        //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
+        if (toDestroy)
         {
-            go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
+        }
+
+    }
+        [ServerRpc(RequireOwnership = false)]
+    public void SpawnCardOnFilledSpaceFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    {
+        CardTableToSpawn.tag = tag;
+        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
        transform.parent.position, Quaternion.identity);
             go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
             go.transform.SetParent(transform.parent, false);
-        }
-        else
-        {
-            Debug.Log("checkTransform passed wrong!!!");
-        }
+    
 
         go.GetComponent<CardTable>().IdCard.Value = IdCard;
         go.GetComponent<CardTable>().Weight.Value = Weight;

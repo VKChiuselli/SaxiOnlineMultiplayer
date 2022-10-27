@@ -54,7 +54,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     {
         int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
         bool IsSingleCard = true;
-        //check if the tile chosed is filled by a card or not
+        //check if the tile chosed is filled by a card or is an empty tile
         if (gameObject.GetComponent<CardTable>() != null)
         {
             IsSingleCard = false ;
@@ -66,20 +66,20 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {//first check, if we have enough Move point to spend.
                 if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
                 {
-
-                    if (MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint))
+                    bool cardCreated = MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint);
+                    if (cardCreated)
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
                         Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
                     }
-
                 }
             }
             else if (player == 1)
             {//first check, if we have enough Move point to spend.
                 if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
                 {
-                    if (MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint))
+                    bool cardCreated = MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint);
+                    if (cardCreated)
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
                         Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
@@ -93,7 +93,8 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {//first check, if we have enough Move point to spend.
                 if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
                 {
-                    if (MoveCardFromTableOnFilledSpace("RPCT", necessaryPoint))
+                    bool cardCreated = MoveCardFromTableOnFilledSpace("RPCT", necessaryPoint);
+                    if (cardCreated)
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
                         Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
@@ -104,7 +105,8 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {//first check, if we have enough Move point to spend.
                 if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
                 {
-                    if (MoveCardFromTableOnFilledSpace("LPCT", necessaryPoint))
+                    bool cardCreated = MoveCardFromTableOnFilledSpace("LPCT", necessaryPoint);
+                    if (cardCreated)
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
                         Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
