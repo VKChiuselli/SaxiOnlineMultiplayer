@@ -145,7 +145,7 @@ indexCard
                     numberOfMergedCards--;
                     indexCard++;
                 }
-                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value);
+                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard-1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
             }
             else
             {

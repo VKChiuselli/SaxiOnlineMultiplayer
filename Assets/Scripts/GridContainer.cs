@@ -163,4 +163,20 @@ public class GridContainer : NetworkBehaviour
         Debug.Log("GetTopCardOnTile method, no CARD FOUND to return!!");
         return finalCard;
     }
+
+    public GameObject GetBelowCard(int x, int y)
+    {
+        GameObject finalCard = null;
+
+        foreach (GameObject tile in gridTiles)
+        {
+            if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
+            {
+                finalCard = tile.transform.GetChild(tile.transform.childCount - 2).gameObject;
+                return finalCard;
+            }
+        }
+        Debug.Log("GetTopCardOnTile method, no CARD FOUND to return!!");
+        return finalCard;
+    }
 }

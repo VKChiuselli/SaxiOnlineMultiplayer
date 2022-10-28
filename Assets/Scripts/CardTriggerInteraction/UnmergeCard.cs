@@ -93,6 +93,8 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
+               //     UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
+                    UpdateWeightTopCardLeft(GetWeightCardBelowTop(placeManager.GetMergedCardSelectedFromTable()), placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
                 }
                 else
                 {
@@ -126,7 +128,8 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
               placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
               );
-                    UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value);
+                    UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
+                    UpdateWeightTopCardLeft(GetWeightCardBelowTop(placeManager.GetMergedCardSelectedFromTable()), placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
                 }
                 else
                 {
@@ -141,7 +144,19 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         }
     }
 
-    private void UpdateWeightTopCard(int cardWeight)
+    private int GetWeightCardBelowTop(GameObject cardOnTop)
+    {
+        int finalWeight = 0;
+        GameObject cardBelow = gridContainer.GetComponent<GridContainer>().GetBelowCard(cardOnTop.transform.parent.GetComponent<CoordinateSystem>().x, cardOnTop.transform.parent.GetComponent<CoordinateSystem>().y);
+        if (cardBelow != null)
+        {
+            finalWeight = cardBelow.GetComponent<CardTable>().Weight.Value;
+        }
+        //TODO prendere il padre della carta, iterare la carta fino a trovare il secondo figlio cardOnTop.transform.parent
+        return finalWeight;
+    }
+
+    private void UpdateWeightTopCard(int cardWeight, int x, int y) //params: the coordinate (x,y) where the update of the top card should go and the weight of the top card i'm going to update
     {
         int finalWeight = cardWeight;
         CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
@@ -155,7 +170,25 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                     finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
                 }
             }
-            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
+            UpdateWeightTopCardServerRpc(finalWeight, x, y);
+        }
+    }
+
+    private void UpdateWeightTopCardLeft(int cardWeight, int x, int y) //params: the coordinate (x,y) where the update of the top card should go and the weight of the top card i'm going to update
+    {
+        int finalWeight = cardWeight;
+        CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
+
+        if (cardTable != null)
+        {
+            foreach (Transform singleCard in placeManager.GetMergedCardSelectedFromTable().transform.parent)
+            {
+                if (singleCard.GetComponent<CardTable>() != null)
+                {
+                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
+                }
+            }
+            UpdateWeightTopCardServerRpc(finalWeight, x, y);
         }
     }
 
