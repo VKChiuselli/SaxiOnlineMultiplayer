@@ -80,21 +80,22 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 ChangeOwnerServerRpc();
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
+                    CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
                     MoveCardFromTableOnEmptySpaceServerRpc(
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              cardTable.IdCard.Value,
+              cardTable.Weight.Value,
+              cardTable.Speed.Value,
+              cardTable.IdOwner.Value,
+              cardTable.IdImageCard.Value.ToString(),
               cardTableTag, //RPT Right player Table
               true, //it means that we have to destroy the old game object when we move
                  gameObject.GetComponent<CoordinateSystem>().x,
               gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+                   cardTable.CurrentPositionX.Value,
+                   cardTable.CurrentPositionY.Value
               );
-               //     UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
-                    UpdateWeightTopCardLeft(GetWeightCardBelowTop(placeManager.GetMergedCardSelectedFromTable()), placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
+                    //     UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
+                    UpdateWeightTopCardLeft(gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTileLessLastOne(cardTable.CurrentPositionX.Value, cardTable.CurrentPositionY.Value), cardTable.CurrentPositionX.Value, cardTable.CurrentPositionY.Value);
                 }
                 else
                 {
@@ -115,21 +116,22 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 ChangeOwnerServerRpc();
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
+                    CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
                     SpawnCardOnFilledSpaceFromServerRpc(
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
+              cardTable.IdCard.Value,
+              cardTable.Weight.Value,
+              cardTable.Speed.Value,
+              cardTable.IdOwner.Value,
+              cardTable.IdImageCard.Value.ToString(),
               cardTableTag, //RPT Right player Table
               true, //it means that we have to destroy the old game object when we move
                  gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-              gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value
+                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+                   cardTable.CurrentPositionX.Value,
+                   cardTable.CurrentPositionY.Value
               );
-                    UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
-                    UpdateWeightTopCardLeft(GetWeightCardBelowTop(placeManager.GetMergedCardSelectedFromTable()), placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().x, placeManager.GetMergedCardSelectedFromTable().transform.parent.GetComponent<CoordinateSystem>().y);
+                    UpdateWeightTopCardLeft(gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTileLessLastOne(cardTable.CurrentPositionX.Value, cardTable.CurrentPositionY.Value), cardTable.CurrentPositionX.Value, cardTable.CurrentPositionY.Value);
+                    UpdateWeightTopCard(gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x, gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y), gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x, gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y);
                 }
                 else
                 {
@@ -158,44 +160,27 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
 
     private void UpdateWeightTopCard(int cardWeight, int x, int y) //params: the coordinate (x,y) where the update of the top card should go and the weight of the top card i'm going to update
     {
-        int finalWeight = cardWeight;
         CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-
-        if (cardTable != null)
-        {
-            foreach (Transform singleCard in transform.parent)
-            {
-                if (singleCard.GetComponent<CardTable>() != null)
-                {
-                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
-                }
-            }
-            UpdateWeightTopCardServerRpc(finalWeight, x, y);
-        }
+        cardWeight = cardTable.Weight.Value + cardWeight;
+        UpdateWeightTopCardServerRpc(cardWeight, x, y);
     }
 
     private void UpdateWeightTopCardLeft(int cardWeight, int x, int y) //params: the coordinate (x,y) where the update of the top card should go and the weight of the top card i'm going to update
     {
-        int finalWeight = cardWeight;
-        CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-
-        if (cardTable != null)
-        {
-            foreach (Transform singleCard in placeManager.GetMergedCardSelectedFromTable().transform.parent)
-            {
-                if (singleCard.GetComponent<CardTable>() != null)
-                {
-                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
-                }
-            }
-            UpdateWeightTopCardServerRpc(finalWeight, x, y);
-        }
+        UpdateWeightTopCardLeftServerRpc(cardWeight, x, y);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
     {
         GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateWeightTopCardLeftServerRpc(int finalWeight, int x, int y)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetBelowCard(x, y);
         cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
 

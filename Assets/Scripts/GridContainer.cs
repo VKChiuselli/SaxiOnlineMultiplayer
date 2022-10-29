@@ -134,7 +134,7 @@ public class GridContainer : NetworkBehaviour
                 tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
             }
         }
-    }
+    }//TODO convert method using  GetTile
     public void RemoveFirstMergedCardFromTable(int x, int y, int indexCard)
     {
         foreach (GameObject tile in gridTiles)
@@ -146,22 +146,70 @@ public class GridContainer : NetworkBehaviour
                 tile.transform.GetChild(indexCard).gameObject.GetComponent<NetworkObject>().Despawn();
             }
         }
-    }
+    }//TODO convert method using  GetTile
 
     public GameObject GetTopCardOnTile(int x, int y)
     {
-        GameObject finalCard = null;
+        GameObject getTile = GetTile(x,y);
+        GameObject topCard;
+        topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
+        return topCard;
+    }
+    public int GetTotalWeightOnTile(int x, int y)
+    {
+        int weight = CalculateTotalWeight(GetTile(x,y));
+        return weight;
+    }
+    public int GetTotalWeightOnTileLessLastOne(int x, int y)
+    {
+        int weight = CalculateTotalWeightLessLastOne(GetTile(x,y));
+        return weight;
+    }
 
+    private GameObject GetTile(int x, int y)
+    {
+        GameObject returnTile = null;
         foreach (GameObject tile in gridTiles)
         {
             if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
             {
-                finalCard = tile.transform.GetChild(tile.transform.childCount - 1).gameObject;
-                return finalCard;
+                returnTile = tile;
+                return returnTile;
             }
         }
-        Debug.Log("GetTopCardOnTile method, no CARD FOUND to return!!");
-        return finalCard;
+        Debug.Log("No tile found at coordinate passed (GetTile METHOD ERROR!!)");
+        return returnTile;
+    }
+
+    private int CalculateTotalWeight(GameObject tile)
+    {
+        int weight = 0;
+        foreach (Transform card in tile.transform)
+        {
+                if (card.GetComponent<CardTable>() != null)
+                {
+                    weight += card.GetComponent<CardTable>().Weight.Value;
+                }
+        }
+        return weight;
+    }
+
+    private int CalculateTotalWeightLessLastOne(GameObject tile)
+    {
+        int weight = 0;
+        foreach (Transform card in tile.transform)
+        {
+            if (card != tile.transform.GetChild(tile.transform.childCount - 1))
+            {
+                if (card.GetComponent<CardTable>() != null)
+                {
+                    weight += card.GetComponent<CardTable>().Weight.Value;
+                }
+            }
+
+           
+        }
+        return weight;
     }
 
     public GameObject GetBelowCard(int x, int y)
