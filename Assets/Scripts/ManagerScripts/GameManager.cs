@@ -26,7 +26,7 @@ public class GameManager : NetworkBehaviour
     }
 
     public void EndTurn()
-    {
+    {//TODO reset cards picked
         EndTurnServerRpc();
     }
 

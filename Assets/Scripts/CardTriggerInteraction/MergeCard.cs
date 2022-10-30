@@ -57,7 +57,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
         //check if the tile chosed is filled by a card or is an empty tile
         if (gameObject.GetComponent<CardTable>() != null)
         {
-            IsSingleCard = false ;
+            IsSingleCard = false;
         }
 
         if (IsSingleCard)
@@ -120,7 +120,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                                                     //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -145,7 +145,7 @@ indexCard
                     numberOfMergedCards--;
                     indexCard++;
                 }
-                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard-1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
+                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
             }
             else
             {
@@ -191,7 +191,7 @@ indexCard
     private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
     {
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                         //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -216,6 +216,7 @@ indexCard
                     numberOfMergedCards--;
                     indexCard++;
                 }
+                UpdateWeight(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value);
             }
             else
             {
@@ -229,6 +230,10 @@ indexCard
             return false;
     }
 
+    private void UpdateWeight(int finalWeight, int x, int y)
+    {
+        UpdateWeightTopCardServerRpc(finalWeight, x, y);
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
@@ -265,7 +270,7 @@ indexCard
         }
 
     }
-      [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void MoveCardFromTableOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
     {
         CardTableToSpawn.tag = tag;

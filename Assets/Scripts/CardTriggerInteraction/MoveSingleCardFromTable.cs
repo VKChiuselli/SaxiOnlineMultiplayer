@@ -27,7 +27,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {   if (NetworkManager.Singleton.IsClient && placeManager.GetSingleCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && placeManager.GetSingleCardSelectedFromTable() != null)
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 )
             {
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
@@ -39,13 +39,16 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         {
                             Debug.Log("punto sottratto PlayerZero move");
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                            placeManager.ResetCardHand();
+                            placeManager.ResetMergedCardTable();
+                            placeManager.ResetSingleCardTable();
                         }
-                 
                     }
                 }
 
             }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && placeManager.GetSingleCardSelectedFromTable() != null)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
+            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
@@ -58,14 +61,15 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         if (isPlayed)
                         {
                             gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                            placeManager.ResetCardHand();
+                            placeManager.ResetMergedCardTable();
+                            placeManager.ResetSingleCardTable();
                         }
                     }
                 }
             }
-            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-            placeManager.ResetCardHand();
-            placeManager.ResetMergedCardTable();
-            placeManager.ResetSingleCardTable();
+        
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
     }

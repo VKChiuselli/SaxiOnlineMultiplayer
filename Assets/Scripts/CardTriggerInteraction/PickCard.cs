@@ -93,6 +93,14 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
                 return;
             }
         }
+        if (placeManager.GetSingleCardSelectedFromTable() != null)
+        {
+           if( gameObject.transform.parent.name == placeManager.GetSingleCardSelectedFromTable().transform.parent.name)
+            {
+                placeManager.ResetSingleCardTable();
+                return;
+            }
+        }
        
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         if(gameObject.transform.parent.childCount == 2)

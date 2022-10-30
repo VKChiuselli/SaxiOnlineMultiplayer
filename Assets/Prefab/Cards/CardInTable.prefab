@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 9136577985858176113}
   - component: {fileID: 3155717926872911066}
   - component: {fileID: -973328772762504473}
+  - component: {fileID: -6055769950358830164}
   m_Layer: 5
   m_Name: CardInTable
   m_TagString: RPCT
@@ -495,6 +496,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4a1f685b9021294baf13956e2971103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardTableToSpawn: {fileID: 6403154168061667466}
+--- !u!114 &-6055769950358830164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403154168061667466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe8ab2d2bc83214eb17631ae4168053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CardTableToSpawn: {fileID: 6403154168061667466}

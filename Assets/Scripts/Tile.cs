@@ -39,11 +39,6 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 
 
-    private void Update()
-    {
-        //  resolution_control();
-    }
-
     private void resolution_control()
     {
         risoluzione_x = Screen.width;
