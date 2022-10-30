@@ -169,8 +169,9 @@ public class PushCard : NetworkBehaviour, IDropHandler
         {
             CardTable currentCardSelected = cardTable; 
 
+            int weightFriendlyCard = cardTable.MergedWeight.Value == 0 ? cardTable.Weight.Value : cardTable.MergedWeight.Value;
             int weightEnemyCard = gameObject.GetComponent<CardTable>().MergedWeight.Value == 0 ? gameObject.GetComponent<CardTable>().Weight.Value : gameObject.GetComponent<CardTable>().MergedWeight.Value;
-            if (currentCardSelected.MergedWeight.Value <= weightEnemyCard)
+            if (weightFriendlyCard <= weightEnemyCard)
             {
                 return false;
             }
@@ -180,7 +181,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 currentCardSelected.CurrentPositionY.Value,
                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-                currentCardSelected.MergedWeight.Value,
+                weightFriendlyCard,
                 weightEnemyCard);
 
             if (check == 505)
@@ -211,7 +212,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
         }
         else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
         {
-            int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher, yPusher, xPushed, yPushed);
+            int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
             int totalWeight = nextCardWeight + weightEnemy;
             if (totalWeight >= weightFriendly)
             {

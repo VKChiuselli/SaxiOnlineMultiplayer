@@ -277,7 +277,7 @@ public class GridContainer : NetworkBehaviour
         if (nextTile == null)
         {
             Debug.Log("Method GetNextTileType: no tile found on next");
-            return 505;
+            return 0;
         }
 
         return CalculateTotalWeight(nextTile);
