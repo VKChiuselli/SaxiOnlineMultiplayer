@@ -25,12 +25,12 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     {
         if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
-            Debug.Log("dropping merged card");
 
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
+                    Debug.Log("dropping merged card");
                     MoveMergedCard(0);
                 }
             }
@@ -38,13 +38,11 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             {//check the max move of the card
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
+                    Debug.Log("dropping merged card");
                     MoveMergedCard(1);
                 }
             }
-            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-            placeManager.ResetCardHand();
-            placeManager.ResetMergedCardTable();
-            placeManager.ResetSingleCardTable();
+        
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
@@ -71,6 +69,10 @@ public class MergeCard : NetworkBehaviour, IDropHandler
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
                         Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
                     }
                 }
             }
@@ -83,6 +85,10 @@ public class MergeCard : NetworkBehaviour, IDropHandler
                     {
                         gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
                         Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
                     }
                 }
             }
