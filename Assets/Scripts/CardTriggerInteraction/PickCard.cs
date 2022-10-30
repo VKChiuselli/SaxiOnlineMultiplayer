@@ -11,7 +11,6 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     private Vector3 mOffset;
     private float mZCoord;
-    GameObject handZone;
     GameObject gridContainer;
     GameObject gameManager;
     PlaceManager placeManager;
@@ -26,8 +25,6 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("begin drag");
-
         if (NetworkManager.Singleton.IsClient)
         {
             if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0)
@@ -87,7 +84,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         ResetShowTilesClientRpc();
         if (placeManager.GetMergedCardSelectedFromTable() != null)
         {
-           if( gameObject.transform.parent.name == placeManager.GetMergedCardSelectedFromTable().transform.parent.name)
+            if (gameObject.transform.parent.name == placeManager.GetMergedCardSelectedFromTable().transform.parent.name)
             {
                 placeManager.ResetMergedCardTable();
                 return;
@@ -95,15 +92,15 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         }
         if (placeManager.GetSingleCardSelectedFromTable() != null)
         {
-           if( gameObject.transform.parent.name == placeManager.GetSingleCardSelectedFromTable().transform.parent.name)
+            if (gameObject.transform.parent.name == placeManager.GetSingleCardSelectedFromTable().transform.parent.name)
             {
                 placeManager.ResetSingleCardTable();
                 return;
             }
         }
-       
+
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        if(gameObject.transform.parent.childCount == 2)
+        if (gameObject.transform.parent.childCount == 2)
         {
             EventsManager.current.PickSingleCardFromTable(gameObject);
             placeManager.ResetCardHand();
@@ -168,22 +165,14 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     }
 
 
-    private void DisableAllHighlight()
-    {
-        for (int i = 0; i < handZone.transform.childCount; i++)
-        {
-            handZone.transform.GetChild(i).gameObject.transform.GetChild(1).gameObject.SetActive(false);
-        }
-    }
-
     public void OnDrag(PointerEventData eventData)
     {
-       // Debug.Log("dragging");
+        // Debug.Log("dragging");
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-      //  Debug.Log("end drag");
+        //  Debug.Log("end drag");
     }
 
 

@@ -150,19 +150,19 @@ public class GridContainer : NetworkBehaviour
 
     public GameObject GetTopCardOnTile(int x, int y)
     {
-        GameObject getTile = GetTile(x,y);
+        GameObject getTile = GetTile(x, y);
         GameObject topCard;
         topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
         return topCard;
     }
     public int GetTotalWeightOnTile(int x, int y)
     {
-        int weight = CalculateTotalWeight(GetTile(x,y));
+        int weight = CalculateTotalWeight(GetTile(x, y));
         return weight;
     }
     public int GetTotalWeightOnTileLessLastOne(int x, int y)
     {
-        int weight = CalculateTotalWeightLessLastOne(GetTile(x,y));
+        int weight = CalculateTotalWeightLessLastOne(GetTile(x, y));
         return weight;
     }
 
@@ -186,10 +186,10 @@ public class GridContainer : NetworkBehaviour
         int weight = 0;
         foreach (Transform card in tile.transform)
         {
-                if (card.GetComponent<CardTable>() != null)
-                {
-                    weight += card.GetComponent<CardTable>().Weight.Value;
-                }
+            if (card.GetComponent<CardTable>() != null)
+            {
+                weight += card.GetComponent<CardTable>().Weight.Value;
+            }
         }
         return weight;
     }
@@ -207,7 +207,7 @@ public class GridContainer : NetworkBehaviour
                 }
             }
 
-           
+
         }
         return weight;
     }
@@ -226,5 +226,61 @@ public class GridContainer : NetworkBehaviour
         }
         Debug.Log("GetTopCardOnTile method, no CARD FOUND to return!!");
         return finalCard;
+    }
+
+    public GameObject GetNextTile(int xPusher, int yPusher, int xPushed, int yPushed)
+    {
+
+        int xNext = xPushed - xPusher;
+        int yNext = yPushed - yPusher;
+
+        GameObject nextTile = GetTile(xPusher + xNext, yPusher + yNext);
+
+        if (nextTile == null)
+        {
+            Debug.Log("Method GetNextTile: no tile found on next");
+            return null;
+        }
+
+        return nextTile;
+    }
+
+    public int GetNextTileType(int xPusher, int yPusher, int xPushed, int yPushed)
+    {
+
+        int xNext = xPushed - xPusher;
+        int yNext = yPushed - yPusher;
+
+        GameObject nextTile = GetTile(xPusher + xNext, yPusher + yNext);
+
+        if (nextTile == null)
+        {
+            Debug.Log("Method GetNextTileType: no tile found on next");
+            return 5;//it means no tile avaiable, the VOID
+        }
+
+        if (nextTile.GetComponent<CardTable>() != null)
+        {
+            return 2;
+        }//the next tile is filled by a card
+
+        return 1; //the next tile is empty
+    }
+    public int GetNextTileWeight(int xPusher, int yPusher, int xPushed, int yPushed)
+    {
+
+        int xNext = xPushed - xPusher;
+        int yNext = yPushed - yPusher;
+
+        GameObject nextTile = GetTile(xPusher + xNext, yPusher + yNext);
+
+        if (nextTile == null)
+        {
+            Debug.Log("Method GetNextTileType: no tile found on next");
+            return 505;
+        }
+
+            return (nextTile.GetComponent<CardTable>().MergedWeight.Value == 0 ? nextTile.GetComponent<CardTable>().Weight.Value : nextTile.GetComponent<CardTable>().MergedWeight.Value);
+
     }
 }

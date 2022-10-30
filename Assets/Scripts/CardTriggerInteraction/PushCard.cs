@@ -25,18 +25,18 @@ public class PushCard : NetworkBehaviour, IDropHandler
     {
         if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
-          
+
 
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
-                    if (gameObject.GetComponent<CardTable>()!=null)
+                    if (gameObject.GetComponent<CardTable>() != null)
                     {
                         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
                         {
                             Debug.Log("player 0 push a merged card");
-                          //  MoveMergedCard(0);
+                            PushWithMergedCard(0);
                         }
                     }
                 }
@@ -98,6 +98,37 @@ public class PushCard : NetworkBehaviour, IDropHandler
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
+    }
+
+    private void PushWithMergedCard(int player)
+    {
+        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
+
+
+        if (player == 0)
+        {//first check, if we have enough Move point to spend.
+            if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
+            {
+                bool cardCreated = MoveCardFromTableOnFilledSpace("RPCT", necessaryPoint);
+                if (cardCreated)
+                {
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                    Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
+                }
+            }
+        }
+        else if (player == 1)
+        {//first check, if we have enough Move point to spend.
+            if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
+            {
+                bool cardCreated = MoveCardFromTableOnFilledSpace("LPCT", necessaryPoint);
+                if (cardCreated)
+                {
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                    Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
+                }
+            }
+        }
     }
 
     private void MoveMergedCard(int player)
@@ -169,16 +200,32 @@ public class PushCard : NetworkBehaviour, IDropHandler
 
     private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
     {
-        if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
+        if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                      //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
-            ChangeOwnerServerRpc();
-            if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
+            //CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1;
+            int weightEnemyCard = gameObject.GetComponent<CardTable>().MergedWeight.Value == 0 ? gameObject.GetComponent<CardTable>().Weight.Value : gameObject.GetComponent<CardTable>().MergedWeight.Value;
+            if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().MergedWeight.Value <= weightEnemyCard)
             {
-                int indexCard = 1;
-                while (numberOfMergedCards != 0)
-                {
-                    SpawnCardOnFilledSpaceFromServerRpc(
+                return false;
+            }
+
+            if (!CheckBehindCard(
+                placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
+                gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+                placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().MergedWeight.Value,
+                weightEnemyCard))
+            {
+                return false;
+            }
+
+            ChangeOwnerServerRpc();
+            int indexCard = 1;
+            while (numberOfMergedCards != 0)
+            {
+                SpawnCardOnFilledSpaceFromServerRpc(
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
@@ -192,17 +239,15 @@ placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCar
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
 indexCard
 );
-                    numberOfMergedCards--;
-                    indexCard++;
-                }
-                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
+                numberOfMergedCards--;
+                indexCard++;
             }
-            else
-            {
-                Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
-            }
+            UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
 
             placeManager.ResetCardHand();
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
+            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             return true;
         }
         else
@@ -210,6 +255,57 @@ indexCard
             Debug.Log("MoveCardFromTableOnFilledSpace type of tile not correct: ");
             return false;
         }
+    }
+
+    //se facessi 1=tileVuoto 2=tileOccupato 5=tileNonEsistente
+    private bool CheckBehindCard(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy)
+    {
+  //      string direction = CheckDirection(xPusher, yPusher, xPushed, yPushed);
+        int x = xPushed - xPusher;
+        int y = yPushed - yPusher;
+        if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5 || gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
+        {
+            return true; //se c'è 5 o 1 (vuoto o baratro) allora faccio il check
+        }
+        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
+        {
+            int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher, yPusher, xPushed, yPushed);
+            int totalWeight = nextCardWeight + weightEnemy;
+            if (totalWeight >= weightFriendly)
+            {
+                return false;
+            }
+
+            return CheckBehindCard(xPusher+x, yPusher+y, xPushed+x, yPushed+y, weightFriendly, totalWeight);
+        }
+
+        return false;
+    }
+
+    private string CheckDirection(int xPusher, int yPusher, int xPushed, int yPushed)
+    {
+        string finalDirection = "";
+
+        int x = xPushed - xPusher;
+        int y = yPushed - yPusher;
+
+        switch (x, y)
+        {
+            case (0, 1):
+                finalDirection = "RIGHT";
+                break;
+            case (0, -1):
+                finalDirection = "LEFT";
+                break;
+            case (1, 0):
+                finalDirection = "DOWN";
+                break;
+            case (-1, 0):
+                finalDirection = "UP";
+                break;
+        }
+
+        return finalDirection;
     }
 
     private void UpdateWeightTopCard(int cardWeight)
