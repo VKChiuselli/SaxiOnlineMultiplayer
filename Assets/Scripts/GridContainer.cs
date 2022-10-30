@@ -259,7 +259,7 @@ public class GridContainer : NetworkBehaviour
             return 5;//it means no tile avaiable, the VOID
         }
 
-        if (nextTile.GetComponent<CardTable>() != null)
+        if (nextTile.transform.childCount>1)
         {
             return 2;
         }//the next tile is filled by a card
@@ -280,7 +280,6 @@ public class GridContainer : NetworkBehaviour
             return 505;
         }
 
-            return (nextTile.GetComponent<CardTable>().MergedWeight.Value == 0 ? nextTile.GetComponent<CardTable>().Weight.Value : nextTile.GetComponent<CardTable>().MergedWeight.Value);
-
+        return CalculateTotalWeight(nextTile);
     }
 }
