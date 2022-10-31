@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -7,11 +8,6 @@ using UnityEngine.EventSystems;
 
 public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
 {
-    bool isPlaceable;
-    bool isCurrentPlayer;
-    bool cardSelected;
-    private Vector3 mOffset;
-    private float mZCoord;
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
@@ -25,9 +21,10 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     }
 
     public void OnDrop(PointerEventData eventData)
-    {   if (NetworkManager.Singleton.IsClient && placeManager.GetSingleCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
+    {
+        if (NetworkManager.Singleton.IsClient && placeManager.GetSingleCardSelectedFromTable() != null) //bisogna mettere molte più condizioni per mettere la carta
         {
-            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 )
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
@@ -69,7 +66,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                     }
                 }
             }
-        
+
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
     }
@@ -79,25 +76,17 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         if (gameObject.transform.parent.name == "GridManager")
         {
             if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                                                                                            //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                             //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
-                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
+                if (cardTable != null)
                 {
-                    SpawnCardFromServerRpc(
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
-              cardTableTag, //RPT Right player Table
-              true, //it means that we have to destroy the old game object when we move
-                 gameObject.GetComponent<CoordinateSystem>().x,
-              gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-              0
-              );
+                    MoveSingleCardToEmptyTileServerRpc(
+                        cardTable.CurrentPositionX.Value,
+                        cardTable.CurrentPositionY.Value,
+                        gameObject.GetComponent<CoordinateSystem>().x,
+                        gameObject.GetComponent<CoordinateSystem>().y);
                 }
                 else
                 {
@@ -116,7 +105,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         else
         {
             if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                                                           //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+                                                                                                         //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
             {
                 ChangeOwnerServerRpc();
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
@@ -149,6 +138,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 return false;
         }
     }
+
+
     private void UpdateWeightTopCard(int cardWeight)
     {
         int finalWeight = cardWeight;
@@ -163,7 +154,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                     finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
                 }
             }
-                Debug.Log("Final weight: " + finalWeight);
+            Debug.Log("Final weight: " + finalWeight);
             UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
         }
     }
@@ -225,6 +216,23 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
         }
 
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void MoveSingleCardToEmptyTileServerRpc(int x, int y, int xNewTile, int yNewTile)
+    {
+        NetworkObject networkObjectCard = null;
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
+        foreach (GameObject card in cardsFromTile)
+        {
+            networkObjectCard = Instantiate(card.GetComponent<NetworkObject>(),
+       transform.position, Quaternion.identity);
+            networkObjectCard.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+            networkObjectCard.transform.SetParent(transform, false);
+            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(x, y);
+            networkObjectCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            networkObjectCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+        }
     }
 
 }

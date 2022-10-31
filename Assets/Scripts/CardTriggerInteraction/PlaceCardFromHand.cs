@@ -11,10 +11,6 @@ using Unity.Collections;
 //place card in empty spaces
 public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
 {
-    bool isPlaceable;
-    bool isCurrentPlayer;
-    bool cardSelected;
-    private Vector3 mOffset;
     private float mZCoord;
     PlaceManager placeManager;
     GameObject gridContainer;
@@ -27,35 +23,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
     }
-
-    public bool IsCardSelected()
-    {
-        return cardSelected;
-    }
-    public bool IsPlaceable()
-    {
-        return isPlaceable;
-    }
-    public bool IsCurrentPlayer()
-    {
-        return isCurrentPlayer;
-    }
-
-    public void SetIsPlaceable(bool value)
-    {
-        isPlaceable = value;
-    }
-
-    public void SetIsCurrentPlayer(bool value)
-    {
-        isCurrentPlayer = value;
-    }
-
-    public void SetCardSelected(bool value)
-    {
-        cardSelected = value;
-    }
-
 
     public void OnDrop(PointerEventData eventData)
     {//we must put a condition that a card can be dropped only where the tile is eligible

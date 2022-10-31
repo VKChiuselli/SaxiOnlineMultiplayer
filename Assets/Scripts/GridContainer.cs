@@ -132,11 +132,12 @@ public class GridContainer : NetworkBehaviour
     public List<GameObject> GetAllCardsFromTile(int x, int y)
     {
         GameObject tile = GetTile(x, y);
-        List<GameObject> cardsOnTile = null;
+        List<GameObject> cardsOnTile = new List<GameObject>();
 
-        foreach(GameObject a in tile.transform)
+        foreach (Transform cardToAdd in tile.transform)
         {
-            cardsOnTile.Add(a);
+            GameObject card = cardToAdd.gameObject;
+            cardsOnTile.Add(card);
         }
 
         return cardsOnTile;
