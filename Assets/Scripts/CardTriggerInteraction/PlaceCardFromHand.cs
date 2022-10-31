@@ -15,6 +15,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
+    GameObject deckManager;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
@@ -22,6 +23,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
+        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -204,12 +206,13 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         go.GetComponent<NetworkObject>().tag = tag;
         go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
-        if (toDestroy)
-        {
-            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
-        }
 
+        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);
+
+        NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
+          transform.position, Quaternion.identity);
+        cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardInterfaceNetwork.transform.SetParent(go.transform, false);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -242,88 +245,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         }
 
     }
-
-
-    //}
-
-    // private void MoveAndPushCardTop() {
-    //     if (placeManager.GetCardSelectedFromTable().GetComponent<Card>().Ready &&
-    //         placeManager.GetCardSelectedFromTable().GetComponent<Card>().CanMoveCardTop(gameObject) &&
-    //             gameBoard.CanBePushedTop(gameObject)) {
-    //         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-    //         isPlaceable = false; //placeholder decativate
-    //         PlayerActions.current.HasMoved = false;
-    //         PushCardTop();
-    //         GameObject card = placeManager.GetCardSelectedFromTable();
-
-    //         Instantiate(card, gameObject.GetComponent<BoxCollider>().center, Quaternion.identity).transform.parent = transform;
-    //         //  PhotonNetwork.Instantiate(card.name, gameObject.GetComponent<BoxCollider>().center, Quaternion.identity).transform.parent = transform;
-
-    //         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-    //         Destroy(placeManager.GetCardSelectedFromTable());
-    //         placeManager.ResetCardTable();
-    //     }
-    // }
-
-    // private void MoveAndPushCardBot() {
-    //     if (placeManager.GetCardSelectedFromTable().GetComponent<Card>().Ready &&
-    //         placeManager.GetCardSelectedFromTable().GetComponent<Card>().CanMoveCardBot(gameObject) &&
-    //        gameBoard.CanBePushedBot(gameObject)
-    //         ) {
-    //         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-    //         isPlaceable = false; //placeholder decativate
-    //         PlayerActions.current.HasMoved = false;
-    //         PushCardBot();
-    //         GameObject card = placeManager.GetCardSelectedFromTable();
-
-    //         Instantiate(card, gameObject.GetComponent<BoxCollider>().center, Quaternion.identity).transform.parent = transform;
-    //         //     PhotonNetwork.Instantiate(card.name, gameObject.GetComponent<BoxCollider>().center, Quaternion.identity).transform.parent = transform;
-
-    //         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-    //         Destroy(placeManager.GetCardSelectedFromTable());
-    //         placeManager.ResetCardTable();
-    //     }
-    // }
-
-    // private void PushCardBot() {
-    //     //    PhotonNetwork.Instantiate(transform.GetChild(0).gameObject.name, gameBoard.SpotPushedBot(gameObject), Quaternion.identity).transform.parent = gameBoard.GetTransformPushedBot(gameObject);
-    //     if (gameBoard.CanBePushedBot(gameObject)) {
-    //         Instantiate(transform.GetChild(0).gameObject, gameBoard.SpotPushedBot(gameObject), Quaternion.identity).transform.parent = gameBoard.GetTransformPushedBot(gameObject);
-    //         Destroy(transform.GetChild(0).gameObject);
-    //     }
-    // }
-    // private void PushCardTop() {
-    //     if (gameBoard.CanBePushedTop(gameObject)) {
-    //         Instantiate(transform.GetChild(0).gameObject, gameBoard.SpotPushedTop(gameObject), Quaternion.identity).transform.parent = gameBoard.GetTransformPushedTop(gameObject);
-    //         Destroy(transform.GetChild(0).gameObject);
-    //     }
-    // }
-
-
-
-
-
-    // private string RemoveCloneString(string name) {
-    //     return     name.Replace("(Clone)", "");
-    // }
-
-    // private void MoveCardBot() {
-    //     if (placeManager.GetCardSelectedFromTable().GetComponent<Card>().Ready && placeManager.GetCardSelectedFromTable().GetComponent<Card>().CanMoveCardBot(gameObject)) {
-    //         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-    //         isPlaceable = false; //placeholder decativate
-    //         PlayerActions.current.HasMoved = false;
-    //         GameObject card = placeManager.GetCardSelectedFromTable();
-
-    //         Instantiate(card, gameObject.GetComponent<BoxCollider>().center, Quaternion.identity).transform.parent = transform;
-
-    //         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-    //         Destroy(placeManager.GetCardSelectedFromTable());
-    //         placeManager.ResetCardTable();
-    //     }
-    // }
 
 
 
