@@ -100,13 +100,13 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         }
 
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        if (gameObject.transform.parent.childCount == 2)
+        if (gameObject.transform.parent.childCount == 1)
         {
             EventsManager.current.PickSingleCardFromTable(gameObject);
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();
         }
-        else if (gameObject.transform.parent.childCount > 2)
+        else if (gameObject.transform.parent.childCount > 1)
         {
             EventsManager.current.PickMergedCardFromTable(gameObject);
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(1);

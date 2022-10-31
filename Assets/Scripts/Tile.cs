@@ -29,12 +29,12 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.GetComponent<Image>().color = Color.red;
+   //     transform.GetComponent<Image>().color = Color.red;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.GetComponent<Image>().color = Color.white;
+   //     transform.GetComponent<Image>().color = Color.white;
     }
 
 

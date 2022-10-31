@@ -132,7 +132,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
     }
     private void PushWithMergedCard(int player)
     {
-        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
+        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount);
 
 
         if (player == 0)
@@ -286,7 +286,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                int indexCard = 1;
+                int indexCard = 0;
                 while (numberOfMergedCards != 0)
                 {
                     MoveCardFromTableOnEmptySpaceServerRpc(

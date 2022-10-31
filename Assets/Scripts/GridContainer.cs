@@ -106,13 +106,13 @@ public class GridContainer : NetworkBehaviour
 
     private static void ShowTile(GameObject cardTablePassed, GameObject tile)
     {
-        if (tile.transform.childCount == 1)
+        if (tile.transform.childCount == 0)
         {//if has only one child it means that the tile is empty, so i put 1 in ShowTileCanDeploy
             tile.GetComponent<Highlight>().ShowTileCanInteract(1);
         }
         else
         {
-            if (tile.transform.GetChild(1).gameObject.GetComponent<CardTable>().IdOwner.Value == cardTablePassed.GetComponent<CardTable>().IdOwner.Value)
+            if (tile.transform.GetChild(0).gameObject.GetComponent<CardTable>().IdOwner.Value == cardTablePassed.GetComponent<CardTable>().IdOwner.Value)
             {
                 tile.GetComponent<Highlight>().ShowTileCanInteract(2);
             }
@@ -125,16 +125,17 @@ public class GridContainer : NetworkBehaviour
 
     public void RemoveCardFromTable(int x, int y)
     {
-        foreach (GameObject tile in gridTiles)
-        {
-            if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
-            {
-                Debug.Log("RemoveCardFromTable Found!!");
-                //despawn the last children
-                tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
-            }
-        }
-    }//TODO convert method using  GetTile
+        GameObject cardToRemove = GetTile(x, y);
+        cardToRemove.transform.GetChild(cardToRemove.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
+    }
+
+    public Transform GetCardTransform(int x, int y)
+    {
+        GameObject tile = GetTile(x, y);
+    //  tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Spawn();
+        return tile.transform;
+    }
+
     public void RemoveFirstMergedCardFromTable(int x, int y, int indexCard)
     {
         foreach (GameObject tile in gridTiles)
@@ -199,7 +200,7 @@ public class GridContainer : NetworkBehaviour
         int weight = 0;
         foreach (Transform card in tile.transform)
         {
-            if (card != tile.transform.GetChild(tile.transform.childCount - 1))
+            if (card != tile.transform.GetChild(tile.transform.childCount - 1))//TODO correggere! non dovrebbe tornare il peso corretto
             {
                 if (card.GetComponent<CardTable>() != null)
                 {
@@ -259,7 +260,7 @@ public class GridContainer : NetworkBehaviour
             return 5;//it means no tile avaiable, the VOID
         }
 
-        if (nextTile.transform.childCount>1)
+        if (nextTile.transform.childCount>=1)
         {
             return 2;
         }//the next tile is filled by a card

@@ -50,7 +50,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     private void MoveMergedCard(int player)
     {
-        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount - 1);
+        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount);
         bool IsSingleCard = true;
         //check if the tile chosed is filled by a card or is an empty tile
         if (gameObject.GetComponent<CardTable>() != null)
@@ -131,7 +131,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                int indexCard = 1;
+                int indexCard = 0;
                 while (numberOfMergedCards != 0)
                 {
                     SpawnCardOnFilledSpaceFromServerRpc(
@@ -202,7 +202,7 @@ indexCard
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                int indexCard = 1;
+                int indexCard = 0;
                 while (numberOfMergedCards != 0)
                 {
                     MoveCardFromTableOnEmptySpaceServerRpc(

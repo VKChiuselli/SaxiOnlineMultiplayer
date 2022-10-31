@@ -7,11 +7,12 @@ using UnityEngine.UI;
 
 public class Highlight : NetworkBehaviour
 {
-    [SerializeField] private Image _highlight;
+    private Image _highlight;
     private Color trasparency;
 
     private void Start()
     {
+        _highlight = gameObject.GetComponent<Image>();
         trasparency = _highlight.color;
     }
 
