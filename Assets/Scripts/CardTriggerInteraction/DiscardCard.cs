@@ -47,10 +47,4 @@ public class DiscardCard : MonoBehaviour {
 
     }
 
-    bool isSelected;
-
-    public bool GetIsSelected() {
-        return isSelected;
-    }
-
 }

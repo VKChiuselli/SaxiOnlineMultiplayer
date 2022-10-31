@@ -75,23 +75,15 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
         if (gameObject.transform.parent.name == "GridManager")
         {
-            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                             //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1)
             {
                 ChangeOwnerServerRpc();
                 CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
-                if (cardTable != null)
-                {
-                    MoveSingleCardToEmptyTileServerRpc(
-                        cardTable.CurrentPositionX.Value,
-                        cardTable.CurrentPositionY.Value,
-                        gameObject.GetComponent<CoordinateSystem>().x,
-                        gameObject.GetComponent<CoordinateSystem>().y);
-                }
-                else
-                {
-                    Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
-                }
+                MoveSingleCardToEmptyTileServerRpc(
+                    cardTable.CurrentPositionX.Value,
+                    cardTable.CurrentPositionY.Value,
+                    gameObject.GetComponent<CoordinateSystem>().x,
+                    gameObject.GetComponent<CoordinateSystem>().y);
 
                 placeManager.ResetCardHand();
                 return true;
@@ -104,27 +96,20 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         }
         else
         {
-            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                                                         //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
+            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2)
             {
                 ChangeOwnerServerRpc();
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
-                    SpawnCardFromServerRpc(
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdCard.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Speed.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdImageCard.Value.ToString(),
-              cardTableTag, //RPT Right player Table
-              true, //it means that we have to destroy the old game object when we move
-                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-              gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-              placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-              1
-              );
-                    UpdateWeightTopCard(placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value);
+                    CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
+                    int xNewTile = gameObject.GetComponent<CardTable>().CurrentPositionX.Value;
+                    int yNewTile = gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
+                    MoveSingleCardToFilledTileServerRpc(
+                        cardTable.CurrentPositionX.Value,
+                        cardTable.CurrentPositionY.Value,
+                        xNewTile,
+                        yNewTile);
+                    UpdateWeightTopCard(placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, xNewTile, yNewTile);
                 }
                 else
                 {
@@ -140,23 +125,14 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     }
 
 
-    private void UpdateWeightTopCard(int cardWeight)
+
+    private void UpdateWeightTopCard(int cardWeight, int x, int y)
     {
         int finalWeight = cardWeight;
-        CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
 
-        if (cardTable != null)
-        {
-            foreach (Transform singleCard in transform.parent)
-            {
-                if (singleCard.GetComponent<CardTable>() != null)
-                {
-                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
-                }
-            }
-            Debug.Log("Final weight: " + finalWeight);
-            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
-        }
+        finalWeight = finalWeight + gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(x, y);
+        Debug.Log("Final weight: " + finalWeight);
+        UpdateWeightTopCardServerRpc(finalWeight, x, y);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -169,53 +145,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
-        Debug.Log("1OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("1NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int checkTransform) //MyCardStruct cartaDaSpawnare
-    {
-        Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
-        CardTableToSpawn.tag = tag;
-        NetworkObject go = null;
-        if (checkTransform == 0)
-        {
-            go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-          transform.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform, false);
-        }
-        else if (checkTransform == 1)
-        {
-            go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-       transform.parent.position, Quaternion.identity);
-            go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            go.transform.SetParent(transform.parent, false);
-        }
-        else
-        {
-            Debug.Log("checkTransform passed wrong!!!");
-        }
-
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        //  gameManager.GetComponent<GameManager>().CurrentTurn.Value = (gameManager.GetComponent<GameManager>().CurrentTurn.Value==1 ? 0 : 1);
-        if (toDestroy)
-        {
-            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(xToDelete, yToDelete);
-        }
-
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -226,7 +156,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         foreach (GameObject card in cardsFromTile)
         {
             networkObjectCard = Instantiate(card.GetComponent<NetworkObject>(),
-       transform.position, Quaternion.identity);
+  transform.position, Quaternion.identity);
             networkObjectCard.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
             networkObjectCard.transform.SetParent(transform, false);
             gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(x, y);
@@ -235,4 +165,20 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void MoveSingleCardToFilledTileServerRpc(int x, int y, int xNewTile, int yNewTile)
+    {
+        NetworkObject networkObjectCard = null;
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
+        foreach (GameObject card in cardsFromTile)
+        {
+            networkObjectCard = Instantiate(card.GetComponent<NetworkObject>(),
+    transform.parent.position, Quaternion.identity);
+            networkObjectCard.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+            networkObjectCard.transform.SetParent(transform.parent, false);
+            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(x, y);
+            networkObjectCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            networkObjectCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+        }
+    }
 }

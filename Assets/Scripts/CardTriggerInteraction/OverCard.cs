@@ -45,10 +45,5 @@ public class OverCard : MonoBehaviour {
 
     }
 
-    bool isSelected;
-
-    public bool GetIsSelected() {
-        return isSelected;
-    }
 
 }
