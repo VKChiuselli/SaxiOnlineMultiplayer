@@ -129,6 +129,19 @@ public class GridContainer : NetworkBehaviour
         cardToRemove.transform.GetChild(cardToRemove.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
     }
 
+    public List<GameObject> GetAllCardsFromTile(int x, int y)
+    {
+        GameObject tile = GetTile(x, y);
+        List<GameObject> cardsOnTile = null;
+
+        foreach(GameObject a in tile.transform)
+        {
+            cardsOnTile.Add(a);
+        }
+
+        return cardsOnTile;
+    }
+
     public Transform GetCardTransform(int x, int y)
     {
         GameObject tile = GetTile(x, y);
