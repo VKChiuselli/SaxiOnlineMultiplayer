@@ -128,19 +128,6 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         }
     }
 
-    private int GetWeightCardBelowTop(GameObject cardOnTop)
-    {
-        int finalWeight = 0;
-        GameObject cardBelow = gridContainer.GetComponent<GridContainer>().GetBelowCard(cardOnTop.transform.parent.GetComponent<CoordinateSystem>().x, cardOnTop.transform.parent.GetComponent<CoordinateSystem>().y);
-        if (cardBelow != null)
-        {
-            finalWeight = cardBelow.GetComponent<CardTable>().Weight.Value;
-        }
-        //TODO prendere il padre della carta, iterare la carta fino a trovare il secondo figlio cardOnTop.transform.parent
-        return finalWeight;
-    }
-
-
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
@@ -158,8 +145,6 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         UpdateWeightTopCard(xOldTile, yOldTile);
         UpdateWeightTopCard(xNewTile, yNewTile);
     }
-
-
 
     [ServerRpc(RequireOwnership = false)]
     public void SpawnCardOnFilledSpaceFromServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile) //MyCardStruct cartaDaSpawnare

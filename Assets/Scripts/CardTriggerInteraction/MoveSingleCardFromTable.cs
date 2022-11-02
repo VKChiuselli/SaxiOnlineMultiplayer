@@ -124,23 +124,6 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     }
 
 
-
-    private void UpdateWeightTopCard(int cardWeight, int x, int y)
-    {
-        int finalWeight = cardWeight;
-
-        finalWeight = finalWeight + gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(x, y);
-        Debug.Log("Final weight: " + finalWeight);
-        UpdateWeightTopCardServerRpc(finalWeight, x, y);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
-    {
-        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
-        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {

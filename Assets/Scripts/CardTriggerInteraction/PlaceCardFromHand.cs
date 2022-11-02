@@ -156,8 +156,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
-        Debug.Log("1OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("1NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 

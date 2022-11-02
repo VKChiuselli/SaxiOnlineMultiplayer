@@ -152,25 +152,7 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
             return false;
         }
     }
-
-    private void UpdateWeightTopCard(int cardWeight)
-    {
-        int finalWeight = cardWeight;
-        CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-
-        if (cardTable != null)
-        {
-            foreach (Transform singleCard in transform.parent)
-            {
-                if (singleCard.GetComponent<CardTable>() != null)
-                {
-                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
-                }
-                Debug.Log("Final weight: " + finalWeight);
-            }
-            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
-        }
-    }
+ 
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
@@ -206,10 +188,7 @@ gameObject.GetComponent<CoordinateSystem>().y
             return false;
     }
 
-    private void UpdateWeight(int finalWeight, int x, int y)
-    {
-        UpdateWeightTopCardServerRpc(finalWeight, x, y);
-    }
+ 
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
