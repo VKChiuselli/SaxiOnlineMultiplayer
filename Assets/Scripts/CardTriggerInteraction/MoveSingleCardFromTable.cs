@@ -109,7 +109,6 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         cardTable.CurrentPositionY.Value,
                         xNewTile,
                         yNewTile);
-                    UpdateWeightTopCard(placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().Weight.Value, xNewTile, yNewTile);
                 }
                 else
                 {
@@ -163,17 +162,21 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     private void MoveSingleCardToFilledTileServerRpc(int x, int y, int xNewTile, int yNewTile)
     {
-        NetworkObject networkObjectCard = null;
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
         foreach (GameObject card in cardsFromTile)
         {
-            networkObjectCard = Instantiate(card.GetComponent<NetworkObject>(),
-    transform.parent.position, Quaternion.identity);
-            networkObjectCard.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            networkObjectCard.transform.SetParent(transform.parent, false);
-            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(x, y);
-            networkObjectCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            networkObjectCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            card.transform.SetParent(transform.parent, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
+        int weightNewTile = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(xNewTile, yNewTile);
+        UpdateWeightCard(weightNewTile, xNewTile, yNewTile);
+
+    }
+
+    private void UpdateWeightCard(int weightNewTile, int xNewTile, int yNewTile)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = weightNewTile;
     }
 }

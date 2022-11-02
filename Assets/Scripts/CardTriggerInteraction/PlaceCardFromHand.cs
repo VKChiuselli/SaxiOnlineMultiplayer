@@ -206,7 +206,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
         //cardToSpawnNetwork.gameObject.AddComponent<CardInterface>();
 
-          GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);
+          GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
