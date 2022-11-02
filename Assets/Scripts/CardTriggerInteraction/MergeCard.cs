@@ -187,18 +187,12 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                int indexCard = 0;
-                while (numberOfMergedCards != 0)
-                {
                     MoveCardFromTableOnEmptySpaceServerRpc(
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.GetComponent<CoordinateSystem>().x,
 gameObject.GetComponent<CoordinateSystem>().y
 );
-                    numberOfMergedCards--;
-                    indexCard++;
-                }
             }
             else
             {

@@ -235,7 +235,7 @@ public class GridContainer : NetworkBehaviour
         {
             if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
             {
-                finalCard = tile.transform.GetChild(tile.transform.childCount - 2).gameObject;
+                finalCard = tile.transform.GetChild(tile.transform.childCount - 1).gameObject;
                 return finalCard;
             }
         }

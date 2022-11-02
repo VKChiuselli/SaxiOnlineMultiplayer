@@ -134,7 +134,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           0,
           0
           );
-                UpdateWeightTopCard(placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value);
             }
             else
                 Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
@@ -147,34 +146,12 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     }
 
 
-    private void UpdateWeightTopCard(int cardWeight)
+    private void UpdateWeightTopCard(int x, int y)
     {
-        int finalWeight = cardWeight;
-        CardTable cardTable =  gameObject.GetComponent<CardTable>();
-
-        if (cardTable != null)
-        {
-            foreach (Transform singleCard in transform.parent)
-            {
-                if (singleCard.GetComponent<CardTable>() != null)
-                {
-                    finalWeight += singleCard.GetComponent<CardTable>().Weight.Value;
-                }
-            }
-            Debug.Log("finalWeight " + finalWeight);
-            Debug.Log(" gameObject.GetComponent<CardTable>().CurrentPositionX.Value " + gameObject.GetComponent<CardTable>().CurrentPositionX.Value);
-            Debug.Log(" gameObject.GetComponent<CardTable>().CurrentPositionX.Value " + gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
-            UpdateWeightTopCardServerRpc(finalWeight, gameObject.GetComponent<CardTable>().CurrentPositionX.Value, gameObject.GetComponent<CardTable>().CurrentPositionY.Value);
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
-    {
+        int finalWeight = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(x, y);
         GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
         cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
-
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
@@ -217,8 +194,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
-        CardTableToSpawn.tag = tag;
-        NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        GameObject cardToSpawn = gameObject.transform.parent.gameObject.GetComponent<PlaceCardFromHand>().CardTableToSpawn;
+        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);
        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
        cardToSpawnNetwork.transform.SetParent(transform.parent, false);
@@ -241,11 +218,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
 
-
+        UpdateWeightTopCard(x, y);
     }
-
-
-
 
     private Vector3 GetMouseAsWorldPoint()
     {
