@@ -188,31 +188,30 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
-        Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
            transform.position, Quaternion.identity);
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform, false);
+        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardToSpawnNetwork.transform.SetParent(transform, false);
+      
+        cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
+        cardToSpawnNetwork.GetComponent<CardTable>().Speed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tag;
+        cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
+        //cardToSpawnNetwork.gameObject.AddComponent<CardInterface>();
 
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-
-        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);
+          GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
-          transform.position, Quaternion.identity);
+          cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        cardInterfaceNetwork.transform.SetParent(go.transform, false);
+       cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -221,7 +220,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         Debug.Log("2OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
         Debug.Log("2NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         CardTableToSpawn.tag = tag;
-        NetworkObject go = go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.parent.position, Quaternion.identity);
 
         go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);

@@ -151,17 +151,12 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     [ServerRpc(RequireOwnership = false)]
     private void MoveSingleCardToEmptyTileServerRpc(int x, int y, int xNewTile, int yNewTile)
     {
-        NetworkObject networkObjectCard = null;
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
         foreach (GameObject card in cardsFromTile)
         {
-            networkObjectCard = Instantiate(card.GetComponent<NetworkObject>(),
-  transform.position, Quaternion.identity);
-            networkObjectCard.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            networkObjectCard.transform.SetParent(transform, false);
-            gridContainer.GetComponent<GridContainer>().RemoveCardFromTable(x, y);
-            networkObjectCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            networkObjectCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            card.transform.SetParent(transform, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
     }
 
