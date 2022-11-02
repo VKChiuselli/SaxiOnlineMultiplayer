@@ -181,7 +181,7 @@ public class GridContainer : NetworkBehaviour
         return weight;
     }
 
-    private GameObject GetTile(int x, int y)
+    public GameObject GetTile(int x, int y)
     {
         GameObject returnTile = null;
         foreach (GameObject tile in gridTiles)

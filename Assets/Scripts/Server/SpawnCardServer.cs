@@ -10,6 +10,7 @@ public class SpawnCardServer :  NetworkBehaviour
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
+    GameObject deckManager;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
@@ -17,72 +18,81 @@ public class SpawnCardServer :  NetworkBehaviour
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
+        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
     
-
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardOnFilledSpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
-    {//indexCard is the number to remove the card 
-        CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-           transform.parent.position, Quaternion.identity);
-
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform.parent, false);
-
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        if (toDestroy)
-        {
-            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
-        }
-
-    }
-
+ 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
-        Debug.Log("1OwnerClientId " + OwnerClientId + " , del server? " + IsOwnedByServer);
-        Debug.Log("1NetworkManager.Singleton.LocalClientId " + NetworkManager.Singleton.LocalClientId);
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
+    public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
     {
-        CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-           transform.position, Quaternion.identity);
 
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform, false);
+        GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
+        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
+        cardToSpawn.transform.position, Quaternion.identity);
+        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
 
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        if (toDestroy)
-        {
-            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
-        }
+        cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
+        cardToSpawnNetwork.GetComponent<CardTable>().Speed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tag;
+        cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
+        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
+
+        NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
+          cardToSpawnNetwork.transform.position, Quaternion.identity);
+        cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    {
+        GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
+        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
+        cardToSpawn.transform.position, Quaternion.identity);
+        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
+
+        cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
+        cardToSpawnNetwork.GetComponent<CardTable>().Speed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdOwner.Value = IdOwner;
+        cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = y;
+        cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tag;
+        cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
+
+        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
+
+        NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
+          cardToSpawnNetwork.transform.position, Quaternion.identity);
+        cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
+
+        UpdateWeightTopCard(x, y);
     }
 
 
+    private void UpdateWeightTopCard(int x, int y)
+    {
+        int finalWeight = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(x, y);
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
+    }
 
 }

@@ -103,11 +103,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
           cardTableTag, //RPT Right player Table
-          false, //it means that we have to destroy the game object when we move
           gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.GetComponent<CoordinateSystem>().y,
-          0,
-          0
+          gameObject.GetComponent<CoordinateSystem>().y
           );
             }
             else
@@ -128,11 +125,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdOwner.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
           cardTableTag, //RPT Right player Table
-          false, //it means that we have to destroy the game object when we move
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-          0,
-          0
+          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
           );
             }
             else
@@ -161,7 +155,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y) //MyCardStruct cartaDaSpawnare
     {
         CardTableToSpawn.tag = tag;
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
@@ -179,7 +173,6 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tag;
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        //cardToSpawnNetwork.gameObject.AddComponent<CardInterface>();
 
           GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
 
@@ -190,7 +183,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag , int x, int y ) //MyCardStruct cartaDaSpawnare
     {
         GameObject cardToSpawn = gameObject.transform.parent.gameObject.GetComponent<PlaceCardFromHand>().CardTableToSpawn;
         NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
