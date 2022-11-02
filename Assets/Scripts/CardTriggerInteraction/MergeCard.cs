@@ -42,7 +42,7 @@ public class MergeCard : NetworkBehaviour, IDropHandler
                     MoveMergedCard(1);
                 }
             }
-        
+
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
@@ -131,27 +131,12 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                int indexCard = 0;
-                while (numberOfMergedCards != 0)
-                {
                     SpawnCardOnFilledSpaceFromServerRpc(
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdOwner.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdImageCard.Value.ToString(),
-cardTableTag, //RPT Right player Table
-true, //it means that we have to destroy the old game object when we move
+                        placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
-indexCard
+gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
 );
-                    numberOfMergedCards--;
-                    indexCard++;
-                }
-                UpdateWeightTopCard(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value);
             }
             else
             {
@@ -206,23 +191,14 @@ indexCard
                 while (numberOfMergedCards != 0)
                 {
                     MoveCardFromTableOnEmptySpaceServerRpc(
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdCard.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Weight.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().Speed.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdOwner.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().IdImageCard.Value.ToString(),
-cardTableTag, //RPT Right player Table
-true, //it means that we have to destroy the old game object when we move
-gameObject.GetComponent<CoordinateSystem>().x,
-gameObject.GetComponent<CoordinateSystem>().y,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
 placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
-indexCard
+gameObject.GetComponent<CoordinateSystem>().x,
+gameObject.GetComponent<CoordinateSystem>().y
 );
                     numberOfMergedCards--;
                     indexCard++;
                 }
-                UpdateWeight(placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(indexCard - 1).gameObject.GetComponent<CardTable>().MergedWeight.Value, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value);
             }
             else
             {
@@ -251,57 +227,36 @@ indexCard
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardOnFilledSpaceFromServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
+    public void SpawnCardOnFilledSpaceFromServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile) //MyCardStruct cartaDaSpawnare
     {
-        CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-           transform.parent.position, Quaternion.identity);
-
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform.parent, false);
-
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        if (toDestroy)
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
+        foreach (GameObject card in cardsFromTile)
         {
-            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
+            card.transform.SetParent(transform.parent, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
-
+        int weightNewTile = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(xNewTile, yNewTile);
+        UpdateWeightCard(weightNewTile, xNewTile, yNewTile);
     }
+
     [ServerRpc(RequireOwnership = false)]
-    public void MoveCardFromTableOnEmptySpaceServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete, int indexCard) //MyCardStruct cartaDaSpawnare
+    public void MoveCardFromTableOnEmptySpaceServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile) //MyCardStruct cartaDaSpawnare
     {
-        CardTableToSpawn.tag = tag;
-        NetworkObject go = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-           transform.position, Quaternion.identity);
-
-        go.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        go.transform.SetParent(transform, false);
-
-        go.GetComponent<CardTable>().IdCard.Value = IdCard;
-        go.GetComponent<CardTable>().Weight.Value = Weight;
-        go.GetComponent<CardTable>().Speed.Value = Speed;
-        go.GetComponent<CardTable>().IdOwner.Value = IdOwner;
-        go.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
-        go.GetComponent<CardTable>().CurrentPositionX.Value = x;
-        go.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        go.GetComponent<NetworkObject>().tag = tag;
-        go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        go.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
-        if (toDestroy)
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
+        foreach (GameObject card in cardsFromTile)
         {
-            gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(xToDelete, yToDelete, indexCard);
+            card.transform.SetParent(transform, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
-
+        int weightNewTile = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(xNewTile, yNewTile);
+        UpdateWeightCard(weightNewTile, xNewTile, yNewTile);
     }
 
-
+    private void UpdateWeightCard(int weightNewTile, int xNewTile, int yNewTile)
+    {
+        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
+        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = weightNewTile;
+    }
 }
