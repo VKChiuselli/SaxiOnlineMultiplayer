@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnCardServer :  NetworkBehaviour
+public class SpawnCardServer : NetworkBehaviour
 {
 
     PlaceManager placeManager;
@@ -20,8 +20,8 @@ public class SpawnCardServer :  NetworkBehaviour
         gameManager = GameObject.Find("Managers/GameManager");
         deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
-    
- 
+
+
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
@@ -29,12 +29,11 @@ public class SpawnCardServer :  NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y) //MyCardStruct cartaDaSpawnare
     {
-
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
-        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
-        cardToSpawn.transform.position, Quaternion.identity);
+        NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        transform.position, Quaternion.identity);
         cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
 
@@ -58,11 +57,11 @@ public class SpawnCardServer :  NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void MergeCardFromHandServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, bool toDestroy, int x, int y, int xToDelete, int yToDelete) //MyCardStruct cartaDaSpawnare
+    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y) //MyCardStruct cartaDaSpawnare
     {
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
-        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
-        cardToSpawn.transform.position, Quaternion.identity);
+        NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
+        transform.position, Quaternion.identity);
         cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
 
