@@ -297,4 +297,30 @@ public class GridContainer : NetworkBehaviour
 
         return CalculateTotalWeight(nextTile);
     }
+
+    private string CheckDirection(int xPusher, int yPusher, int xPushed, int yPushed)
+    {
+        string finalDirection = "";
+
+        int x = xPushed - xPusher;
+        int y = yPushed - yPusher;
+
+        switch (x, y)
+        {
+            case (0, 1):
+                finalDirection = "RIGHT";
+                break;
+            case (0, -1):
+                finalDirection = "LEFT";
+                break;
+            case (1, 0):
+                finalDirection = "DOWN";
+                break;
+            case (-1, 0):
+                finalDirection = "UP";
+                break;
+        }
+
+        return finalDirection;
+    }
 }

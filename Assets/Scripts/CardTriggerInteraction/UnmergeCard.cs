@@ -11,6 +11,8 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
+    GameObject deckManager;
+    GameObject SpawnManager;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
@@ -18,6 +20,8 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
+        SpawnManager = GameObject.Find("Managers/SpawnManager");
+        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -81,7 +85,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
                     CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-                    MoveSingleCardToEmptyTileServerRpc(
+                    SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(
                    cardTable.CurrentPositionX.Value,
                    cardTable.CurrentPositionY.Value,
                       gameObject.GetComponent<CoordinateSystem>().x,
@@ -108,7 +112,7 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
                 {
                     CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-                    SpawnCardOnFilledSpaceFromServerRpc(
+                    SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(
                             cardTable.CurrentPositionX.Value,
                    cardTable.CurrentPositionY.Value,
                  gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
@@ -134,33 +138,5 @@ public class UnmergeCard : NetworkBehaviour, IPointerDownHandler
     {
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void MoveSingleCardToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
-    {
-        GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
-        topCard.transform.SetParent(transform, false);
-        topCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-        topCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
-        UpdateWeightTopCard(xOldTile, yOldTile);
-        UpdateWeightTopCard(xNewTile, yNewTile);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpawnCardOnFilledSpaceFromServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile) //MyCardStruct cartaDaSpawnare
-    {
-        GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
-        topCard.transform.SetParent(transform.parent, false);
-        topCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-        topCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
-        UpdateWeightTopCard(xOldTile, yOldTile);
-        UpdateWeightTopCard(xNewTile, yNewTile);
-    }
-
-    private void UpdateWeightTopCard(int x, int y)
-    {
-        int finalWeight = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(x, y);
-        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
-        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
-    }
+ 
 }
