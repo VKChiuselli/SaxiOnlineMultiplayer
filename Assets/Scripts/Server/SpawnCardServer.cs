@@ -118,6 +118,27 @@ public class SpawnCardServer : NetworkBehaviour
             card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    {
+        GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
+        if (tileWhereToSpawn == null)
+        {
+            Debug.Log("card destroied because no tile found");
+            DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
+            return;
+        }
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
+        foreach (GameObject card in cardsFromTile)
+        {
+            card.transform.SetParent(tileWhereToSpawn.transform, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+        }
+
+        UpdateWeightTopCard(xNewTile, yNewTile);
+    }
 
 
     [ServerRpc(RequireOwnership = false)]

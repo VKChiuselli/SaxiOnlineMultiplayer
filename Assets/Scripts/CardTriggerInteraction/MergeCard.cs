@@ -12,6 +12,8 @@ public class MergeCard : NetworkBehaviour, IDropHandler
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
+    GameObject deckManager;
+    GameObject SpawnManager;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
@@ -19,6 +21,8 @@ public class MergeCard : NetworkBehaviour, IDropHandler
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
+        SpawnManager = GameObject.Find("Managers/SpawnManager");
+        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -131,9 +135,9 @@ public class MergeCard : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                    SpawnCardOnFilledSpaceFromServerRpc(
-                        placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(
+                        placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
 );
@@ -152,7 +156,7 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
             return false;
         }
     }
- 
+
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateWeightTopCardServerRpc(int finalWeight, int x, int y)
@@ -169,9 +173,9 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                    MoveCardFromTableOnEmptySpaceServerRpc(
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-placeManager.GetMergedCardSelectedFromTable().transform.parent.GetChild(0).gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                SpawnManager.GetComponent<SpawnCardServer>().MoveToEmptyTileServerRpc(
+placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.GetComponent<CoordinateSystem>().x,
 gameObject.GetComponent<CoordinateSystem>().y
 );
@@ -187,8 +191,6 @@ gameObject.GetComponent<CoordinateSystem>().y
         else
             return false;
     }
-
- 
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()

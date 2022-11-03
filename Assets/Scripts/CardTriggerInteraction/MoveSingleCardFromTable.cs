@@ -11,6 +11,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
     PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
+    GameObject deckManager;
+    GameObject SpawnManager;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
@@ -18,6 +20,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
+        SpawnManager = GameObject.Find("Managers/SpawnManager");
+        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -79,7 +83,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
             {
                 ChangeOwnerServerRpc();
                 CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
-                MoveSingleCardToEmptyTileServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(
                     cardTable.CurrentPositionX.Value,
                     cardTable.CurrentPositionY.Value,
                     gameObject.GetComponent<CoordinateSystem>().x,
@@ -104,7 +108,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                     CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
                     int xNewTile = gameObject.GetComponent<CardTable>().CurrentPositionX.Value;
                     int yNewTile = gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
-                    MoveSingleCardToFilledTileServerRpc(
+                    SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(
                         cardTable.CurrentPositionX.Value,
                         cardTable.CurrentPositionY.Value,
                         xNewTile,
@@ -130,36 +134,5 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void MoveSingleCardToEmptyTileServerRpc(int x, int y, int xNewTile, int yNewTile)
-    {
-        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
-        foreach (GameObject card in cardsFromTile)
-        {
-            card.transform.SetParent(transform, false);
-            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
-        }
-    }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void MoveSingleCardToFilledTileServerRpc(int x, int y, int xNewTile, int yNewTile)
-    {
-        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
-        foreach (GameObject card in cardsFromTile)
-        {
-            card.transform.SetParent(transform.parent, false);
-            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
-        }
-        int weightNewTile = gridContainer.GetComponent<GridContainer>().GetTotalWeightOnTile(xNewTile, yNewTile);
-        UpdateWeightCard(weightNewTile, xNewTile, yNewTile);
-
-    }
-
-    private void UpdateWeightCard(int weightNewTile, int xNewTile, int yNewTile)
-    {
-        GameObject cardOnTop = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
-        cardOnTop.GetComponent<CardTable>().MergedWeight.Value = weightNewTile;
-    }
 }
