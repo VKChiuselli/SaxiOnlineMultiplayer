@@ -94,4 +94,30 @@ public class SpawnCardServer : NetworkBehaviour
         cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
 
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DespawnAllCardsFromTileServerRpc(int x, int y)
+    {
+
+     List<GameObject> cardsFromTile =   gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
+
+        foreach(GameObject card in cardsFromTile)
+        {
+            card.GetComponent<NetworkObject>().Despawn();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MoveToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    {
+        GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
+        foreach (GameObject card in cardsFromTile)
+        {
+            card.transform.SetParent(tileWhereToSpawn.transform, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+        }
+    }
+
 }
