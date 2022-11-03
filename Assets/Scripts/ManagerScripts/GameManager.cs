@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-
+    [SerializeField] GameObject popupChoose;
     //  GameBoard gameBoard;
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
@@ -61,6 +61,13 @@ public class GameManager : NetworkBehaviour
     {
         IsPopupChoosing.Value = isPopupChoosing;
     }
+
+   
+    public void OpenPopupUI()
+    {
+        popupChoose.SetActive(true);
+    }
+
     public void SetUnmergeChoosing(int unmergeStatus)
     {
         SetUnmergeChoosingServerRpc(unmergeStatus);

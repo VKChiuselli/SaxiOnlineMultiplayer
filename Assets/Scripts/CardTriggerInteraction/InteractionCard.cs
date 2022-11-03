@@ -32,13 +32,14 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
         {
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
             {
-                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 0)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0) //instead of 0 put CARD.MOVEMENT_COST
                     {
-
+                        // I have to open the popup and block all other actions
 
                         Debug.Log("OPEN POPUP player 0");
+                        gameManager.GetComponent<GameManager>().OpenPopupUI();
                         //bool isPlayed = MoveCardFromTable("RPCT");
                         //if (isPlayed)
                         //{
@@ -51,7 +52,7 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card
-                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {

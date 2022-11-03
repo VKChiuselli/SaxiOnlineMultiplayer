@@ -70,6 +70,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
             }
 
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
+            gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
         }
     }
 
