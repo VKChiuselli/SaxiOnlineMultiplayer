@@ -216,13 +216,13 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 //I push the cards less the pusher
                 foreach (GameObject tile in tilesToPush)
                 {
-                    SpawnManager.GetComponent<SpawnCardServer>().MoveToEmptyTileServerRpc(
+                    SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
                         tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
                         tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y
                         );
                 }
                 //I move the card that pushed the other cards
-                SpawnManager.GetComponent<SpawnCardServer>().MoveToEmptyTileServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
                     currentCardSelected.CurrentPositionX.Value, currentCardSelected.CurrentPositionY.Value,
                     gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x, gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
                     );

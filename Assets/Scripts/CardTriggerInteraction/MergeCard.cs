@@ -173,7 +173,7 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
             ChangeOwnerServerRpc();
             if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
             {
-                SpawnManager.GetComponent<SpawnCardServer>().MoveToEmptyTileServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
 placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
 placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.GetComponent<CoordinateSystem>().x,

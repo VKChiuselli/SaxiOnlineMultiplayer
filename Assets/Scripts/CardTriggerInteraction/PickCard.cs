@@ -27,7 +27,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     {
         if (NetworkManager.Singleton.IsClient)
         {
-            if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0)
+            if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0 && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)
             {
                 if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
                 {
@@ -103,6 +103,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         if (gameObject.transform.parent.childCount == 1)
         {
             EventsManager.current.PickSingleCardFromTable(gameObject);
+            gameManager.GetComponent<GameManager>().SetIsPopupChoosing(1);
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();
         }

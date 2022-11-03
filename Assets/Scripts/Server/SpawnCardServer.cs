@@ -101,11 +101,11 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void MoveToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
         GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
         if (tileWhereToSpawn == null)
-        {
+        {//this IF is made for PUSH 
             Debug.Log("card destroied because no tile found");
             DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
             return;

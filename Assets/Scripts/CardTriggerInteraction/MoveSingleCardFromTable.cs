@@ -34,7 +34,6 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
-
                         bool isPlayed = MoveCardFromTable("RPCT");
                         if (isPlayed)
                         {
@@ -47,7 +46,6 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         }
                     }
                 }
-
             }
             else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
             {//check the max move of the card

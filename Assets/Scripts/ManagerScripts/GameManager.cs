@@ -10,6 +10,7 @@ public class GameManager : NetworkBehaviour
     //  GameBoard gameBoard;
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
+    public NetworkVariable<int> IsPopupChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> CurrentTurn = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
@@ -50,6 +51,16 @@ public class GameManager : NetworkBehaviour
         //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
     }
 
+    public void SetIsPopupChoosing(int IsPopupChoosing)
+    {
+        SetIsPopupChoosingServerRpc(IsPopupChoosing);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetIsPopupChoosingServerRpc(int isPopupChoosing)
+    {
+        IsPopupChoosing.Value = isPopupChoosing;
+    }
     public void SetUnmergeChoosing(int unmergeStatus)
     {
         SetUnmergeChoosingServerRpc(unmergeStatus);
@@ -60,6 +71,7 @@ public class GameManager : NetworkBehaviour
     {
         IsUnmergeChoosing.Value = unmergeStatus;
     }
+
 
     public void DeployPointSpent(int howMuchPoint, int whichPlayer)
     {
