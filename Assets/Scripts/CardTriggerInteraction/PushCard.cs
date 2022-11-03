@@ -245,7 +245,6 @@ public class PushCard : NetworkBehaviour, IDropHandler
         int y = yPushed - yPusher;
         if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
         {
-            SpawnManager.GetComponent<SpawnCardServer>().DespawnAllCardsFromTileServerRpc(xPushed, yPushed);
             return tilesToPush;
         }
         else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
