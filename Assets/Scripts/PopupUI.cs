@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PopupUI : MonoBehaviour
 {
@@ -17,16 +18,15 @@ public class PopupUI : MonoBehaviour
     int _yNewTile;
     int _typeOfTile;
     PlaceManager placeManager;
-    GameObject gridContainer;
+    GridContainer gridContainer;
     GameObject gameManager;
     GameObject deckManager;
     GameObject SpawnManager;
-    [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
     {
         placeManager = FindObjectOfType<PlaceManager>();
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+     
         gameManager = GameObject.Find("Managers/GameManager");
         SpawnManager = GameObject.Find("Managers/SpawnManager");
         deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
@@ -39,6 +39,7 @@ public class PopupUI : MonoBehaviour
         gameObject.transform.GetChild(1).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(1));
         gameObject.transform.GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(2));
         gameObject.transform.GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(3));
+        gridContainer = FindObjectOfType<GridContainer>();
     }
 
     private void button_pressed(int numberAction)
@@ -92,24 +93,27 @@ public class PopupUI : MonoBehaviour
         _yNewTile = yNewTile;
         _typeOfTile = typeOfTile;
 
-    GameObject tile =    gridContainer.GetComponent<GridContainer>().GetTile(xOldTile, yOldTile);
-        if (tile == null)
+
+        if (xOldTile == 0 && yOldTile == 0 && xNewTile == 0 && yNewTile == 0)
         {
             return;
         }
 
+        GameObject tile = gridContainer.GetTile(xOldTile, yOldTile);
         if (tile.transform.childCount == 1)
         {
             if (typeOfTile == 1)
             {
                 gameObject.transform.GetChild(0).gameObject.SetActive(false);
                 gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE";
                 gameObject.transform.GetChild(2).gameObject.SetActive(false);
             }
             else if (typeOfTile == 2)
             {
                 gameObject.transform.GetChild(0).gameObject.SetActive(true);
                 gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE";
                 gameObject.transform.GetChild(2).gameObject.SetActive(false);
             }
             else if (typeOfTile == 3)
@@ -125,13 +129,17 @@ public class PopupUI : MonoBehaviour
             {
                 gameObject.transform.GetChild(0).gameObject.SetActive(false);
                 gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE ALL CARDS";
                 gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE TOP CARD";
             }
             else if (typeOfTile == 2)
             {
                 gameObject.transform.GetChild(0).gameObject.SetActive(true);
                 gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE ALL CARDS";
                 gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "MOVE TOP CARD";
             }
             else if (typeOfTile == 3)
             {
@@ -164,8 +172,8 @@ public class PopupUI : MonoBehaviour
         {
             return false;
         }
-        CardTable cardPusher = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
-        CardTable cardPushed = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
+        CardTable cardPusher = gridContainer.GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
+        CardTable cardPushed = gridContainer.GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
 
         int weightFriendlyCard = cardPusher.MergedWeight.Value == 0 ? cardPusher.Weight.Value : cardPusher.MergedWeight.Value;
         int weightEnemyCard = cardPushed.MergedWeight.Value == 0 ? cardPushed.Weight.Value : cardPushed.MergedWeight.Value;
@@ -237,17 +245,17 @@ public class PopupUI : MonoBehaviour
     {
         int x = xPushed - xPusher;
         int y = yPushed - yPusher;
-        if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
+        if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
         {
             return 400; //400 è VERO
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
+        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
         {
             return 400; //400 è VERO
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
+        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
         {
-            int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
+            int nextCardWeight = gridContainer.GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
             int totalWeight = nextCardWeight + weightEnemy;
             if (totalWeight >= weightFriendly)
             {
@@ -273,17 +281,17 @@ public class PopupUI : MonoBehaviour
     {
         int x = xPushed - xPusher;
         int y = yPushed - yPusher;
-        if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
+        if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
         {
             return tilesToPush;
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
+        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
         {
             return tilesToPush;
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
+        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
         {
-            int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
+            int nextCardWeight = gridContainer.GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
             int totalWeight = nextCardWeight + weightEnemy;
             if (totalWeight >= weightFriendly)
             {
@@ -291,7 +299,7 @@ public class PopupUI : MonoBehaviour
                 return tilesToPush;
             }
 
-            GameObject tileToAdd = gridContainer.GetComponent<GridContainer>().GetTile(xPushed, yPushed);
+            GameObject tileToAdd = gridContainer.GetTile(xPushed, yPushed);
             tilesToPush.Add(tileToAdd);
 
             return FindAllCardsToPush(xPusher + x, yPusher + y, xPushed + x, yPushed + y, weightFriendly, totalWeight, tilesToPush);

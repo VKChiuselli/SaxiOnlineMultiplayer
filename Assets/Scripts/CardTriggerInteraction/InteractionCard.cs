@@ -182,25 +182,55 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                     }
                 }
 
-            }
-            else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)//&& (NetworkManager.Singleton.LocalClientId % 2) == 0)
-            {//check the max move of the card
+            } else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+            {
                 if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
-                    if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
+                    if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0) //instead of 0 put CARD.MOVEMENT_COST
                     {
-
-                        Debug.Log("punto sottratto PlayerOne move");
-
-                        bool isPlayed = MoveCardFromTable("LPCT");
-                        if (isPlayed)
+                        if (gameObject.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
                         {
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                                    placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                                    gameObject.GetComponent<CoordinateSystem>().x,
+                                    gameObject.GetComponent<CoordinateSystem>().y,
+                                    gameObject.GetComponent<CoordinateSystem>().typeOfTile
+                          );
+                            }
                         }
-
+                        else //so it is a filled tile
+                        {
+                            Debug.Log("OPEN POPUP player 1"); //manage point spent
+                            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           2
+                       );
+                            }
+                            else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           3
+                       );
+                            }
+                        }
                     }
                 }
+
             }
+
+
             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();

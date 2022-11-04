@@ -449,6 +449,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -675
       objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_fontSize
+      value: 18.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_lineSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_charWidthMaxAdj
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403056302958709513, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7403056303444337202, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -588,6 +612,30 @@ PrefabInstance:
     - target: {fileID: 7403056304365138347, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -405
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_fontSize
+      value: 19.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_lineSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_charWidthMaxAdj
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080351884587888096, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e0bc492b7783ad4fabf3b980bca2640, type: 3}
