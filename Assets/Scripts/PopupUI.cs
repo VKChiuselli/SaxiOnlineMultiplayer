@@ -82,11 +82,12 @@ public class PopupUI : MonoBehaviour
         if (typeOfTile == 1)
         {
             gameObject.transform.GetChild(0).gameObject.SetActive(false);
-        } 
+        }
+        else
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        }
     }
-
-
-
 
     private void OnDisable()
     {

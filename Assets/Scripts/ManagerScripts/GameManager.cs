@@ -32,7 +32,7 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-     void EndTurnServerRpc()
+    void EndTurnServerRpc()
     {
 
         if (CurrentTurn.Value == 0)
@@ -62,9 +62,14 @@ public class GameManager : NetworkBehaviour
         IsPopupChoosing.Value = isPopupChoosing;
     }
 
-   
+
     public void OpenPopupUI(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int typeOfTile)
     {
+        if (xOldTile == xNewTile && yOldTile == yNewTile)
+        {
+            Debug.Log("Popup can't open, trying to open same tile");
+            return;
+        }
         popupChoose.SetActive(true);
         popupChoose.GetComponent<PopupUI>().InitializeVariables(xOldTile, yOldTile, xNewTile, yNewTile, typeOfTile);
     }
