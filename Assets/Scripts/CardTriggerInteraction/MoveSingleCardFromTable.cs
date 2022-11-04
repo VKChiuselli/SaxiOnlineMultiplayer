@@ -38,7 +38,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         if (isPlayed)
                         {
                             Debug.Log("punto sottratto PlayerZero move");
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
+                            gameManager.GetComponent<GameManager>().MovePointSpent(1 );
                             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                             placeManager.ResetCardHand();
                             placeManager.ResetMergedCardTable();
@@ -59,7 +59,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                         bool isPlayed = MoveCardFromTable("LPCT");
                         if (isPlayed)
                         {
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
+                            gameManager.GetComponent<GameManager>().MovePointSpent(1);
                             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                             placeManager.ResetCardHand();
                             placeManager.ResetMergedCardTable();

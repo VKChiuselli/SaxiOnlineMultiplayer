@@ -26,7 +26,6 @@ public class PopupUI : MonoBehaviour
     void Start()
     {
         placeManager = FindObjectOfType<PlaceManager>();
-     
         gameManager = GameObject.Find("Managers/GameManager");
         SpawnManager = GameObject.Find("Managers/SpawnManager");
         deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
@@ -47,9 +46,10 @@ public class PopupUI : MonoBehaviour
         if (numberAction == 0)
         {
             Debug.Log("TODO push");
-            bool result = PushCardFromTable(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
-            if (result)
+            int result = PushCardFromTable(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
+            if (result>0)
             {
+                gameManager.GetComponent<GameManager>().MovePointSpent(result);
                 Debug.Log("Card pushed from UI!");
             }
             else
@@ -79,11 +79,7 @@ public class PopupUI : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
-    public void FunctionAvaiable()
-    {
-
-    }
+ 
 
     public void InitializeVariables(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int typeOfTile)
     {
@@ -166,11 +162,11 @@ public class PopupUI : MonoBehaviour
     }
 
 
-    private bool PushCardFromTable(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    private int PushCardFromTable(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
         if (xOldTile == 0 && yOldTile == 0 && xNewTile == 0 && yNewTile == 0)
         {
-            return false;
+            return 0;
         }
         CardTable cardPusher = gridContainer.GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
         CardTable cardPushed = gridContainer.GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
@@ -179,7 +175,7 @@ public class PopupUI : MonoBehaviour
         int weightEnemyCard = cardPushed.MergedWeight.Value == 0 ? cardPushed.Weight.Value : cardPushed.MergedWeight.Value;
         if (weightFriendlyCard <= weightEnemyCard)
         {
-            return false;
+            return 0;
         }
 
         int check = CheckBehindCard(
@@ -192,7 +188,7 @@ public class PopupUI : MonoBehaviour
 
         if (check == 505)
         {
-            return false;
+            return 0;
         }
 
 
@@ -236,9 +232,7 @@ public class PopupUI : MonoBehaviour
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
 
-
-        return true;
-
+        return gridContainer.GetTile(xNewTile, yNewTile).transform.childCount;
     }
 
     private int CheckBehindCard(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy)

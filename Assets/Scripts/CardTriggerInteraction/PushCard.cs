@@ -112,7 +112,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
                     Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
                 }
             }
@@ -124,7 +124,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
                     Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
                 }
             }
@@ -142,7 +142,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
                     Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
                 }
             }
@@ -154,7 +154,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
+                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
                     Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
                 }
             }

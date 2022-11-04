@@ -33,18 +33,22 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
                 {
                     PickCardFromHand("DeployTileRight");
                 }
-                else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
-                {//la questione è: io clicco la carta, compare un popup in cui ho due possibilità: il merge o select della carta 
-                    PickCardFromTable();
-                }
                 else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
                 {
                     PickCardFromHand("DeployTileLeft");
                 }
-                else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
+                else if (gameObject.GetComponent<CardTable>()!=null)
                 {
-                    PickCardFromTable();
+                    if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
+                    {
+                        PickCardFromTable();
+                    }
+                    else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
+                    {//la questione è: io clicco la carta, compare un popup in cui ho due possibilità: il merge o select della carta 
+                        PickCardFromTable();
+                    }
                 }
+            
             }
         }
     }

@@ -108,9 +108,10 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    public void MovePointSpent(int howMuchPoint, int whichPlayer)
+    public void MovePointSpent(int howMuchPoint)
     {
-        MovePointSpentServerRpc(howMuchPoint, whichPlayer);
+
+        MovePointSpentServerRpc(howMuchPoint, CurrentTurn.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]
