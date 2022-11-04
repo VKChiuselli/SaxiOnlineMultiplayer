@@ -17,14 +17,6 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> PlayerOneMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerOneDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
 
-    void Start()
-    {
-        //    PlayerActions.current = FindObjectOfType<PlayerActions>();
-        //  TriggerManager.current = FindObjectOfType<TriggerManager>();
-        //    gameBoard = FindObjectOfType<GameBoard>();
-        //      placeManager = FindObjectOfType<PlaceManager>();
-        //TriggerManager.current.EnableDiscardManager = false;
-    }
 
     public void EndTurn()
     {//TODO reset cards picked
@@ -86,19 +78,13 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    public void DeployPointSpent(int howMuchPoint, int whichPlayer)
+    public void DeployPointSpent(int howMuchPoint)
     {
-        DeployPointSpentServerRpc(howMuchPoint, whichPlayer);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void DeployPointSpentServerRpc(int howMuchPoint, int whichPlayer)
-    {
-        if (whichPlayer == 0)
+        if (CurrentTurn.Value == 0)
         {
             PlayerZeroDP.Value = PlayerZeroDP.Value - howMuchPoint;
         }
-        else if (whichPlayer == 1)
+        else if (CurrentTurn.Value == 1)
         {
             PlayerOneDP.Value = PlayerOneDP.Value - howMuchPoint;
         }
@@ -131,21 +117,3 @@ public class GameManager : NetworkBehaviour
         }
     }
 }
-// void Update() {
-//  DisableEnablePlaceManagerKey();
-//   }
-
-//private void DisableEnablePlaceManagerKey() {
-//    if (Input.GetKeyDown(KeyCode.P)) {
-//        Debug.Log("Disattivo il place manager");
-//        placeManager.ResetCardTable();
-//        placeManager.ResetCardHand();
-//        placeManager.gameObject.SetActive(false);
-//    }
-//    else if (Input.GetKeyDown(KeyCode.L)) {
-//        Debug.Log("Attivo il place manager");
-//        placeManager.ResetCardTable();
-//        placeManager.ResetCardHand();
-//        placeManager.gameObject.SetActive(true);
-//    }
-//}

@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -29,8 +30,12 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y) //MyCardStruct cartaDaSpawnare
+    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost) //MyCardStruct cartaDaSpawnare
     {
+       if(CheckDeploy(deployCost))
+        {
+            return;
+        }
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);
@@ -54,11 +59,36 @@ public class SpawnCardServer : NetworkBehaviour
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
+
+        gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
+    }
+
+    private bool CheckDeploy(int deployCost)
+    {
+        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
+        {
+            if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value >= deployCost) {
+                return false;
+            }
+        }
+        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+        {
+            if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value >= deployCost)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y) //MyCardStruct cartaDaSpawnare
+    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost) //MyCardStruct cartaDaSpawnare
     {
+        if (CheckDeploy(deployCost))
+        {
+            return;
+        }
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);
@@ -83,6 +113,7 @@ public class SpawnCardServer : NetworkBehaviour
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
 
+        gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
         UpdateWeightTopCard(x, y);
     }
 

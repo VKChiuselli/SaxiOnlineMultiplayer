@@ -50,11 +50,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
                     if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value > 0)
                     {
                         Debug.Log("punto sottratto PlayerZero deploy");
-                        bool isDeployed = DeployCardFromHand("DeployTileRight", "RPCT");
-                        if (isDeployed)
-                        {
-                            gameManager.GetComponent<GameManager>().DeployPointSpent(1, 0);
-                        }
+                        DeployCardFromHand("DeployTileRight", "RPCT");
                     }
                 }
             }
@@ -73,11 +69,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
                     if (gameManager.GetComponent<GameManager>().PlayerOneDP.Value > 0) //valore maggiore uguale dei punti che "devo spendere", e poi la variabile "devo spendere" va dentro deploypointspent
                     {
                         Debug.Log("punto sottratto PlayerOne deploy");
-                        bool isDeployed = DeployCardFromHand("DeployTileLeft", "LPCT");
-                        if (isDeployed)
-                        {
-                            gameManager.GetComponent<GameManager>().DeployPointSpent(1, 1);
-                        }
+                        DeployCardFromHand("DeployTileLeft", "LPCT");
                     }
                 }
             }
@@ -107,7 +99,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
           cardTableTag, //RPT Right player Table
           gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.GetComponent<CoordinateSystem>().y
+          gameObject.GetComponent<CoordinateSystem>().y,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value
           );
             }
             else
@@ -129,7 +122,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdImageCard.Value.ToString(),
           cardTableTag, //RPT Right player Table
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
+          gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value
           );
             }
             else

@@ -24,6 +24,7 @@ namespace Assets.Scripts
         public NetworkVariable<int> Weight = new NetworkVariable<int>();
         public NetworkVariable<int> Speed = new NetworkVariable<int>();
         public NetworkVariable<int> IdOwner = new NetworkVariable<int>();
+        public NetworkVariable<int> DeployCost = new NetworkVariable<int>(1);
         public NetworkVariable<FixedString32Bytes> IdImageCard = new NetworkVariable<FixedString32Bytes>();
 
         private void Start()
