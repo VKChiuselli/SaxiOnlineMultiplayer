@@ -63,9 +63,10 @@ public class GameManager : NetworkBehaviour
     }
 
    
-    public void OpenPopupUI()
+    public void OpenPopupUI(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int typeOfTile)
     {
         popupChoose.SetActive(true);
+        popupChoose.GetComponent<PopupUI>().InitializeVariables(xOldTile, yOldTile, xNewTile, yNewTile, typeOfTile);
     }
 
     public void SetUnmergeChoosing(int unmergeStatus)

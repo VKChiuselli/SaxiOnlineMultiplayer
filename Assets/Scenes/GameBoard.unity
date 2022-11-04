@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &79046475 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8972903493082795536, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
-  m_PrefabInstance: {fileID: 8972903493026834779}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &79046479 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8972903493082795540, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
@@ -195,7 +190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupChoose: {fileID: 1716762869}
-  canvasManager: {fileID: 79046475}
   IsUnmergeChoosing:
     m_InternalValue: 0
   IsPopupChoosing:

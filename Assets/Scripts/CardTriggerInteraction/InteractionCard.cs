@@ -36,16 +36,30 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0) //instead of 0 put CARD.MOVEMENT_COST
                     {
-                        // I have to open the popup and block all other actions
-
-                        Debug.Log("OPEN POPUP player 0");
-                        gameManager.GetComponent<GameManager>().OpenPopupUI();
-                        //bool isPlayed = MoveCardFromTable("RPCT");
-                        //if (isPlayed)
-                        //{
-                        //    Debug.Log("punto sottratto PlayerZero move");
-                        //    gameManager.GetComponent<GameManager>().MovePointSpent(1, 0);
-                        //}
+                        if (gameObject.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
+                        {
+                            if(gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                                    gameObject.GetComponent<CoordinateSystem>().x,
+                                    gameObject.GetComponent<CoordinateSystem>().y,
+                                    gameObject.GetComponent<CoordinateSystem>().typeOfTile
+                          );
+                            }
+                        }
+                        else //so it is a filled tile
+                        {
+                            Debug.Log("OPEN POPUP player 0"); //manage point spent
+                            gameManager.GetComponent<GameManager>().OpenPopupUI(
+                                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                                    gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                                    gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                                    2
+                                );
+                        }
                     }
                 }
 
@@ -54,19 +68,32 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
             {//check the max move of the card
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().IdOwner.Value == 1)
                 {
-                    if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
+                    if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0) //instead of 0 put CARD.MOVEMENT_COST
                     {
-
-                        Debug.Log("OPEN POPUP player 1");
-
-                        //Debug.Log("punto sottratto PlayerOne move");
-
-                        //bool isPlayed = MoveCardFromTable("LPCT");
-                        //if (isPlayed)
-                        //{
-                        //    gameManager.GetComponent<GameManager>().MovePointSpent(1, 1);
-                        //}
-
+                        if (gameObject.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
+                        {
+                            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                                    gameObject.GetComponent<CoordinateSystem>().x,
+                                    gameObject.GetComponent<CoordinateSystem>().y,
+                                    gameObject.GetComponent<CoordinateSystem>().typeOfTile
+                          );
+                            }
+                        }
+                        else //so it is a filled tile
+                        {
+                            Debug.Log("OPEN POPUP player 0"); //manage point spent
+                            gameManager.GetComponent<GameManager>().OpenPopupUI(
+                                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                                    gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                                    gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                                    2
+                                );
+                        }
                     }
                 }
             }
