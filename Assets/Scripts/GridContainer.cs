@@ -180,6 +180,13 @@ public class GridContainer : NetworkBehaviour
         int weight = CalculateTotalWeight(GetTile(x, y));
         return weight;
     }
+    
+    public int GetTotalMoveCostOnTile(int x, int y)
+    {
+        int moveCost = CalculateTotalMoveCost(GetTile(x, y));
+        return moveCost;
+    }
+
     public int GetTotalWeightOnTileLessLastOne(int x, int y)
     {
         int weight = CalculateTotalWeightLessLastOne(GetTile(x, y));
@@ -212,6 +219,23 @@ public class GridContainer : NetworkBehaviour
             }
         }
         return weight;
+    }
+
+    private int CalculateTotalMoveCost(GameObject tile)
+    {
+        int moveCost = 0;
+        foreach (Transform card in tile.transform)
+        {
+            if (card.GetComponent<CardTable>() != null)
+            {
+                moveCost += card.GetComponent<CardTable>().MoveCost.Value;
+            }
+        }
+        if (moveCost == 0)
+        {
+            Debug.Log("ERROR!!! Zero move cost");
+        }
+        return moveCost;
     }
 
     private int CalculateTotalWeightLessLastOne(GameObject tile)

@@ -32,7 +32,7 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost) //MyCardStruct cartaDaSpawnare
     {
-       if(CheckDeploy(deployCost))
+        if (CheckDeploy(deployCost))
         {
             return;
         }
@@ -67,7 +67,8 @@ public class SpawnCardServer : NetworkBehaviour
     {
         if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
         {
-            if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value >= deployCost) {
+            if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value >= deployCost)
+            {
                 return false;
             }
         }
@@ -134,6 +135,14 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
+        int totalMove = CheckMove(xOldTile, yOldTile);
+
+        if (totalMove==0)
+        {
+            return;
+        }
+     
+
         GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
         if (tileWhereToSpawn == null)
         {//this IF is made for PUSH 
@@ -148,11 +157,25 @@ public class SpawnCardServer : NetworkBehaviour
             card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
             card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
+
+        gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
     }
-    
+
+    private int CheckMove(int xOldTile, int yOldTile)
+    {
+ return       gridContainer.GetComponent<GridContainer>().GetTotalMoveCostOnTile(xOldTile, yOldTile);
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
+        int totalMove = CheckMove(xOldTile, yOldTile);
+
+        if (totalMove == 0)
+        {
+            return;
+        }
+
         GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
         if (tileWhereToSpawn == null)
         {
@@ -169,13 +192,14 @@ public class SpawnCardServer : NetworkBehaviour
         }
 
         UpdateWeightTopCard(xNewTile, yNewTile);
+        gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
     }
 
 
     [ServerRpc(RequireOwnership = false)]
     public void MoveTopCardToAnotherTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
-
+    //TODO improve code with cards here
         GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
         GameObject newTile = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
         topCard.transform.SetParent(newTile.transform, false);
@@ -184,6 +208,8 @@ public class SpawnCardServer : NetworkBehaviour
 
         UpdateWeightTopCard(xOldTile, yOldTile);
         UpdateWeightTopCard(xNewTile, yNewTile);
+
+        gameManager.GetComponent<GameManager>().MovePointSpent(1);
     }
 
     private void UpdateWeightTopCard(int x, int y)

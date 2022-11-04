@@ -39,8 +39,7 @@ namespace Assets.Scripts
             Testo_Peso.text = Weight.Value.ToString();
             Testo_Speed.text = Speed.Value.ToString();
             Testo_Copie.text = Copies.Value.ToString();
-          GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");  //Resources.Load($"CardIllustration/{IdImageCard.Value}");
-       //     GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/04_summon_skeleton_army");  //Resources.Load($"CardIllustration/{IdImageCard.Value}");
+          GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");  
         }
 
         public void PlayCard()

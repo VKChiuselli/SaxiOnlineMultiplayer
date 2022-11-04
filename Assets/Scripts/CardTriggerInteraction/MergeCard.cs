@@ -54,7 +54,6 @@ public class MergeCard : NetworkBehaviour, IDropHandler
 
     private void MoveMergedCard(int player)
     {
-        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount);
         bool IsSingleCard = true;
         //check if the tile chosed is filled by a card or is an empty tile
         if (gameObject.GetComponent<CardTable>() != null)
@@ -65,69 +64,37 @@ public class MergeCard : NetworkBehaviour, IDropHandler
         if (IsSingleCard)
         {
             if (player == 0)
-            {//first check, if we have enough Move point to spend.
-                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
-                {
-                    bool cardCreated = MoveCardFromTableOnEmptySpace("RPCT", necessaryPoint);
-                    if (cardCreated)
-                    {
-                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                        Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
-                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                        placeManager.ResetCardHand();
-                        placeManager.ResetMergedCardTable();
-                        placeManager.ResetSingleCardTable();
-                    }
-                }
+            { 
+                     MoveCardFromTableOnEmptySpace( );
             }
             else if (player == 1)
-            {//first check, if we have enough Move point to spend.
-                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
-                {
-                    bool cardCreated = MoveCardFromTableOnEmptySpace("LPCT", necessaryPoint);
-                    if (cardCreated)
-                    {
-                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                        Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
-                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                        placeManager.ResetCardHand();
-                        placeManager.ResetMergedCardTable();
-                        placeManager.ResetSingleCardTable();
-                    }
-                }
+            { 
+                 MoveCardFromTableOnEmptySpace( );
             }
+            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            placeManager.ResetCardHand();
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
         }
         else if (!IsSingleCard)
         {
             if (player == 0)
-            {//first check, if we have enough Move point to spend.
-                if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
-                {
-                    bool cardCreated = MoveCardFromTableOnFilledSpace("RPCT", necessaryPoint);
-                    if (cardCreated)
-                    {
-                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                        Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
-                    }
-                }
+            { 
+                      MoveCardFromTableOnFilledSpace( );
             }
             else if (player == 1)
-            {//first check, if we have enough Move point to spend.
-                if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
-                {
-                    bool cardCreated = MoveCardFromTableOnFilledSpace("LPCT", necessaryPoint);
-                    if (cardCreated)
-                    {
-                        gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                        Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
-                    }
-                }
+            { 
+                     MoveCardFromTableOnFilledSpace( );
             }
+            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+            placeManager.ResetCardHand();
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
         }
     }
 
 
-    private bool MoveCardFromTableOnFilledSpace(string cardTableTag, int numberOfMergedCards)
+    private bool MoveCardFromTableOnFilledSpace( )
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                      //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
@@ -165,7 +132,7 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
         cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
 
-    private bool MoveCardFromTableOnEmptySpace(string cardTableTag, int numberOfMergedCards)
+    private bool MoveCardFromTableOnEmptySpace( )
     {
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                          //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check

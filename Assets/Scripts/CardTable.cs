@@ -16,7 +16,9 @@ namespace Assets.Scripts
         public NetworkVariable<int> IdCard = new NetworkVariable<int>();
         public NetworkVariable<int> Weight = new NetworkVariable<int>();
         public NetworkVariable<int> MergedWeight = new NetworkVariable<int>();
-        public NetworkVariable<int> Speed = new NetworkVariable<int>();
+        public NetworkVariable<int> MoveCost = new NetworkVariable<int>(1);
+        public NetworkVariable<int> MaxMove = new NetworkVariable<int>(2);
+        public NetworkVariable<int> Speed = new NetworkVariable<int>(2);
         public NetworkVariable<int> IdOwner = new NetworkVariable<int>();
         public NetworkVariable<int> CurrentPositionX = new NetworkVariable<int>();
         public NetworkVariable<int> CurrentPositionY = new NetworkVariable<int>();

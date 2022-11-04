@@ -97,17 +97,11 @@ public class GameManager : NetworkBehaviour
     public void MovePointSpent(int howMuchPoint)
     {
 
-        MovePointSpentServerRpc(howMuchPoint, CurrentTurn.Value);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void MovePointSpentServerRpc(int howMuchPoint, int whichPlayer)
-    {
-        if (whichPlayer == 0)
+        if (CurrentTurn.Value == 0)
         {
             PlayerZeroMP.Value = PlayerZeroMP.Value - howMuchPoint;
         }
-        else if (whichPlayer == 1)
+        if (CurrentTurn.Value == 1)
         {
             PlayerOneMP.Value = PlayerOneMP.Value - howMuchPoint;
         }
@@ -116,4 +110,5 @@ public class GameManager : NetworkBehaviour
             Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
         }
     }
+ 
 }
