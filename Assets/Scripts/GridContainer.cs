@@ -166,6 +166,11 @@ public class GridContainer : NetworkBehaviour
     public GameObject GetTopCardOnTile(int x, int y)
     {
         GameObject getTile = GetTile(x, y);
+        if (getTile == null)
+        {
+            Debug.Log("GetTopCardOnTile: the card on top is null");
+            return null;
+        }
         GameObject topCard;
         topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
         return topCard;

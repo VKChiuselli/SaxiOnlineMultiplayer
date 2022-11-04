@@ -52,13 +52,26 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                         else //so it is a filled tile
                         {
                             Debug.Log("OPEN POPUP player 0"); //manage point spent
-                            gameManager.GetComponent<GameManager>().OpenPopupUI(
-                                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-                                    gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-                                    gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
-                                    2
-                                );
+                            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           2
+                       );
+                            }
+                            else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
+                            {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           3
+                       );
+                            }
                         }
                     }
                 }
@@ -85,14 +98,26 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                         }
                         else //so it is a filled tile
                         {
-                            Debug.Log("OPEN POPUP player 0"); //manage point spent
-                            gameManager.GetComponent<GameManager>().OpenPopupUI(
-                                   placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
-                                    placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
-                                    gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
-                                    gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
-                                    2
-                                );
+                            Debug.Log("OPEN POPUP player 1"); //manage point spent
+                            if(gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2)
+                                    {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           2
+                       );
+                            }  else if(gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
+                                    {
+                                gameManager.GetComponent<GameManager>().OpenPopupUI(
+                          placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
+                           placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionX.Value,
+                           gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
+                           3
+                       );
+                            }
                         }
                     }
                 }

@@ -109,7 +109,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
         {//first check, if we have enough Move point to spend.
             if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
             {
-                bool cardCreated = PushCardFromTable("RPCT", necessaryPoint, placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
+                bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
                     gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
@@ -121,7 +121,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
         {//first check, if we have enough Move point to spend.
             if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
             {
-                bool cardCreated = PushCardFromTable("LPCT", necessaryPoint, placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
+                bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
                     gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
@@ -139,7 +139,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
         {//first check, if we have enough Move point to spend.
             if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
             {
-                bool cardCreated = PushCardFromTable("RPCT", necessaryPoint, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
+                bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
                     gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 0);
@@ -151,7 +151,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
         {//first check, if we have enough Move point to spend.
             if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
             {
-                bool cardCreated = PushCardFromTable("LPCT", necessaryPoint, placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
+                bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
                 if (cardCreated)
                 {
                     gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint, 1);
@@ -162,7 +162,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
     }
 
 
-    private bool PushCardFromTable(string cardTableTag, int numberOfMergedCards, CardTable cardTable)
+    private bool PushCardFromTable( CardTable cardTable)
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                      //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
@@ -299,9 +299,6 @@ public class PushCard : NetworkBehaviour, IDropHandler
 
         return 505;
     }
-
-  
-
 
 
     [ServerRpc(RequireOwnership = false)]
