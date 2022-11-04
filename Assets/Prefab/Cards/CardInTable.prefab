@@ -262,7 +262,6 @@ GameObject:
   - component: {fileID: 8012396393232581035}
   - component: {fileID: 9136577985858176113}
   - component: {fileID: 3155717926872911066}
-  - component: {fileID: -973328772762504473}
   - component: {fileID: -6055769950358830164}
   - component: {fileID: 4770880821683355578}
   m_Layer: 5
@@ -484,19 +483,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31263ab2c245ff14b842efe134068a69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CardTableToSpawn: {fileID: 6403154168061667466}
---- !u!114 &-973328772762504473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6403154168061667466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4a1f685b9021294baf13956e2971103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CardTableToSpawn: {fileID: 6403154168061667466}

@@ -38,6 +38,7 @@ public class PopupUI : MonoBehaviour
         gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(0));
         gameObject.transform.GetChild(1).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(1));
         gameObject.transform.GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(2));
+        gameObject.transform.GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(() => button_pressed(3));
     }
 
     private void button_pressed(int numberAction)
@@ -59,12 +60,19 @@ public class PopupUI : MonoBehaviour
         else
         if (numberAction == 1)
         {
-            Debug.Log("TODO merge/move");
+            Debug.Log("TODO move all cards");
             SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
             gameObject.SetActive(false);
         }
         else
         if (numberAction == 2)
+        {
+            Debug.Log("TODO move top card");
+            SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
+            gameObject.SetActive(false);
+        }
+        else
+        if (numberAction == 3)
         {
             Debug.Log("TODO cancel");
             gameObject.SetActive(false);
@@ -84,21 +92,61 @@ public class PopupUI : MonoBehaviour
         _yNewTile = yNewTile;
         _typeOfTile = typeOfTile;
 
-        if (typeOfTile == 1)
+    GameObject tile =    gridContainer.GetComponent<GridContainer>().GetTile(xOldTile, yOldTile);
+        if (tile == null)
         {
-            gameObject.transform.GetChild(0).gameObject.SetActive(false);
-            gameObject.transform.GetChild(1).gameObject.SetActive(true);
+            return;
         }
-        else if (typeOfTile == 2)
+
+        if (tile.transform.childCount == 1)
         {
-            gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            gameObject.transform.GetChild(1).gameObject.SetActive(true);
+            if (typeOfTile == 1)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            }
+            else if (typeOfTile == 2)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            }
+            else if (typeOfTile == 3)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            }
         }
-        else if (typeOfTile == 3)
+        else if (tile.transform.childCount > 1)
         {
-            gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            if (typeOfTile == 1)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            }
+            else if (typeOfTile == 2)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            }
+            else if (typeOfTile == 3)
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            }
         }
+        else
+        {
+            Debug.Log("InitializeVariables ERROR! no child on the tile");
+        }
+
+
+
     }
 
     private void OnDisable()
