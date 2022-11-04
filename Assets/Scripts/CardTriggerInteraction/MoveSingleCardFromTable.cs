@@ -34,16 +34,11 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
-                        bool isPlayed = MoveCardFromTable("RPCT");
-                        if (isPlayed)
-                        {
-                            Debug.Log("punto sottratto PlayerZero move");
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1 );
+                       MoveCardFromTable();
                             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                             placeManager.ResetCardHand();
                             placeManager.ResetMergedCardTable();
                             placeManager.ResetSingleCardTable();
-                        }
                     }
                 }
             }
@@ -56,16 +51,11 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
 
                         Debug.Log("punto sottratto PlayerOne move");
 
-                        bool isPlayed = MoveCardFromTable("LPCT");
-                        if (isPlayed)
-                        {
-                            gameManager.GetComponent<GameManager>().MovePointSpent(1);
+                        MoveCardFromTable();
                             gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                             placeManager.ResetCardHand();
                             placeManager.ResetMergedCardTable();
-                            placeManager.ResetSingleCardTable();
                         }
-                    }
                 }
             }
 
@@ -74,7 +64,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         }
     }
 
-    private bool MoveCardFromTable(string cardTableTag)
+    private bool MoveCardFromTable( )
     {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
         if (gameObject.transform.parent.name == "GridManager")
         {
@@ -89,6 +79,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                     gameObject.GetComponent<CoordinateSystem>().y);
 
                 placeManager.ResetCardHand();
+                placeManager.ResetMergedCardTable();
+                placeManager.ResetSingleCardTable();
                 return true;
             }
             else
@@ -119,6 +111,31 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 }
 
                 placeManager.ResetCardHand();
+                placeManager.ResetMergedCardTable();
+                placeManager.ResetSingleCardTable();
+                return true;
+            }else             if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
+            {//todo FARE IL PUSH QUA DENTRO
+                ChangeOwnerServerRpc();
+                if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
+                {
+                    CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
+                    int xNewTile = gameObject.GetComponent<CardTable>().CurrentPositionX.Value;
+                    int yNewTile = gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
+                    SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
+                        cardTable.CurrentPositionX.Value,
+                        cardTable.CurrentPositionY.Value,
+                        xNewTile,
+                        yNewTile);
+                }
+                else
+                {
+                    Debug.Log("Class PlaceCard, method OnPointerDown, Errore! CardHand vuota");
+                }
+
+                placeManager.ResetCardHand();
+                placeManager.ResetMergedCardTable();
+                placeManager.ResetSingleCardTable();
                 return true;
             }
             else

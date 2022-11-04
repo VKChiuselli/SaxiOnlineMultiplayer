@@ -127,6 +127,7 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
             gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
+            gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 
 
@@ -235,6 +236,7 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
             placeManager.ResetCardHand();
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
+            gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
         }
 

@@ -78,6 +78,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
             placeManager.ResetMergedCardTable();
             placeManager.ResetSingleCardTable();
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
+            gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
         }
 
 
