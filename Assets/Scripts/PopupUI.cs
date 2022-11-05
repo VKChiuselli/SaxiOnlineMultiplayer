@@ -167,7 +167,14 @@ public class PopupUI : MonoBehaviour
         {
             return 0;
         }
+
         CardTable cardPusher = gridContainer.GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
+
+        if (cardPusher.Speed.Value == 0)
+        {
+            return 0;
+        }
+
         CardTable cardPushed = gridContainer.GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
 
         int weightFriendlyCard = cardPusher.MergedWeight.Value == 0 ? cardPusher.Weight.Value : cardPusher.MergedWeight.Value;

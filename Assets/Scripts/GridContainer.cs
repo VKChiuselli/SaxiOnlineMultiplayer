@@ -142,11 +142,23 @@ public class GridContainer : NetworkBehaviour
 
         return cardsOnTile;
     }
+    public List<GameObject> GetAllCardsFromTile(GameObject tile)
+    {
+        List<GameObject> cardsOnTile = new List<GameObject>();
+
+        foreach (Transform cardToAdd in tile.transform)
+        {
+            GameObject card = cardToAdd.gameObject;
+            cardsOnTile.Add(card);
+        }
+
+        return cardsOnTile;
+    }
 
     public Transform GetCardTransform(int x, int y)
     {
         GameObject tile = GetTile(x, y);
-    //  tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Spawn();
+        //  tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Spawn();
         return tile.transform;
     }
 
@@ -180,7 +192,7 @@ public class GridContainer : NetworkBehaviour
         int weight = CalculateTotalWeight(GetTile(x, y));
         return weight;
     }
-    
+
     public int GetTotalMoveCostOnTile(int x, int y)
     {
         int moveCost = CalculateTotalMoveCost(GetTile(x, y));
@@ -303,7 +315,7 @@ public class GridContainer : NetworkBehaviour
             return 5;//it means no tile avaiable, the VOID
         }
 
-        if (nextTile.transform.childCount>=1)
+        if (nextTile.transform.childCount >= 1)
         {
             return 2;
         }//the next tile is filled by a card
@@ -351,5 +363,27 @@ public class GridContainer : NetworkBehaviour
         }
 
         return finalDirection;
+    }
+
+    public List<GameObject> GetCardsFromPlayer(int player)
+    {
+        List<GameObject> playerCards = new List<GameObject>();
+
+        foreach (GameObject tile in gridTiles)
+        {
+            foreach (GameObject card in GetAllCardsFromTile(tile))
+            {
+                if (card.GetComponent<CardTable>() != null)
+                {
+                    if (card.GetComponent<CardTable>().IdOwner.Value == player)
+                    {
+                        playerCards.Add(card);
+                    }
+                }
+            }
+        }
+
+        return playerCards;
+
     }
 }

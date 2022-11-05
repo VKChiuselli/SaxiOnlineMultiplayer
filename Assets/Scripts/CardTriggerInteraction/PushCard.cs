@@ -50,7 +50,7 @@ public class PushCard : NetworkBehaviour, IDropHandler
                         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
                         {
                             Debug.Log("player 1 push a merged card");
-                            //  MoveMergedCard(0);
+                            PushWithMergedCard(1);
                         }
                     }
                 }
@@ -102,74 +102,49 @@ public class PushCard : NetworkBehaviour, IDropHandler
 
     private void PushWithSingleCard(int player)
     {
-        int necessaryPoint = 1;
-
-
         if (player == 0)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
-            {
-                bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
-                if (cardCreated)
-                {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                    Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
-                }
-            }
+        { 
+            PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
         }
         else if (player == 1)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
-            {
-                bool cardCreated = PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
-                if (cardCreated)
-                {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                    Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
-                }
+        { 
+               PushCardFromTable( placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>());
             }
-        }
     }
+
     private void PushWithMergedCard(int player)
     {
-        int necessaryPoint = (placeManager.GetMergedCardSelectedFromTable().transform.parent.childCount);
-
-
         if (player == 0)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value >= necessaryPoint)
-            {
-                bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
-                if (cardCreated)
-                {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                    Debug.Log("Punti movimento spesi giocatore 0: " + necessaryPoint);
-                }
-            }
+        {
+               PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
+               
         }
         else if (player == 1)
-        {//first check, if we have enough Move point to spend.
-            if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value >= necessaryPoint)
-            {
-                bool cardCreated = PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
-                if (cardCreated)
-                {
-                    gameManager.GetComponent<GameManager>().MovePointSpent(necessaryPoint );
-                    Debug.Log("Punti movimento spesi giocatore 1: " + necessaryPoint);
-                }
-            }
+        { 
+                PushCardFromTable( placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>());
         }
     }
 
 
-    private bool PushCardFromTable( CardTable cardTable)
+    private bool PushCardFromTable( CardTable currentCardSelected)
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                      //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
-            CardTable currentCardSelected = cardTable;
 
-            int weightFriendlyCard = cardTable.MergedWeight.Value == 0 ? cardTable.Weight.Value : cardTable.MergedWeight.Value;
+            if (currentCardSelected.Speed.Value == 0)
+            {
+                return false;
+            }
+
+            int totalMove = SpawnManager.GetComponent<SpawnCardServer>().CheckMove(currentCardSelected.CurrentPositionX.Value, currentCardSelected.CurrentPositionY.Value);
+
+            if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
+            {
+                return false;
+            }
+
+            int weightFriendlyCard = currentCardSelected.MergedWeight.Value == 0 ? currentCardSelected.Weight.Value : currentCardSelected.MergedWeight.Value;
             int weightEnemyCard = gameObject.GetComponent<CardTable>().MergedWeight.Value == 0 ? gameObject.GetComponent<CardTable>().Weight.Value : gameObject.GetComponent<CardTable>().MergedWeight.Value;
             if (weightFriendlyCard <= weightEnemyCard)
             {

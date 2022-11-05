@@ -242,65 +242,6 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
 
     }
 
-    private bool MoveCardFromTable(string cardTableTag)
-    {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
-        if (gameObject.transform.parent.name == "GridManager")
-        {
-            if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                             //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
-            {
-                ChangeOwnerServerRpc();
-                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
-                {
-                    CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-                    SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(
-                   cardTable.CurrentPositionX.Value,
-                   cardTable.CurrentPositionY.Value,
-                      gameObject.GetComponent<CoordinateSystem>().x,
-              gameObject.GetComponent<CoordinateSystem>().y
-              );
-                }
-                else
-                {
-                    Debug.Log("Classe PlaceCard, metodo OnPointerDown, Errore! CardHand vuota");
-                }
-
-                placeManager.ResetMergedCardTable();
-                return true;
-            }
-            else
-                return false;
-        }
-        else
-        {
-            if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
-                                                                                                         //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
-            {
-                ChangeOwnerServerRpc();
-                if (placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>() != null)
-                {
-                    CardTable cardTable = placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>();
-                    SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(
-                            cardTable.CurrentPositionX.Value,
-                   cardTable.CurrentPositionY.Value,
-                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
-                 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
-              );
-                }
-                else
-                {
-                    Debug.Log("Class PlaceCard, method OnPointerDown, Errore! CardHand vuota");
-                }
-
-                placeManager.ResetMergedCardTable();
-                return true;
-            }
-            else
-                return false;
-        }
-    }
-
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {

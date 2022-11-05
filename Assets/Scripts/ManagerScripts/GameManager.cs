@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     [SerializeField] GameObject popupChoose;
+     GameObject grid;
+     GridContainer gridContainer;
     //  GameBoard gameBoard;
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
@@ -17,6 +20,11 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> PlayerOneMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerOneDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
 
+    private void Start()
+    {
+        grid = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = grid.GetComponent<GridContainer>();
+    }
 
     public void EndTurn()
     {//TODO reset cards picked
@@ -38,9 +46,26 @@ public class GameManager : NetworkBehaviour
             PlayerOneDP.Value = 2;
         }
         IsUnmergeChoosing.Value = 0;
+        IsPopupChoosing.Value = 0;
+
+        ResetSpeedCards(CurrentTurn.Value);
+
 
         CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
         //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
+   
+    }
+
+    private void ResetSpeedCards(int player)
+    {
+        List<GameObject> playerCard = gridContainer.GetCardsFromPlayer(player);
+
+        foreach (GameObject card in playerCard)
+        {
+            card.GetComponent<CardTable>().Speed.Value = 2 ; //TODO call a method that reset own speed
+        }
+
+        //TODO implement reset speed card, every card get his own card and reset it as default
     }
 
     public void SetIsPopupChoosing(int IsPopupChoosing)
@@ -77,6 +102,38 @@ public class GameManager : NetworkBehaviour
         IsUnmergeChoosing.Value = unmergeStatus;
     }
 
+    public int GetCurrentPlayerDeployPoint()
+    {
+        if (CurrentTurn.Value == 0)
+        {
+        return    PlayerZeroDP.Value  ;
+        }
+        else if (CurrentTurn.Value == 1)
+        {
+            return PlayerOneDP.Value ;
+        }
+        else
+        {
+            Debug.Log("ERROR!! Class gameManager, class GetCurrentPlayerDeployPoint. whichplayer is wrong!!");
+            return 0;
+        }
+    }
+    public int GetCurrentPlayerMovePoint()
+    {
+        if (CurrentTurn.Value == 0)
+        {
+        return    PlayerZeroMP.Value  ;
+        }
+        else if (CurrentTurn.Value == 1)
+        {
+            return PlayerOneMP.Value ;
+        }
+        else
+        {
+            Debug.Log("ERROR!! Class gameManager, class GetCurrentPlayerMovePoint. whichplayer is wrong!!");
+            return 0;
+        }
+    }
 
     public void DeployPointSpent(int howMuchPoint)
     {

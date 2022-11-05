@@ -136,15 +136,21 @@ public class SpawnCardServer : NetworkBehaviour
     public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
     {
         int totalMove = CheckMove(xOldTile, yOldTile);
-
+        int totalSpeed = CheckSpeed(xOldTile, yOldTile);
         if (!isPushed)
         {
-            if (totalMove == 0)
+            if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
             {
+                Debug.Log("Not enough Move Points");
+                return;
+            }
+            else if (totalSpeed == 0)
+            {
+                Debug.Log("Not enough speed");
                 return;
             }
         }
-       
+
 
 
         GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
@@ -164,24 +170,38 @@ public class SpawnCardServer : NetworkBehaviour
 
         if (!isPushed)
         {
+            RemoveSpeedCard(xNewTile, yNewTile);
             gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         }
     }
 
-    private int CheckMove(int xOldTile, int yOldTile)
+
+    public int CheckMove(int xOldTile, int yOldTile)
     {
         return gridContainer.GetComponent<GridContainer>().GetTotalMoveCostOnTile(xOldTile, yOldTile);
+    }
+    private int CheckMoveTopCard(int xOldTile, int yOldTile)
+    {
+        return gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>().MoveCost.Value;
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
         int totalMove = CheckMove(xOldTile, yOldTile);
+        int totalSpeed = CheckSpeed(xOldTile, yOldTile);
 
-        if (totalMove == 0)
+        if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
         {
+            Debug.Log("Not enough Move Points");
             return;
         }
+        if (totalSpeed == 0)
+        {
+            Debug.Log("Not enough speed");
+            return;
+        }
+
 
         GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
         if (tileWhereToSpawn == null)
@@ -200,12 +220,25 @@ public class SpawnCardServer : NetworkBehaviour
 
         UpdateWeightTopCard(xNewTile, yNewTile);
         gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
+        RemoveSpeedCard(xNewTile, yNewTile);
     }
 
 
     [ServerRpc(RequireOwnership = false)]
     public void MoveTopCardToAnotherTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
+        int totalMove = CheckMoveTopCard(xOldTile, yOldTile);
+        int totalSpeed = CheckSpeed(xOldTile, yOldTile);
+        if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
+        {
+            Debug.Log("Not enough Move Points");
+            return;
+        }
+        if (totalSpeed == 0)
+        {
+            Debug.Log("Not enough speed");
+            return;
+        }
         //TODO improve code with cards here
         GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
         GameObject newTile = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
@@ -217,6 +250,7 @@ public class SpawnCardServer : NetworkBehaviour
         UpdateWeightTopCard(xNewTile, yNewTile);
 
         gameManager.GetComponent<GameManager>().MovePointSpent(1);
+        RemoveSpeedCard(xNewTile, yNewTile);
     }
 
     private void UpdateWeightTopCard(int x, int y)
@@ -226,6 +260,28 @@ public class SpawnCardServer : NetworkBehaviour
         cardOnTop.GetComponent<CardTable>().MergedWeight.Value = finalWeight;
     }
 
+    private int CheckSpeed(int xOldTile, int yOldTile)
+    {
+        GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
+
+        if (topCard.GetComponent<CardTable>() != null)
+        {
+            if (topCard.GetComponent<CardTable>().Speed.Value > 0)
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    private void RemoveSpeedCard(int xNewTile, int yNewTile)
+    {
+        GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
+        if (topCard.GetComponent<CardTable>() != null)
+        {
+            topCard.GetComponent<CardTable>().Speed.Value = topCard.GetComponent<CardTable>().Speed.Value - 1;
+        }
+    }
 
 
     public int PushCardFromTable(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
@@ -234,8 +290,21 @@ public class SpawnCardServer : NetworkBehaviour
         {
             return 0;
         }
+
         CardTable cardPusher = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
         CardTable cardPushed = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
+
+        if (cardPusher.Speed.Value == 0)
+        {
+            return 0;
+        }
+
+        int totalMove = CheckMove(xOldTile, yOldTile);
+
+        if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
+        {
+            return 0;
+        }
 
         int weightFriendlyCard = cardPusher.MergedWeight.Value == 0 ? cardPusher.Weight.Value : cardPusher.MergedWeight.Value;
         int weightEnemyCard = cardPushed.MergedWeight.Value == 0 ? cardPushed.Weight.Value : cardPushed.MergedWeight.Value;
@@ -280,20 +349,20 @@ public class SpawnCardServer : NetworkBehaviour
             //I push the cards less the pusher
             foreach (GameObject tile in tilesToPush)
             {
-                 MoveAllCardsToEmptyTileServerRpc(
-                    tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
-                    tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
-                    true
-                    );
+                MoveAllCardsToEmptyTileServerRpc(
+                   tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
+                   tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
+                   true
+                   );
             }
             //I move the card that pushed the other cards
-           MoveAllCardsToEmptyTileServerRpc(
-                  xOldTile,
-                  yOldTile,
-                  xNewTile,
-                  yNewTile,
-                  false
-                );
+            MoveAllCardsToEmptyTileServerRpc(
+                   xOldTile,
+                   yOldTile,
+                   xNewTile,
+                   yNewTile,
+                   false
+                 );
         }
         else
         {
