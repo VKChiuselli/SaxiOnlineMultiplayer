@@ -46,7 +46,7 @@ public class PopupUI : MonoBehaviour
         if (numberAction == 0)
         {
             Debug.Log("TODO push");
-            int result = PushCardFromTable(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
+            int result = SpawnManager.GetComponent<SpawnCardServer>().PushCardFromTable(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
             if (result>0)
             {
                 Debug.Log("Card pushed from UI!");
@@ -161,149 +161,8 @@ public class PopupUI : MonoBehaviour
     }
 
 
-    private int PushCardFromTable(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
-    {
-        if (xOldTile == 0 && yOldTile == 0 && xNewTile == 0 && yNewTile == 0)
-        {
-            return 0;
-        }
-
-        CardTable cardPusher = gridContainer.GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
-
-        if (cardPusher.Speed.Value == 0)
-        {
-            return 0;
-        }
-
-        CardTable cardPushed = gridContainer.GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
-
-        int weightFriendlyCard = cardPusher.MergedWeight.Value == 0 ? cardPusher.Weight.Value : cardPusher.MergedWeight.Value;
-        int weightEnemyCard = cardPushed.MergedWeight.Value == 0 ? cardPushed.Weight.Value : cardPushed.MergedWeight.Value;
-        if (weightFriendlyCard <= weightEnemyCard)
-        {
-            return 0;
-        }
-
-        int check = CheckBehindCard(
-                  xOldTile,
-                  yOldTile,
-                  xNewTile,
-                  yNewTile,
-                  weightFriendlyCard,
-                  weightEnemyCard);
-
-        if (check == 505)
-        {
-            return 0;
-        }
-
-
-
-        List<GameObject> tilesToPushList = new List<GameObject>();
-        List<GameObject> tilesToPush = new List<GameObject>();
-        tilesToPush = FindAllCardsToPush(
-                  xOldTile,
-                  yOldTile,
-                  xNewTile,
-                  yNewTile,
-                  weightFriendlyCard,
-                  weightEnemyCard,
-                  tilesToPushList);
-
-        int x = xNewTile - xOldTile;
-        int y = yNewTile - yOldTile;
-
-        tilesToPush.Reverse();
-
-        if (tilesToPush != null)
-        {
-            //I push the cards less the pusher
-            foreach (GameObject tile in tilesToPush)
-            {
-                SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
-                    tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
-                    tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
-                    true
-                    );
-            }
-            //I move the card that pushed the other cards
-            SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
-                  xOldTile,
-                  yOldTile,
-                  xNewTile,
-                  yNewTile,
-                  false
-                );
-        }
-        else
-        {
-            Debug.Log("ERROR! no card added in the list to be pushed!");
-        }
-
-        return gridContainer.GetTile(xNewTile, yNewTile).transform.childCount;
-    }
-
-    private int CheckBehindCard(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy)
-    {
-        int x = xPushed - xPusher;
-        int y = yPushed - yPusher;
-        if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
-        {
-            return 400; //400 è VERO
-        }
-        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
-        {
-            return 400; //400 è VERO
-        }
-        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
-        {
-            int nextCardWeight = gridContainer.GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
-            int totalWeight = nextCardWeight + weightEnemy;
-            if (totalWeight >= weightFriendly)
-            {
-                Debug.Log("too much weight, we can't push it");
-                return 505; //505 è FALSO
-            }
-
-            return CheckBehindCard(xPusher + x, yPusher + y, xPushed + x, yPushed + y, weightFriendly, totalWeight);
-        }
-
-        return 505;
-    }
-
-
  
-
-    private List<GameObject> FindAllCardsToPush(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy, List<GameObject> tilesToPush)
-    {
-        int x = xPushed - xPusher;
-        int y = yPushed - yPusher;
-        if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
-        {
-            return tilesToPush;
-        }
-        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
-        {
-            return tilesToPush;
-        }
-        else if (gridContainer.GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
-        {
-            int nextCardWeight = gridContainer.GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
-            int totalWeight = nextCardWeight + weightEnemy;
-            if (totalWeight >= weightFriendly)
-            {
-                Debug.Log("we shold not enter here becauise FindAllCardsToPush means that all cards will be pushed!");
-                return tilesToPush;
-            }
-
-            GameObject tileToAdd = gridContainer.GetTile(xPushed, yPushed);
-            tilesToPush.Add(tileToAdd);
-
-            return FindAllCardsToPush(xPusher + x, yPusher + y, xPushed + x, yPushed + y, weightFriendly, totalWeight, tilesToPush);
-        }
-
-        return tilesToPush;
-    }
+ 
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
