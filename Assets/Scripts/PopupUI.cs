@@ -49,7 +49,6 @@ public class PopupUI : MonoBehaviour
             int result = PushCardFromTable(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
             if (result>0)
             {
-                gameManager.GetComponent<GameManager>().MovePointSpent(result);
                 Debug.Log("Card pushed from UI!");
             }
             else
@@ -216,7 +215,8 @@ public class PopupUI : MonoBehaviour
             {
                 SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
                     tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
-                    tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y
+                    tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
+                    true
                     );
             }
             //I move the card that pushed the other cards
@@ -224,7 +224,8 @@ public class PopupUI : MonoBehaviour
                   xOldTile,
                   yOldTile,
                   xNewTile,
-                  yNewTile
+                  yNewTile,
+                  false
                 );
         }
         else
@@ -264,12 +265,7 @@ public class PopupUI : MonoBehaviour
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeOwnerServerRpc()
-    {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-    }
-
+ 
 
     private List<GameObject> FindAllCardsToPush(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy, List<GameObject> tilesToPush)
     {
@@ -302,5 +298,10 @@ public class PopupUI : MonoBehaviour
         return tilesToPush;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void ChangeOwnerServerRpc()
+    {
+        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
+    }
 
 }

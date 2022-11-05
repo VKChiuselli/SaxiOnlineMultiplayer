@@ -122,11 +122,12 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                     CardTable cardTable = placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>();
                     int xNewTile = gameObject.GetComponent<CardTable>().CurrentPositionX.Value;
                     int yNewTile = gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
-                    SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
+                    SpawnManager.GetComponent<SpawnCardServer>().PushCardFromTable(
                         cardTable.CurrentPositionX.Value,
                         cardTable.CurrentPositionY.Value,
                         xNewTile,
-                        yNewTile);
+                        yNewTile
+                        );
                 }
                 else
                 {

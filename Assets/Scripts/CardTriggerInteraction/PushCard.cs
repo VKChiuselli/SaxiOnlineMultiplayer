@@ -218,13 +218,15 @@ public class PushCard : NetworkBehaviour, IDropHandler
                 {
                     SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
                         tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
-                        tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y
+                        tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
+                        true
                         );
                 }
                 //I move the card that pushed the other cards
                 SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
                     currentCardSelected.CurrentPositionX.Value, currentCardSelected.CurrentPositionY.Value,
-                    gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x, gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
+                    gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x, gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
+                    false
                     );
             }
             else

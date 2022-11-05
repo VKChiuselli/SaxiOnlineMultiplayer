@@ -144,7 +144,8 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
 placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionX.Value,
 placeManager.GetMergedCardSelectedFromTable().GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.GetComponent<CoordinateSystem>().x,
-gameObject.GetComponent<CoordinateSystem>().y
+gameObject.GetComponent<CoordinateSystem>().y,
+false
 );
             }
             else
