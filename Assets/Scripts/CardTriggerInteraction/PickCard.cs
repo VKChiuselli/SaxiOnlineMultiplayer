@@ -73,6 +73,14 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     private void PickCardFromHand(string DeployTile)
     {
         ResetShowTilesClientRpc();
+        if (placeManager.GetCardSelectedFromHand() != null)
+        {
+            if (gameObject.name == placeManager.GetCardSelectedFromHand().name)
+            {
+                placeManager.ResetCardHand();
+                return;
+            }
+        }
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         EventsManager.current.PickCardFromHand(gameObject);
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();

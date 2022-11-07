@@ -8,7 +8,6 @@ using UnityEngine;
 public class SpawnCardServer : NetworkBehaviour
 {
 
-    PlaceManager placeManager;
     GameObject gridContainer;
     GameObject gameManager;
     GameObject deckManager;
@@ -16,7 +15,6 @@ public class SpawnCardServer : NetworkBehaviour
 
     void Start()
     {
-        placeManager = FindObjectOfType<PlaceManager>();
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
         deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
