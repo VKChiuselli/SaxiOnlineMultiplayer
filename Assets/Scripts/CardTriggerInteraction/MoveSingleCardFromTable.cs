@@ -34,11 +34,11 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerZeroMP.Value > 0)
                     {
-                       MoveCardFromTable();
-                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                            placeManager.ResetCardHand();
-                            placeManager.ResetMergedCardTable();
-                            placeManager.ResetSingleCardTable();
+                        MoveCardFromTable();
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
                     }
                 }
             }
@@ -48,14 +48,12 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 {
                     if (gameManager.GetComponent<GameManager>().PlayerOneMP.Value > 0)
                     {
-
-                        Debug.Log("punto sottratto PlayerOne move");
-
                         MoveCardFromTable();
-                            gridContainer.GetComponent<GridContainer>().ResetShowTiles();
-                            placeManager.ResetCardHand();
-                            placeManager.ResetMergedCardTable();
-                        }
+                        gridContainer.GetComponent<GridContainer>().ResetShowTiles();
+                        placeManager.ResetCardHand();
+                        placeManager.ResetMergedCardTable();
+                        placeManager.ResetSingleCardTable();
+                    }
                 }
             }
 
@@ -64,7 +62,7 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
         }
     }
 
-    private bool MoveCardFromTable( )
+    private bool MoveCardFromTable()
     {//if it is gridManager, it means it is empty space on the grid otherwise is a card already existing
         if (gameObject.transform.parent.name == "GridManager")
         {
@@ -114,7 +112,8 @@ public class MoveSingleCardFromTable : NetworkBehaviour, IDropHandler
                 placeManager.ResetMergedCardTable();
                 placeManager.ResetSingleCardTable();
                 return true;
-            }else             if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
+            }
+            else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)
             {//todo FARE IL PUSH QUA DENTRO
                 ChangeOwnerServerRpc();
                 if (placeManager.GetSingleCardSelectedFromTable().GetComponent<CardTable>() != null)
