@@ -92,6 +92,12 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value == 0)
+                {
+                    Debug.Log("  Errore! not enough copies");
+                    placeManager.ResetCardHand();
+                    return false;
+                }
                 SpawnManager.GetComponent<SpawnCardServer>().DeployServerRpc(
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
@@ -101,7 +107,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           cardTableTag, //RPT Right player Table
           gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
-          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value
           );
             }
             else
@@ -115,6 +122,12 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
             ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
+                if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value == 0)
+                {
+                    Debug.Log("  Errore! not enough copies");
+                    placeManager.ResetCardHand();
+                    return false;
+                }
                 SpawnManager.GetComponent<SpawnCardServer>().DeployMergeServerRpc(
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
@@ -124,7 +137,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           cardTableTag, //RPT Right player Table
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
-            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value
+            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value,
+            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value
           );
             }
             else
@@ -144,7 +158,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 
- 
+
     private Vector3 GetMouseAsWorldPoint()
     {
 

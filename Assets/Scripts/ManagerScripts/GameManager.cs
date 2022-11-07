@@ -157,7 +157,7 @@ public class GameManager : NetworkBehaviour
         if (CurrentTurn.Value == 0)
         {
             PlayerZeroMP.Value = PlayerZeroMP.Value - howMuchPoint;
-        }
+        }else
         if (CurrentTurn.Value == 1)
         {
             PlayerOneMP.Value = PlayerOneMP.Value - howMuchPoint;

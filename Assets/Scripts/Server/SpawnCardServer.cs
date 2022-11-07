@@ -28,12 +28,18 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost) //MyCardStruct cartaDaSpawnare
+    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies) //MyCardStruct cartaDaSpawnare
     {
+
         if (CheckDeploy(deployCost))
         {
             return;
         }
+        if (CheckEnoughCopies(Copies))
+        {
+            return;
+        }
+
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);
@@ -51,14 +57,25 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
+   //     GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject;
+        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetIndexCard(0);
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
-
+        CardHand cardToRemoveCopy = deckManager.GetComponent<DeckLoad>().GetCardHand(IdCard);
+        cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
+    }
+
+    private bool CheckEnoughCopies(int copies)
+    {
+        if (copies == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     private bool CheckDeploy(int deployCost)
@@ -82,12 +99,17 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost) //MyCardStruct cartaDaSpawnare
+    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies) //MyCardStruct cartaDaSpawnare
     {
         if (CheckDeploy(deployCost))
         {
             return;
         }
+        if (CheckEnoughCopies(Copies))
+        {
+            return;
+        }
+
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);
@@ -105,13 +127,16 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCard(0);//TODO instead of put 0, I must put the number of card, the zero it will be card Dog(0), ent(1), dragon(2) etc
-
+    //    GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject; //it is child 8 because the card is putted there
+        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetIndexCard(0);
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
 
+
+        CardHand cardToRemoveCopy = deckManager.GetComponent<DeckLoad>().GetCardHand(IdCard);
+        cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
         UpdateWeightTopCard(x, y);
     }

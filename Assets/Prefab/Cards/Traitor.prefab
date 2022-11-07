@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2600767316102733458, guid: 5bfdfa5f34053b14d9e4c6622e522a08, type: 3}
       propertyPath: m_Name
-      value: Dog_Card
+      value: Traitor
       objectReference: {fileID: 0}
     - target: {fileID: 9095596503194689967, guid: 5bfdfa5f34053b14d9e4c6622e522a08, type: 3}
       propertyPath: m_Pivot.x
@@ -99,8 +99,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8449007486929249320, guid: 5bfdfa5f34053b14d9e4c6622e522a08, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5bfdfa5f34053b14d9e4c6622e522a08, type: 3}
+--- !u!1 &8975620648163769228 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2600767316102733458, guid: 5bfdfa5f34053b14d9e4c6622e522a08, type: 3}
+  m_PrefabInstance: {fileID: 6383860668873418014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8809405002207457468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8975620648163769228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb2b51f3ccc8394888fb837c2b70f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8063560220902166787
 PrefabInstance:
   m_ObjectHideFlags: 0

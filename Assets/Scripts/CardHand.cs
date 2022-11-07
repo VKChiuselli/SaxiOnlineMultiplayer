@@ -39,7 +39,7 @@ namespace Assets.Scripts
             Testo_Peso.text = Weight.Value.ToString();
             Testo_Speed.text = Speed.Value.ToString();
             Testo_Copie.text = Copies.Value.ToString();
-          GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");  
+            GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");
         }
 
         public void PlayCard()

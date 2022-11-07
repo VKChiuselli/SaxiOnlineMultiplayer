@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca764bde583c804bbe8707df395939e, type: 3}
   m_Name: Ent
   m_EditorClassIdentifier: 
-  IdCard: 0
+  IdCard: 3
   Copies: 2
   Weight: 15
   Speed: 2
