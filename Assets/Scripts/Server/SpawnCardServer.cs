@@ -10,14 +10,16 @@ public class SpawnCardServer : NetworkBehaviour
 
     GameObject gridContainer;
     GameObject gameManager;
-    GameObject deckManager;
+    GameObject deckManagerRight;
+    GameObject deckManagerLeft;
     [SerializeField] GameObject CardTableToSpawn;
 
     void Start()
     {
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
         gameManager = GameObject.Find("Managers/GameManager");
-        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+        deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
     }
 
 
@@ -28,7 +30,8 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies) //MyCardStruct cartaDaSpawnare
+    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, 
+        string tag, int x, int y, int deployCost, int Copies, int CardPosition)  
     {
 
         if (CheckDeploy(deployCost))
@@ -57,14 +60,30 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-   //     GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject;
-        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetIndexCard(0);
+        //     GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject;
+
+
+
+        DeckLoad deckLoad = null;
+
+        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value==0)
+        {
+            deckLoad = deckManagerRight.GetComponent<DeckLoad>() ;
+        }
+        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+        {
+            deckLoad = deckManagerLeft.GetComponent<DeckLoad>() ;
+        }
+
+        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition); 
+      
+
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
-        CardHand cardToRemoveCopy = deckManager.GetComponent<DeckLoad>().GetCardHand(IdCard);
+        CardHand cardToRemoveCopy = deckLoad.GetCardHand(IdCard);
         cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
     }
@@ -99,7 +118,7 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies) //MyCardStruct cartaDaSpawnare
+    public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies, int CardPosition) //MyCardStruct cartaDaSpawnare
     {
         if (CheckDeploy(deployCost))
         {
@@ -127,15 +146,26 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-    //    GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject; //it is child 8 because the card is putted there
-        GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetIndexCard(0);
+        //    GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject; //it is child 8 because the card is putted there
+        DeckLoad deckLoad = null;
+
+        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
+        {
+            deckLoad = deckManagerRight.GetComponent<DeckLoad>();
+        }
+        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+        {
+            deckLoad = deckManagerLeft.GetComponent<DeckLoad>();
+        }
+
+        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition);
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
 
 
-        CardHand cardToRemoveCopy = deckManager.GetComponent<DeckLoad>().GetCardHand(IdCard);
+        CardHand cardToRemoveCopy = deckLoad.GetComponent<DeckLoad>().GetCardHand(IdCard);
         cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
         UpdateWeightTopCard(x, y);

@@ -6,19 +6,30 @@ using UnityEngine;
 
 public class DeckLoad : NetworkBehaviour
 {
-    [SerializeField] private GameObject CardOne;
-    [SerializeField] private GameObject CardTwo;
-    [SerializeField] private GameObject CardThree;
-    [SerializeField] private GameObject CardFour;
-    [SerializeField] private GameObject CardFive;
-    [SerializeField] private GameObject CardSix;
+
+    private GameObject CardOne;
+    private GameObject CardTwo;
+    private GameObject CardThree;
+    private GameObject CardFour;
+ private NetworkManager netti;
 
     void Start()
-    {
-        //if (gameObject.transform.GetChild(0).gameObject != null)
-        //{
-        //    CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
-        //}
+    {//TODO improve network 
+        netti = FindObjectOfType<NetworkManager>();
+        CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
+        CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
+        CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
+        CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
+        netti.AddNetworkPrefab(CardOne);
+        netti.AddNetworkPrefab(CardTwo);
+        netti.AddNetworkPrefab(CardThree);
+        netti.AddNetworkPrefab(CardFour);
+
+        gameObject.transform.GetChild(0).gameObject.GetComponent<CardHand>().CardPosition.Value = 0;
+        gameObject.transform.GetChild(1).gameObject.GetComponent<CardHand>().CardPosition.Value = 1;
+        gameObject.transform.GetChild(2).gameObject.GetComponent<CardHand>().CardPosition.Value = 2;
+        gameObject.transform.GetChild(3).gameObject.GetComponent<CardHand>().CardPosition.Value = 3;
+
         //if (gameObject.transform.GetChild(1).gameObject != null)
         //{
         //    CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
@@ -92,6 +103,7 @@ public class DeckLoad : NetworkBehaviour
         {
             return CardFour;
         }
+   
         Debug.Log("DeckLoad, method GetCard: No card found! Error!!");
         return null;
     }

@@ -108,7 +108,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.GetComponent<CoordinateSystem>().y,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value,
-          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value,
+          placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().CardPosition.Value
           );
             }
             else
@@ -138,7 +139,8 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
           gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y,
             placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().DeployCost.Value,
-            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value
+            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value,
+            placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().CardPosition.Value
           );
             }
             else
