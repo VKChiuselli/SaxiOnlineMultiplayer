@@ -84,7 +84,7 @@ public class SpawnCardServer : NetworkBehaviour
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
         cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
         CardHand cardToRemoveCopy = deckLoad.GetCardHand(IdCard);
-        cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
+        cardToRemoveCopy.PlayCard();
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
     }
 
@@ -166,7 +166,7 @@ public class SpawnCardServer : NetworkBehaviour
 
 
         CardHand cardToRemoveCopy = deckLoad.GetComponent<DeckLoad>().GetCardHand(IdCard);
-        cardToRemoveCopy.Copies.Value = cardToRemoveCopy.Copies.Value - 1;
+        cardToRemoveCopy.PlayCard();
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
         UpdateWeightTopCard(x, y);
     }

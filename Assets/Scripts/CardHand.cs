@@ -48,7 +48,6 @@ namespace Assets.Scripts
             if (Copies.Value > 0)
             {
                 Copies.Value--;
-                Testo_Copie.text = Copies.ToString();
             }
             else
             {
@@ -56,6 +55,11 @@ namespace Assets.Scripts
             }
 
 
+        }
+
+        private void Update()
+        {
+                Testo_Copie.text = Copies.Value.ToString();
         }
 
     }

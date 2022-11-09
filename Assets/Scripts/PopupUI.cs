@@ -11,24 +11,18 @@ public class PopupUI : MonoBehaviour
     [SerializeField] GameObject pushButton;
     [SerializeField] GameObject mergeButton;
     [SerializeField] GameObject cancelButton;
+    GridContainer gridContainer;
 
     int _xOldTile;
     int _yOldTile;
     int _xNewTile;
     int _yNewTile;
     int _typeOfTile;
-    PlaceManager placeManager;
-    GridContainer gridContainer;
-    GameObject gameManager;
-    GameObject deckManager;
     GameObject SpawnManager;
 
     void Start()
     {
-        placeManager = FindObjectOfType<PlaceManager>();
-        gameManager = GameObject.Find("Managers/GameManager");
         SpawnManager = GameObject.Find("Managers/SpawnManager");
-        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
     }
 
 
@@ -158,16 +152,6 @@ public class PopupUI : MonoBehaviour
         _yOldTile = 0;
         _xNewTile = 0;
         _yNewTile = 0;
-    }
-
-
- 
- 
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeOwnerServerRpc()
-    {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
     }
 
 }

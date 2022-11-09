@@ -882,7 +882,6 @@ MonoBehaviour:
   pushButton: {fileID: 7403056304317869759}
   mergeButton: {fileID: 7403056304365138346}
   cancelButton: {fileID: 7403056303444337201}
-  CardTableToSpawn: {fileID: 0}
 --- !u!114 &4314800816582211062
 MonoBehaviour:
   m_ObjectHideFlags: 0
