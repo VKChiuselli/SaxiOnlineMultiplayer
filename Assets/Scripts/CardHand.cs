@@ -28,7 +28,7 @@ namespace Assets.Scripts
         public NetworkVariable<int> CardPosition = new NetworkVariable<int>();
         public NetworkVariable<FixedString32Bytes> IdImageCard = new NetworkVariable<FixedString32Bytes>();
 
-        private void Start()
+        void Start()
         {
             IdCard.Value = cardSO.IdCard;
             Copies.Value = cardSO.Copies;
@@ -36,6 +36,7 @@ namespace Assets.Scripts
             Speed.Value = cardSO.Speed;
             IdOwner.Value = cardSO.IdOwner;
             IdImageCard.Value = cardSO.IdImageCard;
+            CardPosition.Value = cardSO.CardPosition;
 
             Testo_Peso.text = Weight.Value.ToString();
             Testo_Speed.text = Speed.Value.ToString();

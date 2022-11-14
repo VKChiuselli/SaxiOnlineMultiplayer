@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 20
   Speed: 2
   IdOwner: 0
+  CardPosition: 2
   IdImageCard: dragon_coldbreath

@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 15
   Speed: 2
   IdOwner: 0
+  CardPosition: 0
   IdImageCard: 14_summon_dogs

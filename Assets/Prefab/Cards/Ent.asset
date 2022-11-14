@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 15
   Speed: 2
   IdOwner: 0
+  CardPosition: 3
   IdImageCard: 5_summon_ent

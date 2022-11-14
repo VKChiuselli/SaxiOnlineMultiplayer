@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace HelloWorld
 {
-    public class GameNetworkManager : MonoBehaviour
+    public class GameNetworkManager : NetworkBehaviour
     {
         public static int playerLogged;
         static GameObject gameManager;
-         void Start()
+        public override void OnNetworkSpawn()
         {
             gameManager = GameObject.Find("Managers/GameManager");
         }
@@ -85,12 +85,6 @@ namespace HelloWorld
                     //se è cliente  e nn server fa questo
                 }
             }
-        }
-
-        [ServerRpc]
-        public void LoggingClientCount()
-        {
-            playerLogged++;
         }
 
     }

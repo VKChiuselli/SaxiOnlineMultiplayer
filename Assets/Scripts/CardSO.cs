@@ -16,6 +16,7 @@ public class CardSO : ScriptableObject
     public int Weight;
     public int Speed;
     public int IdOwner;
+    public int CardPosition;
     public string IdImageCard;
 
 

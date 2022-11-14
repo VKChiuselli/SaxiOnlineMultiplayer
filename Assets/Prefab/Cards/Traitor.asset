@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 10
   Speed: 2
   IdOwner: 0
+  CardPosition: 1
   IdImageCard: 25_secret_community

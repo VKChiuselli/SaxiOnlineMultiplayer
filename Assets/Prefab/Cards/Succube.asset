@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 10
   Speed: 2
   IdOwner: 1
+  CardPosition: 3
   IdImageCard: 10_summon_succubus

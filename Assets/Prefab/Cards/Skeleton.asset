@@ -17,4 +17,5 @@ MonoBehaviour:
   Weight: 10
   Speed: 2
   IdOwner: 1
+  CardPosition: 1
   IdImageCard: 04_summon_skeleton_army

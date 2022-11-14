@@ -427,50 +427,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5184994206645545509, guid: 852d45e01ff786145b29f7ea1110dbdb, type: 3}
   m_PrefabInstance: {fileID: 5184994205049287869}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1780043797
+--- !u!1 &1780043797 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4987967814889235613, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+  m_PrefabInstance: {fileID: 4987967814252147848}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1780043798}
-  - component: {fileID: 1780043799}
-  m_Layer: 0
-  m_Name: GameNetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1780043798
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780043797}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.510757, y: -1.8140708, z: -5.9808607}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1780043799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780043797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be87189133542fc45bf8f9456e70aa7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1863154103 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5501228890928601546, guid: 046f8e732e66bf24e9665bc36fd4344e, type: 3}
@@ -773,6 +734,11 @@ MonoBehaviour:
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 1780043797}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -781,13 +747,74 @@ MonoBehaviour:
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
-    ForceSamePrefabs: 1
+    ForceSamePrefabs: 0
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
     LoadSceneTimeOut: 120
     SpawnTimeout: 1
     EnableNetworkLogs: 1
+--- !u!1001 &4987967814252147848
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1780043800, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 426565201
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235613, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_Name
+      value: GameNetworkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.510757
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.8140708
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.9808607
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987967814889235614, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e65fe7b72c61e6f4b97e8deb5671a497, type: 3}
 --- !u!1001 &5184994205049287869
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -996,6 +1023,10 @@ PrefabInstance:
     - target: {fileID: 2410108213795581516, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3204375951
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411241375720986004, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2670797075
       objectReference: {fileID: 0}
     - target: {fileID: 2426187235265304674, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -1364,6 +1395,10 @@ PrefabInstance:
     - target: {fileID: 7914405624709242317, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3840796748
+      objectReference: {fileID: 0}
+    - target: {fileID: 8028121074072036739, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1183421970
       objectReference: {fileID: 0}
     - target: {fileID: 8214977397798869784, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
       propertyPath: GlobalObjectIdHash
