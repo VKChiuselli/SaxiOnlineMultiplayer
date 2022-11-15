@@ -86,6 +86,8 @@ public class SpawnCardServer : NetworkBehaviour
         CardHand cardToRemoveCopy = deckLoad.GetCardHand(IdCard);
         cardToRemoveCopy.PlayCard();
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
+
+        gameManager.GetComponent<TriggerCardManager>().TriggerETBEffect(cardInterface);
     }
 
     private bool CheckEnoughCopies(int copies)

@@ -151,6 +151,22 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    public void DeployPointIncrease(int howMuchPoint)
+    {
+        if (CurrentTurn.Value == 0)
+        {
+            PlayerZeroDP.Value = PlayerZeroDP.Value + howMuchPoint;
+        }
+        else if (CurrentTurn.Value == 1)
+        {
+            PlayerOneDP.Value = PlayerOneDP.Value + howMuchPoint;
+        }
+        else
+        {
+            Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
+        }
+    }
+
     public void MovePointSpent(int howMuchPoint)
     {
 
@@ -161,6 +177,23 @@ public class GameManager : NetworkBehaviour
         if (CurrentTurn.Value == 1)
         {
             PlayerOneMP.Value = PlayerOneMP.Value - howMuchPoint;
+        }
+        else
+        {
+            Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
+        }
+    }
+
+    public void MovePointIncrease(int howMuchPoint)
+    {
+
+        if (CurrentTurn.Value == 0)
+        {
+            PlayerZeroMP.Value = PlayerZeroMP.Value + howMuchPoint;
+        }else
+        if (CurrentTurn.Value == 1)
+        {
+            PlayerOneMP.Value = PlayerOneMP.Value + howMuchPoint;
         }
         else
         {

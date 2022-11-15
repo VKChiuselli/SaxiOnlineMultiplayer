@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardDragonIce : MonoBehaviour
+public class CardDragonIce : CardInterface
 {
     // Start is called before the first frame update
     void Start()

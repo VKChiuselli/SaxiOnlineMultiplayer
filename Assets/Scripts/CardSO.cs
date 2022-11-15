@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum EquipmentType
+public enum CardKeyword
 {
-    Armor, Weapon, Jewlery
+    NONE,
+    ETB,
+    MERGE,
+    FUSION,
+    DEPLOYCONDITION,
+    COSTEFFECT,
+    CONDITION,
+    PUSH,
+    PUSHMIX,
+    STARTGAME,
+    STARTROUND,
+    PASSIVE
 }
 
 [CreateAssetMenu]
@@ -18,7 +29,7 @@ public class CardSO : ScriptableObject
     public int IdOwner;
     public int CardPosition;
     public string IdImageCard;
-
-
-
+    public CardKeyword keyword1;
+    public CardKeyword keyword2;
+    public CardKeyword keyword3;
 }

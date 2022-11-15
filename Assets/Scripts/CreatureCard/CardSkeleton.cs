@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardSkeleton : MonoBehaviour
+public class CardSkeleton : CardInterface
 {
     // Start is called before the first frame update
     void Start()
