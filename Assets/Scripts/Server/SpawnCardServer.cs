@@ -384,8 +384,7 @@ public class SpawnCardServer : NetworkBehaviour
 
 
         List<GameObject> tilesToPushList = new List<GameObject>();
-        List<GameObject> tilesToPush = new List<GameObject>();
-        tilesToPush = FindAllCardsToPush(
+        List<GameObject>  tilesToPush = FindAllCardsToPush(
                   xOldTile,
                   yOldTile,
                   xNewTile,
@@ -423,7 +422,8 @@ public class SpawnCardServer : NetworkBehaviour
         {
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
-
+     GameObject cardInterface =   gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
+        gameManager.GetComponent<TriggerCardManager>().TriggerPushEffect(cardInterface);
         return gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile).transform.childCount;
     }
 

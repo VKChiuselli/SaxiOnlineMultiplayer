@@ -17,7 +17,7 @@ public class CardDog : CardInterface
     public override void MyCardEffect()
     {
         Debug.Log("Gain 1 move point");
-        gameManager.GetComponent<GameManager>().MovePointIncrease(1);
+        gameManager.GetComponent<GameManager>().MovePointIncreaseServerRpc(1);
     }
 
 }

@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class CardTraitor : CardInterface
 {
-    // Start is called before the first frame update
+    GameObject gameManager;
+
     void Start()
     {
-        
+        gameManager = GameObject.Find("Managers/GameManager");
+        keyword1 = CardKeyword.PUSH;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void MyCardEffect()
     {
-        
+        Debug.Log("Gain 1 move point");
+        gameManager.GetComponent<GameManager>().MovePointIncreaseServerRpc(1);
     }
+
 }

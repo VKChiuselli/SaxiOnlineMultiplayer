@@ -11,16 +11,19 @@ public class TriggerCardManager : MonoBehaviour
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
     }
 
-    public void TriggerPushEffect(int x, int y, CardKeyword push)
+    public void TriggerPushEffect(GameObject card)
     {
-        GameObject getTile = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
-        if (getTile.transform.GetChild(2).gameObject.GetComponent<CardInterface>().keyword1 == CardKeyword.PUSH)
-            getTile.transform.GetChild(2).gameObject.GetComponent<CardInterface>().MyCardEffect();
+        if (card.transform.GetChild(2).GetComponent<CardInterface>().keyword1 == CardKeyword.PUSH)
+        {
+            card.transform.GetChild(2).GetComponent<CardInterface>().MyCardEffect();
+        }
     }
 
     public void TriggerETBEffect(GameObject card)
     {
         if (card.GetComponent<CardInterface>().keyword1 == CardKeyword.ETB)
-            card.gameObject.GetComponent<CardInterface>().MyCardEffect();
+        {
+            card.GetComponent<CardInterface>().MyCardEffect();
+        }
     }
 }

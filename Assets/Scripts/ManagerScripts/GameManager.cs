@@ -184,7 +184,8 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    public void MovePointIncrease(int howMuchPoint)
+    [ServerRpc(RequireOwnership = false)]
+    public void MovePointIncreaseServerRpc(int howMuchPoint)
     {
 
         if (CurrentTurn.Value == 0)
