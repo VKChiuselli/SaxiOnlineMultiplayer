@@ -123,6 +123,17 @@ public class GridContainer : NetworkBehaviour
         }
     }
 
+    public void ShowTileToInteract(List<GameObject> tileToInteract)
+    {
+        foreach(GameObject tile in tileToInteract)
+        {
+            if (tile.transform.parent.GetComponent<Highlight>()!=null)
+            {
+                tile.transform.parent.GetComponent<Highlight>().ShowTileCanInteract(7);
+            }
+        }
+    }
+
     public void RemoveCardFromTable(int x, int y)
     {
         GameObject cardToRemove = GetTile(x, y);
@@ -143,7 +154,7 @@ public class GridContainer : NetworkBehaviour
         }
     }
 
-    private List<GameObject> GetHalfBoardCard(int player)
+    public List<GameObject> GetHalfBoardCard(int player)
     {
         List<GameObject> listHalfBoard = new List<GameObject>();
         if (player == 0)
