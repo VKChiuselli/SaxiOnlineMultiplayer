@@ -11,6 +11,7 @@ public enum CardKeyword
     FUSION,
     DEPLOYCONDITION,
     COSTEFFECT,
+    EFFECT,
     CONDITION,
     PUSH,
     PUSHMIX,

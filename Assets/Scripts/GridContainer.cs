@@ -129,6 +129,71 @@ public class GridContainer : NetworkBehaviour
         cardToRemove.transform.GetChild(cardToRemove.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
     }
 
+    public bool ExistHalfBoardCard(int player) //it means if exist a card in the opposite part of the board , in "enemy terrain"
+    {
+     List<GameObject> listHalfBoard =  GetHalfBoardCard(player);
+
+        if (listHalfBoard.Count == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    private List<GameObject> GetHalfBoardCard(int player)
+    {
+        List<GameObject> listHalfBoard = new List<GameObject>();
+        if (player == 0)
+        {
+            for(int x=1; x<6; x++)
+            {
+                for (int y = 1; y < 7; y++)
+                {
+                    GameObject topCard = GetTopCardOnTile(x, y);
+
+                    if (topCard != null)
+                    {
+                        if (topCard.GetComponent<CardTable>() != null)
+                        {
+                            if (topCard.GetComponent<CardTable>().IdOwner.Value == player)
+                            {
+                                listHalfBoard.Add(topCard);
+                            }
+                        }
+                       
+                    }
+                }
+            }
+        }
+        else if (player == 1)
+        {
+            for (int x = 6; x < 11; x++)
+            {
+                for (int y = 1; y < 7; y++)
+                {
+                    GameObject topCard = GetTopCardOnTile(x, y);
+
+                    if (topCard != null)
+                    {
+                        if (topCard.GetComponent<CardTable>() != null)
+                        {
+                            if (topCard.GetComponent<CardTable>().IdOwner.Value == player)
+                            {
+                                listHalfBoard.Add(topCard);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return listHalfBoard;
+    }
+
     public List<GameObject> GetAllCardsFromTile(int x, int y)
     {
         GameObject tile = GetTile(x, y);
@@ -175,7 +240,7 @@ public class GridContainer : NetworkBehaviour
         }
     }//TODO convert method using  GetTile
 
-    public GameObject GetTopCardOnTile(int x, int y)
+    public GameObject GetTopCardOnTile(int x, int y)//do per scontato che qui c'è una carta 
     {
         GameObject getTile = GetTile(x, y);
         if (getTile == null)
@@ -183,7 +248,14 @@ public class GridContainer : NetworkBehaviour
             Debug.Log("GetTopCardOnTile: the card on top is null");
             return null;
         }
+        if (getTile.transform.childCount == 0)
+        {
+            Debug.Log("I didnt find any card on top of this tile");
+            return null;
+        }
+
         GameObject topCard;
+
         topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
         return topCard;
     }

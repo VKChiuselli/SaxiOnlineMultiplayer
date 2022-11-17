@@ -30,9 +30,28 @@ public class SpawnCardServer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, 
-        string tag, int x, int y, int deployCost, int Copies, int CardPosition)  
+    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard,
+        string tag, int x, int y, int deployCost, int Copies, int CardPosition)
     {
+
+
+        DeckLoad deckLoad = null;
+
+        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
+        {
+            deckLoad = deckManagerRight.GetComponent<DeckLoad>();
+        }
+        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+        {
+            deckLoad = deckManagerLeft.GetComponent<DeckLoad>();
+        }
+
+        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition);
+
+        if (!(gameManager.GetComponent<TriggerCardManager>().TriggerDeployCondition(cardInterface)))
+        {
+            return;
+        }
 
         if (CheckDeploy(deployCost))
         {
@@ -60,24 +79,7 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-        //     GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject;
-
-
-
-        DeckLoad deckLoad = null;
-
-        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value==0)
-        {
-            deckLoad = deckManagerRight.GetComponent<DeckLoad>() ;
-        }
-        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
-        {
-            deckLoad = deckManagerLeft.GetComponent<DeckLoad>() ;
-        }
-
-        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition); 
-      
-
+       
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
@@ -101,8 +103,16 @@ public class SpawnCardServer : NetworkBehaviour
 
     private bool CheckDeploy(int deployCost)
     {
+
+        //if (!(gridContainer.GetComponent<GridContainer>().ExistHalfBoardCard(gameManager.GetComponent<GameManager>().CurrentTurn.Value)))
+        //{
+        //    return false;
+        //}
+
         if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
         {
+
+
             if (gameManager.GetComponent<GameManager>().PlayerZeroDP.Value >= deployCost)
             {
                 return false;
@@ -384,7 +394,7 @@ public class SpawnCardServer : NetworkBehaviour
 
 
         List<GameObject> tilesToPushList = new List<GameObject>();
-        List<GameObject>  tilesToPush = FindAllCardsToPush(
+        List<GameObject> tilesToPush = FindAllCardsToPush(
                   xOldTile,
                   yOldTile,
                   xNewTile,
@@ -422,7 +432,7 @@ public class SpawnCardServer : NetworkBehaviour
         {
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
-     GameObject cardInterface =   gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
+        GameObject cardInterface = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
         gameManager.GetComponent<TriggerCardManager>().TriggerPushEffect(cardInterface);
         return gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile).transform.childCount;
     }

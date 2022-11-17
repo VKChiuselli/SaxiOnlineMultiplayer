@@ -21,7 +21,16 @@ public class CardInterface : MonoBehaviour
     }
     public virtual void MyCardEffect()
     {
-        Debug.Log("Children must implemenmt this");
+        Debug.Log("Children must implemenmt MyCardEffect");
+    }
+    public virtual void MyCardCostEffect()
+    {
+        Debug.Log("Children must implemenmt MyCardCostEffect");
+    }
+    public virtual bool MyCardDeploy(GameObject card)
+    {
+        Debug.Log("Children must implemenmt MyCardDeploy");
+        return true;
     }
 
 

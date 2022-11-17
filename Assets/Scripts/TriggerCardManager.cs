@@ -26,4 +26,13 @@ public class TriggerCardManager : MonoBehaviour
             card.GetComponent<CardInterface>().MyCardEffect();
         }
     }
+    public bool TriggerDeployCondition(GameObject card)
+    {
+        if (card.GetComponent<CardInterface>().keyword1 == CardKeyword.DEPLOYCONDITION)
+        {
+            return card.GetComponent<CardInterface>().MyCardDeploy(card);
+        }
+
+        return card.GetComponent<CardInterface>().MyCardDeploy(card);
+    }
 }
