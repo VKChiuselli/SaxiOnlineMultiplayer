@@ -25,8 +25,26 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     public void OnPointerDown(PointerEventData eventData)
     {
+
         if (NetworkManager.Singleton.IsClient)
         {
+            if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
+            {
+                if (gameObject.transform.parent.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
+                {
+                    if (gameObject.transform.parent.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                    {
+                        TriggerCardSelected();
+                        return;
+                    }
+                }
+            }
+        }
+
+
+        if (NetworkManager.Singleton.IsClient)
+        {
+
             if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0 && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)
             {
                 if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
@@ -37,7 +55,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
                 {
                     PickCardFromHand("DeployTileLeft");
                 }
-                else if (gameObject.GetComponent<CardTable>()!=null)
+                else if (gameObject.GetComponent<CardTable>() != null)
                 {
                     if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
                     {
@@ -48,7 +66,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
                         PickCardFromTable();
                     }
                 }
-            
+
             }
         }
     }
@@ -91,8 +109,27 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     }
 
+    private void TriggerCardSelected()
+    {
+        if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
+        {
+            ResetShowTilesClientRpc();
+            var cardInterface = placeManager.GetCardSelectedFromTable().transform.GetChild(8).GetComponent<CardInterface>();
+            var eventManager = new EventsManager();
+            eventManager.onOverCard += cardInterface.MyCardCostEffect;
+            eventManager.OverCard(gameObject);
+            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(0);
+            placeManager.ResetMergedCardTable();
+            placeManager.ResetSingleCardTable();
+            placeManager.ResetCardHand();
+            ShowTilesAround(false);
+            return;
+        }
+    }
+
     private void PickCardFromTable()
     {
+
         ResetShowTilesClientRpc();
         if (placeManager.GetMergedCardSelectedFromTable() != null)
         {

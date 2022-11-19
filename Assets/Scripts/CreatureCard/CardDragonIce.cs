@@ -1,4 +1,4 @@
-using System.Collections;
+using Assets.Scripts;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,7 +7,7 @@ public class CardDragonIce : CardInterface
 {
     GameObject gameManager;
     GameObject gridContainer;
-
+    PlaceManager placeManager;
 
     void Start()
     {
@@ -15,20 +15,18 @@ public class CardDragonIce : CardInterface
         keyword1 = CardKeyword.DEPLOYCONDITION;
         keyword2 = CardKeyword.ETB;
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-
+        placeManager = FindObjectOfType<PlaceManager>();
     }
 
-    public override void MyCardEffect()
+    public override void MyCardCostEffect(GameObject card)
     {
-        Debug.Log("Add a the creature to my hand");
-
-        MyCardEffectClientRpc();
-
+        MyCardCostEffectServerRpc(card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
     }
 
-    public override void MyCardCostEffect()
+    [ServerRpc(RequireOwnership = false)]
+    public void MyCardCostEffectServerRpc(int x, int y)
     {
-        Debug.Log("Bounce a creature to my hand");
+        gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(x,y);
     }
 
     public override bool MyCardDeploy(GameObject card)
@@ -45,6 +43,14 @@ public class CardDragonIce : CardInterface
         }
     }
 
+    public override void MyCardEffect()
+    {
+        Debug.Log("Add a the creature to my hand");
+
+        MyCardEffectClientRpc();
+
+    }
+
     [ClientRpc] //TODO improve connection with client, I must understand which and how the client is called from the server, we need a specific client, not every client 
     void MyCardEffectClientRpc()
     {
@@ -52,8 +58,21 @@ public class CardDragonIce : CardInterface
         {
             List<GameObject> list = gridContainer.GetComponent<GridContainer>().GetHalfBoardCard(gameManager.GetComponent<GameManager>().CurrentTurn.Value);
             gridContainer.GetComponent<GridContainer>().ShowTileToInteract(list);
-            Debug.Log("PICK UR CARD");
+            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(1);
+            EventsManager.current.SelectCardFromTable(gameObject.transform.parent.gameObject);
+            //          GameObject cardSelectFromTable = WaitingForSelectCard().GetAwaiter().GetResult();
+
+
+            Debug.Log("PICK UR CARD: "); //+ cardSelectFromTable.name);
         }
     }
 
+    //async Task<GameObject> WaitingForSelectCard()
+    //{
+    
+
+    //    Debug.Log("TROVAT2");
+    //    await Task.Delay(100);
+    //    return placeManager.GetCardSelectedFromTable();
+    //}
 }

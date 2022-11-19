@@ -238,13 +238,23 @@ public class GridContainer : NetworkBehaviour
         return tile.transform;
     }
 
-    public void RemoveFirstMergedCardFromTable(int x, int y, int indexCard)
+    public void RemoveFirstMergedCardFromTable(int x, int y)
+    {
+
+        GameObject tile = GetTile(x, y);
+        tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
+    } 
+    public void RemoveFirstMergedCardFromTable(GameObject card)
+    {
+                card.GetComponent<NetworkObject>().Despawn();
+    } 
+    public void RemoveIndexMergedCardFromTable(int x, int y, int indexCard)
     {
         foreach (GameObject tile in gridTiles)
         {
             if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
             {
-                Debug.Log("RemoveFirstMergedCardFromTable Found!!");
+                Debug.Log("RemoveIndexMergedCardFromTable Found!!");
                 //despawn the last children
                 tile.transform.GetChild(indexCard).gameObject.GetComponent<NetworkObject>().Despawn();
             }

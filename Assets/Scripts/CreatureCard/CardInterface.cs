@@ -24,7 +24,7 @@ public class CardInterface : NetworkBehaviour
     {
         Debug.Log("Children must implemenmt MyCardEffect");
     }
-    public virtual void MyCardCostEffect()
+    public virtual void MyCardCostEffect(GameObject card)
     {
         Debug.Log("Children must implemenmt MyCardCostEffect");
     }

@@ -14,6 +14,7 @@ public class GameManager : NetworkBehaviour
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> IsPopupChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
+    public NetworkVariable<int> IsPickingChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> CurrentTurn = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
@@ -66,6 +67,17 @@ public class GameManager : NetworkBehaviour
         }
 
         //TODO implement reset speed card, every card get his own card and reset it as default
+    }
+
+    public void SetIsPickingChoosing(int isPickingChoosing)
+    {
+        SetIsPickingChoosingServerRpc(isPickingChoosing);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetIsPickingChoosingServerRpc(int isPickingChoosing)
+    {
+        IsPickingChoosing.Value = isPickingChoosing;
     }
 
     public void SetIsPopupChoosing(int IsPopupChoosing)

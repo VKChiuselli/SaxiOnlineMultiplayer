@@ -26,6 +26,15 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (NetworkManager.Singleton.IsClient)
+        {
+            if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
+            {
+                return;
+            }
+        }
+
+
         if (NetworkManager.Singleton.IsClient
            && placeManager.GetSingleCardSelectedFromTable() != null
            && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 1) //bisogna mettere molte più condizioni per mettere la carta

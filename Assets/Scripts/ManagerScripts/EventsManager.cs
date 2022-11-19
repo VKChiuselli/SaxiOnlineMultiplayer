@@ -67,7 +67,6 @@ public class EventsManager : MonoBehaviour {
     }
     public event Action<GameObject> onOverCard;
     public void OverCard(GameObject cardOvered) {
-        if (onOverCard != null)
-            onOverCard(cardOvered);
+        onOverCard?.Invoke(cardOvered);
     }
 }

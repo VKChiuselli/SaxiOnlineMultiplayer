@@ -7,24 +7,28 @@ public class PlaceManager : MonoBehaviour {
     GameObject handCard;
     GameObject tableSingleCard;
     GameObject tableMergedCard;
+    GameObject tableSelectCard;
     bool isCardSelected;
 
     void OnEnable() {
         EventsManager.current.onPickCardFromHand += PickedHandCard;
         EventsManager.current.onPickMergedCardFromTable += PickedMergedTableCard;
         EventsManager.current.onPickSingleCardFromTable += PickedSingleTableCard;
+        EventsManager.current.onSelectCardFromTable += SelectCardFromTable;
     }
     void OnDisable() {
         EventsManager.current.onPickCardFromHand -= PickedHandCard;
         EventsManager.current.onPickMergedCardFromTable -= PickedMergedTableCard;
         EventsManager.current.onPickSingleCardFromTable -= PickedSingleTableCard;
+        EventsManager.current.onSelectCardFromTable -= SelectCardFromTable;
     }
 
     public void PickedHandCard(GameObject cardToPlace) {
-        if (tableSingleCard != null || tableMergedCard != null  )
+        if (tableSingleCard != null || tableMergedCard != null|| tableSelectCard != null  )
         {
             ResetSingleCardTable();
             ResetMergedCardTable();
+            ResetTableSelectCard();
         }
         handCard = cardToPlace;
         Debug.Log("Passing card to pick it from hand");
@@ -49,6 +53,20 @@ public class PlaceManager : MonoBehaviour {
         Debug.Log("Passing single card to pick it from table");
     }
 
+    public void SelectCardFromTable(GameObject cardToSelect) {
+        if (handCard != null)
+        {
+            ResetCardHand();
+        }
+        if (tableSingleCard != null || tableMergedCard != null)
+        {
+            ResetSingleCardTable();
+            ResetMergedCardTable();
+        }
+        tableSelectCard = cardToSelect;
+        Debug.Log("Passing selected card to use it from table");
+    }
+
     public GameObject GetCardSelectedFromHand() {
         return handCard;
     }
@@ -59,6 +77,9 @@ public class PlaceManager : MonoBehaviour {
     public GameObject GetMergedCardSelectedFromTable() {
         return tableMergedCard;
     }
+    public GameObject GetCardSelectedFromTable() {
+        return tableSelectCard;
+    }
 
     public void ResetCardHand() {
         handCard = null;
@@ -66,6 +87,9 @@ public class PlaceManager : MonoBehaviour {
 
     public void ResetMergedCardTable() {
         tableMergedCard = null;
+    }
+    public void ResetTableSelectCard() {
+        tableSelectCard = null;
     }
     public void ResetSingleCardTable() {
         tableSingleCard = null;
