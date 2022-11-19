@@ -65,8 +65,8 @@ public class EventsManager : MonoBehaviour {
         if (onSelectCardFromTable != null)
             onSelectCardFromTable(cardSelected);
     }
-    public event Action<GameObject> onOverCard;
-    public void OverCard(GameObject cardOvered) {
-        onOverCard?.Invoke(cardOvered);
+    public event Action<GameObject> onSelectCard;
+    public void SelectCard(GameObject selectCard) {
+        onSelectCard?.Invoke(selectCard);
     }
 }
