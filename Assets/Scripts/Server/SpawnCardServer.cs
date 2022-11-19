@@ -132,6 +132,27 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies, int CardPosition) //MyCardStruct cartaDaSpawnare
     {
+
+
+        DeckLoad deckLoad = null;
+
+        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
+        {
+            deckLoad = deckManagerRight.GetComponent<DeckLoad>();
+        }
+        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
+        {
+            deckLoad = deckManagerLeft.GetComponent<DeckLoad>();
+        }
+
+        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition);
+
+        if (!(gameManager.GetComponent<TriggerCardManager>().TriggerDeployCondition(cardInterface)))
+        {
+            return;
+        }
+
+
         if (CheckDeploy(deployCost))
         {
             return;
@@ -159,18 +180,8 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
         //    GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject; //it is child 8 because the card is putted there
-        DeckLoad deckLoad = null;
+     
 
-        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
-        {
-            deckLoad = deckManagerRight.GetComponent<DeckLoad>();
-        }
-        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1)
-        {
-            deckLoad = deckManagerLeft.GetComponent<DeckLoad>();
-        }
-
-        GameObject cardInterface = deckLoad.GetIndexCard(CardPosition);
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
         cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
