@@ -114,7 +114,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
         {
             ResetShowTilesClientRpc();
-            var cardInterface = placeManager.GetCardSelectedFromTable().transform.GetChild(8).GetComponent<CardInterface>(); //il placemanager ha immagazzinato questa carta
+            var cardInterface = placeManager.GetCardSelectedFromTable(); //il placemanager ha immagazzinato questa carta
             var eventManager = new EventsManager();
             eventManager.onSelectCard += cardInterface.MyCardCostEffect; //mi metto in ascolto dell'effetto
             eventManager.SelectCard(gameObject); //triggero l'effetto

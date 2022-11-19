@@ -299,7 +299,7 @@ public class SpawnCardServer : NetworkBehaviour
         UpdateWeightTopCard(xNewTile, yNewTile);
         gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         Debug.Log("xNewTile, yNewTile" + xNewTile + " " + yNewTile);
-        GameObject cardTable = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
+        GameObject cardTable = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
         gameManager.GetComponent<TriggerCardManager>().TriggerMergeEffect(cardTable.transform.GetChild(2).gameObject);
         RemoveSpeedCard(xNewTile, yNewTile);
     }

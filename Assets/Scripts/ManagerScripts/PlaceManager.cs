@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -77,8 +78,16 @@ public class PlaceManager : MonoBehaviour {
     public GameObject GetMergedCardSelectedFromTable() {
         return tableMergedCard;
     }
-    public GameObject GetCardSelectedFromTable() {
-        return tableSelectCard;
+    public CardInterface GetCardSelectedFromTable() {
+        //placeManager.GetCardSelectedFromTable().transform.GetChild(8).GetComponent<CardInterface>();
+        if (tableSelectCard.GetComponent<CardTable>()!=null)
+        {
+            return tableSelectCard.transform.GetChild(2).GetComponent<CardInterface>();
+        }
+        else
+        {
+            return tableSelectCard.transform.GetChild(8).GetComponent<CardInterface>(); ;
+        }
     }
 
     public void ResetCardHand() {
