@@ -20,13 +20,18 @@ public class CardDragonIce : CardInterface
 
     public override void MyCardCostEffect(GameObject card)
     {
+        //remove card and put in hand
         MyCardCostEffectServerRpc(card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void MyCardCostEffectServerRpc(int x, int y)
     {
+        GameObject card = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x,y);
+     
         gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(x,y);
+        gameManager.GetComponent<GameManager>().AddCardCopyOnHand(card.GetComponent<CardTable>().IdCard.Value, 1);
+        Debug.Log("Card added to hand--> " + card.GetComponent<CardTable>().IdCard.Value);
     }
 
     public override bool MyCardDeploy(GameObject card)

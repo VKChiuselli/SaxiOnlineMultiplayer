@@ -9,7 +9,7 @@ public class OverCardManager : MonoBehaviour {
     bool isCardSelected;
 
     void Start() {
-        EventsManager.current.onOverCard += OveredCard;
+       // EventsManager.current.onOverCard += OveredCard;
     }
 
     public void OveredCard(GameObject overedCard) { //TODO in future maybe we select more than one card

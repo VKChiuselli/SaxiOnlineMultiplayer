@@ -123,6 +123,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
             placeManager.ResetTableSelectCard();
             placeManager.ResetSingleCardTable();
             placeManager.ResetCardHand();
+            // eventManager.onSelectCard -= cardInterface.MyCardCostEffect;
             return;
         }
     }

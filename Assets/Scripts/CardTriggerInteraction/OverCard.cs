@@ -20,8 +20,7 @@ public class OverCard : MonoBehaviour {
             gameObject.tag == "HandTopSpell" || gameObject.tag == "HandBotSpell") {
             gameObject.transform.GetChild(2).gameObject.SetActive(true);
             mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-
-            EventsManager.current.OverCard(gameObject);
+            // EventsManager.current.OverCard(gameObject);
             mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
         }
     }

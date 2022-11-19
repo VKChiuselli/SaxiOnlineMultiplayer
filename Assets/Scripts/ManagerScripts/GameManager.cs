@@ -8,8 +8,11 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     [SerializeField] GameObject popupChoose;
-     GameObject grid;
-     GridContainer gridContainer;
+    GameObject grid;
+    GridContainer gridContainer;
+    GameObject deckManagerRight;
+    GameObject deckManagerLeft;
+
     //  GameBoard gameBoard;
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
@@ -19,12 +22,15 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> PlayerZeroMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerOneMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
+
     public NetworkVariable<int> PlayerOneDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
 
     private void Start()
     {
         grid = GameObject.Find("CanvasHandPlayer/GridManager");
         gridContainer = grid.GetComponent<GridContainer>();
+        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+        deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
     }
 
     public void EndTurn()
@@ -53,9 +59,25 @@ public class GameManager : NetworkBehaviour
 
 
         CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
-        //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
-   
+                                                            //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
+
     }
+
+
+    public void AddCardCopyOnHand(int idCard, int quantity)
+    {
+        if (CurrentTurn.Value == 0)
+        {
+            CardHand card = deckManagerRight.GetComponent<DeckLoad>().GetCardHand(idCard);
+            card.Copies.Value = card.Copies.Value + quantity;
+        }
+        else if (CurrentTurn.Value == 1)
+        {
+            CardHand card = deckManagerLeft.GetComponent<DeckLoad>().GetCardHand(idCard);
+            card.Copies.Value = card.Copies.Value + quantity;
+        }
+    }
+
 
     private void ResetSpeedCards(int player)
     {
@@ -63,7 +85,7 @@ public class GameManager : NetworkBehaviour
 
         foreach (GameObject card in playerCard)
         {
-            card.GetComponent<CardTable>().Speed.Value = 2 ; //TODO call a method that reset own speed
+            card.GetComponent<CardTable>().Speed.Value = 2; //TODO call a method that reset own speed
         }
 
         //TODO implement reset speed card, every card get his own card and reset it as default
@@ -118,11 +140,11 @@ public class GameManager : NetworkBehaviour
     {
         if (CurrentTurn.Value == 0)
         {
-        return    PlayerZeroDP.Value  ;
+            return PlayerZeroDP.Value;
         }
         else if (CurrentTurn.Value == 1)
         {
-            return PlayerOneDP.Value ;
+            return PlayerOneDP.Value;
         }
         else
         {
@@ -134,11 +156,11 @@ public class GameManager : NetworkBehaviour
     {
         if (CurrentTurn.Value == 0)
         {
-        return    PlayerZeroMP.Value  ;
+            return PlayerZeroMP.Value;
         }
         else if (CurrentTurn.Value == 1)
         {
-            return PlayerOneMP.Value ;
+            return PlayerOneMP.Value;
         }
         else
         {
@@ -185,7 +207,8 @@ public class GameManager : NetworkBehaviour
         if (CurrentTurn.Value == 0)
         {
             PlayerZeroMP.Value = PlayerZeroMP.Value - howMuchPoint;
-        }else
+        }
+        else
         if (CurrentTurn.Value == 1)
         {
             PlayerOneMP.Value = PlayerOneMP.Value - howMuchPoint;
@@ -203,7 +226,8 @@ public class GameManager : NetworkBehaviour
         if (CurrentTurn.Value == 0)
         {
             PlayerZeroMP.Value = PlayerZeroMP.Value + howMuchPoint;
-        }else
+        }
+        else
         if (CurrentTurn.Value == 1)
         {
             PlayerOneMP.Value = PlayerOneMP.Value + howMuchPoint;
@@ -213,5 +237,5 @@ public class GameManager : NetworkBehaviour
             Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
         }
     }
- 
+
 }
