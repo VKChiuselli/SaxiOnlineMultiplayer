@@ -191,6 +191,8 @@ public class SpawnCardServer : NetworkBehaviour
         CardHand cardToRemoveCopy = deckLoad.GetComponent<DeckLoad>().GetCardHand(IdCard);
         cardToRemoveCopy.PlayCard();
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
+        gameManager.GetComponent<TriggerCardManager>().TriggerMergeEffect(cardInterface);
+
         UpdateWeightTopCard(x, y);
     }
 
@@ -296,6 +298,9 @@ public class SpawnCardServer : NetworkBehaviour
 
         UpdateWeightTopCard(xNewTile, yNewTile);
         gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
+        Debug.Log("xNewTile, yNewTile" + xNewTile + " " + yNewTile);
+        GameObject cardTable = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
+        gameManager.GetComponent<TriggerCardManager>().TriggerMergeEffect(cardTable.transform.GetChild(2).gameObject);
         RemoveSpeedCard(xNewTile, yNewTile);
     }
 

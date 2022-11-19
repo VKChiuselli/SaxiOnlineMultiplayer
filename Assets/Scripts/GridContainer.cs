@@ -280,6 +280,26 @@ public class GridContainer : NetworkBehaviour
         topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
         return topCard;
     }
+
+    public GameObject GetTopCardOnTile(GameObject tile)//do per scontato che qui c'è una carta 
+    {
+        GameObject getTile = GetTile(tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y);
+        if (getTile == null)
+        {
+            Debug.Log("GetTopCardOnTile: the card on top is null");
+            return null;
+        }
+        if (getTile.transform.childCount == 0)
+        {
+            Debug.Log("I didnt find any card on top of this tile");
+            return null;
+        }
+
+        GameObject topCard;
+
+        topCard = getTile.transform.GetChild(getTile.transform.childCount - 1).gameObject;
+        return topCard;
+    }
     public int GetTotalWeightOnTile(int x, int y)
     {
         int weight = CalculateTotalWeight(GetTile(x, y));
@@ -465,6 +485,29 @@ public class GridContainer : NetworkBehaviour
         foreach (GameObject tile in gridTiles)
         {
             foreach (GameObject card in GetAllCardsFromTile(tile))
+            {
+                if (card.GetComponent<CardTable>() != null)
+                {
+                    if (card.GetComponent<CardTable>().IdOwner.Value == player)
+                    {
+                        playerCards.Add(card);
+                    }
+                }
+            }
+        }
+
+        return playerCards;
+
+    }
+
+    public List<GameObject> GetAllTopCardsFromPlayer(int player)
+    {
+        List<GameObject> playerCards = new List<GameObject>();
+
+        foreach (GameObject tile in gridTiles)
+        {
+            GameObject card = GetTopCardOnTile(tile);
+            if (card != null)
             {
                 if (card.GetComponent<CardTable>() != null)
                 {

@@ -50,7 +50,7 @@ public class CardDragonIce : CardInterface
 
     public override void MyCardEffect()
     {
-        Debug.Log("Add a the creature to my hand");
+        Debug.Log("DragonIce MyCardEffect");
 
         MyCardEffectClientRpc();
 

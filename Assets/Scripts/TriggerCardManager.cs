@@ -26,6 +26,14 @@ public class TriggerCardManager : MonoBehaviour
             card.GetComponent<CardInterface>().MyCardEffect();
         }
     }
+
+    public void TriggerMergeEffect(GameObject card)
+    {
+        if (card.GetComponent<CardInterface>().keyword1 == CardKeyword.MERGE)
+        {
+            card.GetComponent<CardInterface>().MyCardEffect();
+        }
+    }
     public bool TriggerDeployCondition(GameObject card)
     {
         if (card.GetComponent<CardInterface>().keyword1 == CardKeyword.DEPLOYCONDITION)
