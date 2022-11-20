@@ -26,7 +26,7 @@ public class CardImp : CardInterface
 
     }
 
-    void LateUpdate()
+    void Update()
     {
         if (gameObject.transform.parent.gameObject.GetComponent<CardTable>() != null)
         {

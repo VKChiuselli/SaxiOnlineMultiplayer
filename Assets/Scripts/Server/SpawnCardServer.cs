@@ -260,6 +260,7 @@ public class SpawnCardServer : NetworkBehaviour
     }
     private int CheckMoveTopCard(int xOldTile, int yOldTile)
     {
+    
         return gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>().MoveCost.Value;
     }
 
@@ -308,6 +309,11 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void MoveTopCardToAnotherTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
+        if (xOldTile == 0 && yOldTile == 0)
+        {
+            return;
+        }
+
         int totalMove = CheckMoveTopCard(xOldTile, yOldTile);
         int totalSpeed = CheckSpeed(xOldTile, yOldTile);
         if (totalMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
