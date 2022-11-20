@@ -125,9 +125,9 @@ public class GridContainer : NetworkBehaviour
 
     public void ShowTileToInteract(List<GameObject> tileToInteract)
     {
-        foreach(GameObject tile in tileToInteract)
+        foreach (GameObject tile in tileToInteract)
         {
-            if (tile.transform.parent.GetComponent<Highlight>()!=null)
+            if (tile.transform.parent.GetComponent<Highlight>() != null)
             {
                 tile.transform.parent.GetComponent<Highlight>().ShowTileCanInteract(7);
             }
@@ -142,7 +142,7 @@ public class GridContainer : NetworkBehaviour
 
     public bool ExistHalfBoardCard(int player) //it means if exist a card in the opposite part of the board , in "enemy terrain"
     {
-     List<GameObject> listHalfBoard =  GetHalfBoardCard(player);
+        List<GameObject> listHalfBoard = GetHalfBoardCard(player);
 
         if (listHalfBoard.Count == 0)
         {
@@ -159,7 +159,7 @@ public class GridContainer : NetworkBehaviour
         List<GameObject> listHalfBoard = new List<GameObject>();
         if (player == 0)
         {
-            for(int x=1; x<6; x++)
+            for (int x = 1; x < 6; x++)
             {
                 for (int y = 1; y < 7; y++)
                 {
@@ -174,7 +174,7 @@ public class GridContainer : NetworkBehaviour
                                 listHalfBoard.Add(topCard);
                             }
                         }
-                       
+
                     }
                 }
             }
@@ -243,11 +243,11 @@ public class GridContainer : NetworkBehaviour
 
         GameObject tile = GetTile(x, y);
         tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
-    } 
+    }
     public void RemoveFirstMergedCardFromTable(GameObject card)
     {
-                card.GetComponent<NetworkObject>().Despawn();
-    } 
+        card.GetComponent<NetworkObject>().Despawn();
+    }
     public void RemoveIndexMergedCardFromTable(int x, int y, int indexCard)
     {
         foreach (GameObject tile in gridTiles)
@@ -266,12 +266,10 @@ public class GridContainer : NetworkBehaviour
         GameObject getTile = GetTile(x, y);
         if (getTile == null)
         {
-            Debug.Log("GetTopCardOnTile: the card on top is null");
             return null;
         }
         if (getTile.transform.childCount == 0)
         {
-            Debug.Log("I didnt find any card on top of this tile");
             return null;
         }
 
@@ -329,7 +327,6 @@ public class GridContainer : NetworkBehaviour
                 return returnTile;
             }
         }
-        Debug.Log("No tile found at coordinate passed (GetTile METHOD ERROR!!)");
         return returnTile;
     }
 
@@ -349,6 +346,12 @@ public class GridContainer : NetworkBehaviour
     private int CalculateTotalMoveCost(GameObject tile)
     {
         int moveCost = 0;
+
+        if (tile == null)
+        {
+            return 1;
+        }
+
         foreach (Transform card in tile.transform)
         {
             if (card.GetComponent<CardTable>() != null)
@@ -521,5 +524,54 @@ public class GridContainer : NetworkBehaviour
 
         return playerCards;
 
+    }
+
+
+    public bool HasAdjacentEnemyCard(int x, int y, int player)
+    {
+        if (GetTopCardOnTile(x - 1, y) != null)
+        {
+            if(GetTopCardOnTile(x - 1, y).GetComponent<CardTable>() != null)
+            {
+                if (GetTopCardOnTile(x - 1, y).GetComponent<CardTable>().IdOwner.Value != player)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (GetTopCardOnTile(x + 1, y) != null)
+        {
+            if(GetTopCardOnTile(x + 1, y).GetComponent<CardTable>() != null)
+            {
+                if (GetTopCardOnTile(x + 1, y).GetComponent<CardTable>().IdOwner.Value != player)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (GetTopCardOnTile(x , y + 1) != null)
+        {
+            if(GetTopCardOnTile(x , y + 1).GetComponent<CardTable>() != null)
+            {
+                if (GetTopCardOnTile(x , y + 1).GetComponent<CardTable>().IdOwner.Value != player)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (GetTopCardOnTile(x , y - 1) != null)
+        {
+            if(GetTopCardOnTile(x , y - 1).GetComponent<CardTable>() != null)
+            {
+                if (GetTopCardOnTile(x , y - 1).GetComponent<CardTable>().IdOwner.Value != player)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

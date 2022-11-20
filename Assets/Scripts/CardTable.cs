@@ -21,19 +21,15 @@ namespace Assets.Scripts
         public NetworkVariable<int> IdOwner = new NetworkVariable<int>();
         public NetworkVariable<int> CurrentPositionX = new NetworkVariable<int>();
         public NetworkVariable<int> CurrentPositionY = new NetworkVariable<int>();
+        public NetworkVariable<bool> IsOnTop = new NetworkVariable<bool>(true);
         public NetworkVariable<FixedString32Bytes> IdImageCard = new NetworkVariable<FixedString32Bytes>();
 
-        //private void Start()
-        //{
-        //    idcard = cardso.idcard;
-        //    weight = cardso.weight;
-        //    speed = cardso.speed;
-        //    idowner = cardso.idowner;
-        //    idimagecard = cardso.idimagecard;
+        GameObject SpawnManager;
 
-        //    testo_peso.text = weight.tostring();
-
-        //}
+        private void Start()
+        {
+            SpawnManager = GameObject.Find("Managers/SpawnManager");
+        }
 
         //public void ConvertCardFromHandToTable(MyCardStruct cardHandToConvert)
         //{
@@ -59,6 +55,17 @@ namespace Assets.Scripts
             GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void ChangeMoveCostServerRpc(int newMoveCost)
+        {
+            MoveCost.Value = newMoveCost;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdateMoveCostServerRpc(int x, int y)
+        {
+            MoveCost.Value = SpawnManager.GetComponent<SpawnCardServer>().CheckMove(x, y);
+        }
 
     }
 }
