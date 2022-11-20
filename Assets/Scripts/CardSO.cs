@@ -11,13 +11,16 @@ public enum CardKeyword
     FUSION,
     DEPLOYCONDITION,
     COSTEFFECT,
+    COSTMOVE,
     EFFECT,
     CONDITION,
     PUSH,
     PUSHMIX,
     STARTGAME,
     STARTROUND,
-    PASSIVE
+    PASSIVE,
+    SPECIALMOVE,
+    SPECIALMOVECOST
 }
 
 [CreateAssetMenu]

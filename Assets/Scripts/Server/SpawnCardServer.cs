@@ -79,7 +79,7 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
-       
+
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
@@ -180,7 +180,7 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
         //    GameObject cardInterface = deckManager.GetComponent<DeckLoad>().GetCardGameObject(IdCard).transform.GetChild(8).gameObject; //it is child 8 because the card is putted there
-     
+
 
         NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
           cardToSpawnNetwork.transform.position, Quaternion.identity);
@@ -256,11 +256,25 @@ public class SpawnCardServer : NetworkBehaviour
 
     public int CheckMove(int xOldTile, int yOldTile)
     {
+        CardInterface cardInterface = gridContainer.GetComponent<GridContainer>()
+            .GetTopCardOnTile(xOldTile, yOldTile)
+            .GetComponent<CardTable>().transform.GetChild(2).gameObject
+            .GetComponent<CardInterface>();
+
+        if (cardInterface != null)
+        {
+            if (cardInterface.keyword3 == CardKeyword.SPECIALMOVECOST)
+            {
+                if (cardInterface.PassiveEffect)
+                {
+                    return gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>().MoveCost.Value;
+                }
+            }
+        }
         return gridContainer.GetComponent<GridContainer>().GetTotalMoveCostOnTile(xOldTile, yOldTile);
     }
     private int CheckMoveTopCard(int xOldTile, int yOldTile)
     {
-    
         return gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>().MoveCost.Value;
     }
 
@@ -336,7 +350,7 @@ public class SpawnCardServer : NetworkBehaviour
         UpdateWeightTopCard(xOldTile, yOldTile);
         UpdateWeightTopCard(xNewTile, yNewTile);
 
-        gameManager.GetComponent<GameManager>().MovePointSpent(1);
+        gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         RemoveSpeedCard(xNewTile, yNewTile);
     }
 

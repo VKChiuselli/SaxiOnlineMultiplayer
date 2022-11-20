@@ -7,6 +7,7 @@ public class CardInterface : NetworkBehaviour
 {
 
     public bool CanWin;
+    public bool PassiveEffect;
     public string CardDescription;
  public  CardKeyword keyword1;
  public  CardKeyword keyword2;
@@ -15,6 +16,7 @@ public class CardInterface : NetworkBehaviour
     void Awake()
     {
         CanWin = true;
+        PassiveEffect = false;
         CardDescription = "this card is a normal unit";
         keyword1 = CardKeyword.NONE;
         keyword2 = CardKeyword.NONE;

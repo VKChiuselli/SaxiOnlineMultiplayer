@@ -16,6 +16,7 @@ public class CardImp : CardInterface
         gameManager = GameObject.Find("Managers/GameManager");
         keyword1 = CardKeyword.CONDITION;
         keyword2 = CardKeyword.EFFECT;
+        keyword3 = CardKeyword.SPECIALMOVECOST;
         gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
     }
 
@@ -38,6 +39,7 @@ public class CardImp : CardInterface
             }
             else
             {//in this way, if the card is not in the top, the move cost is 1
+                PassiveEffect = false;
                 gameObject.transform.parent.gameObject.GetComponent<CardTable>().ChangeMoveCostServerRpc(1);
             }
             
@@ -48,10 +50,12 @@ public class CardImp : CardInterface
     {
         if (condition)
         {
+            PassiveEffect = true;
             gameObject.transform.parent.gameObject.GetComponent<CardTable>().ChangeMoveCostServerRpc(0);
         }
         else
         {
+            PassiveEffect = false;
             gameObject.transform.parent.gameObject.GetComponent<CardTable>().ChangeMoveCostServerRpc(1);
         }
     }
