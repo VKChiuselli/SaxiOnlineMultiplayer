@@ -85,7 +85,7 @@ public class GameManager : NetworkBehaviour
 
         foreach (GameObject card in playerCard)
         {
-            card.GetComponent<CardTable>().Speed.Value = 2; //TODO call a method that reset own speed
+            card.GetComponent<CardTable>().CurrentSpeed.Value = card.GetComponent<CardTable>().BaseSpeed.Value; //TODO call a method that reset own speed
         }
 
         //TODO implement reset speed card, every card get his own card and reset it as default

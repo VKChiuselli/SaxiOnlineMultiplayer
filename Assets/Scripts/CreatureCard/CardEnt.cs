@@ -28,7 +28,7 @@ public class CardEnt : CardInterface
     public void MyCardCostEffectServerRpc(int x, int y)
     {
         GameObject card = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
-        card.GetComponent<CardTable>().Speed.Value = card.GetComponent<CardTable>().Speed.Value + 1;
+        card.GetComponent<CardTable>().CurrentSpeed.Value = card.GetComponent<CardTable>().CurrentSpeed.Value + 1;
     }
 
     public override void MyCardEffect()

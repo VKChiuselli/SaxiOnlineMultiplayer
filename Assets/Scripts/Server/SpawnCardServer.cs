@@ -70,7 +70,8 @@ public class SpawnCardServer : NetworkBehaviour
 
         cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
         cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
-        cardToSpawnNetwork.GetComponent<CardTable>().Speed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentSpeed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().BaseSpeed.Value = Speed;
         cardToSpawnNetwork.GetComponent<CardTable>().IdOwner.Value = IdOwner;
         cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
         cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
@@ -170,7 +171,8 @@ public class SpawnCardServer : NetworkBehaviour
 
         cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
         cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
-        cardToSpawnNetwork.GetComponent<CardTable>().Speed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().CurrentSpeed.Value = Speed;
+        cardToSpawnNetwork.GetComponent<CardTable>().BaseSpeed.Value = Speed;
         cardToSpawnNetwork.GetComponent<CardTable>().IdOwner.Value = IdOwner;
         cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
         cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
@@ -367,7 +369,7 @@ public class SpawnCardServer : NetworkBehaviour
 
         if (topCard.GetComponent<CardTable>() != null)
         {
-            if (topCard.GetComponent<CardTable>().Speed.Value > 0)
+            if (topCard.GetComponent<CardTable>().CurrentSpeed.Value > 0)
             {
                 return 1;
             }
@@ -380,7 +382,7 @@ public class SpawnCardServer : NetworkBehaviour
         GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
         if (topCard.GetComponent<CardTable>() != null)
         {
-            topCard.GetComponent<CardTable>().Speed.Value = topCard.GetComponent<CardTable>().Speed.Value - 1;
+            topCard.GetComponent<CardTable>().RemoveSpeed();
         }
     }
 
@@ -395,7 +397,7 @@ public class SpawnCardServer : NetworkBehaviour
         CardTable cardPusher = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>();
         CardTable cardPushed = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile).GetComponent<CardTable>();
 
-        if (cardPusher.Speed.Value == 0)
+        if (cardPusher.CurrentSpeed.Value == 0)
         {
             return 0;
         }
