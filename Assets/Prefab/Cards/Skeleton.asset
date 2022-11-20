@@ -19,3 +19,7 @@ MonoBehaviour:
   IdOwner: 1
   CardPosition: 1
   IdImageCard: 04_summon_skeleton_army
+  CardDescription: STACO
+  keyword1: 0
+  keyword2: 0
+  keyword3: 0

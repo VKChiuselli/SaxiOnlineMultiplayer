@@ -19,6 +19,7 @@ MonoBehaviour:
   IdOwner: 0
   CardPosition: 1
   IdImageCard: 25_secret_community
+  CardDescription: 'PUSH: guadagni un punto movimento '
   keyword1: 7
   keyword2: 0
   keyword3: 0

@@ -19,6 +19,8 @@ MonoBehaviour:
   IdOwner: 0
   CardPosition: 2
   IdImageCard: dragon_coldbreath
+  CardDescription: 'CONDIZIONE DEPLOY: puoi giocare questa carta solo se hai almeno
+    1 creatura nel campo nemico ETB: ritorna una creatura amica dal campo nemico'
   keyword1: 4
   keyword2: 0
   keyword3: 0

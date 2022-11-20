@@ -27,6 +27,7 @@ namespace Assets.Scripts
         public NetworkVariable<int> DeployCost = new NetworkVariable<int>(1);
         public NetworkVariable<int> CardPosition = new NetworkVariable<int>();
         public NetworkVariable<FixedString32Bytes> IdImageCard = new NetworkVariable<FixedString32Bytes>();
+        public string CardDescription;
         public CardKeyword keyword1;
         public CardKeyword keyword2;
         public CardKeyword keyword3;
@@ -39,6 +40,7 @@ namespace Assets.Scripts
             IdOwner.Value = cardSO.IdOwner;
             IdImageCard.Value = cardSO.IdImageCard;
             CardPosition.Value = cardSO.CardPosition;
+            CardDescription = cardSO.CardDescription;
             keyword1 = cardSO.keyword1;
             keyword2 = cardSO.keyword2;
             keyword3 = cardSO.keyword3;

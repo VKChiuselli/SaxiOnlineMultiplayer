@@ -19,3 +19,8 @@ MonoBehaviour:
   IdOwner: 0
   CardPosition: 3
   IdImageCard: 5_summon_ent
+  CardDescription: 'MERGIATO: aumenta di 1 il MaxMov di una qualsiasi pedina amica
+    fino alla fine del turno '
+  keyword1: 0
+  keyword2: 0
+  keyword3: 0

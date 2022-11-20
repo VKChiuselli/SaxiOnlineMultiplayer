@@ -33,6 +33,7 @@ public class CardSO : ScriptableObject
     public int IdOwner;
     public int CardPosition;
     public string IdImageCard;
+    public string CardDescription;
     public CardKeyword keyword1;
     public CardKeyword keyword2;
     public CardKeyword keyword3;

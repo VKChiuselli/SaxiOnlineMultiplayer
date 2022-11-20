@@ -17,4 +17,10 @@ MonoBehaviour:
   Weight: 5
   Speed: 3
   IdOwner: 1
+  CardPosition: 0
   IdImageCard: 12_summon_imp_army
+  CardDescription: 'CONDIZIONE pedina nemica adiancente EFFETTO: puoi andare a destra
+    o sinistra senza spendere punti movimento MA conta il MAXMOV'
+  keyword1: 0
+  keyword2: 0
+  keyword3: 0

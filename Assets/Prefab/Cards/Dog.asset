@@ -19,6 +19,7 @@ MonoBehaviour:
   IdOwner: 0
   CardPosition: 0
   IdImageCard: 14_summon_dogs
+  CardDescription: 'ETB: guadagni un punto movimento'
   keyword1: 1
   keyword2: 0
   keyword3: 0

@@ -16,7 +16,7 @@ public class CardTraitor : CardInterface
     public override void MyCardEffect()
     {
         Debug.Log("Gain 1 move point");
-        gameManager.GetComponent<GameManager>().MovePointIncreaseServerRpc(1);
+        gameManager.GetComponent<GameManager>().MovePointIncrease(1);
     }
 
 }
