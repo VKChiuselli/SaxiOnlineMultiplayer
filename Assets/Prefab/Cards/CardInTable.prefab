@@ -262,6 +262,7 @@ GameObject:
   - component: {fileID: 8012396393232581035}
   - component: {fileID: 9136577985858176113}
   - component: {fileID: 4770880821683355578}
+  - component: {fileID: -6224864371635755897}
   m_Layer: 5
   m_Name: CardInTable
   m_TagString: RPCT
@@ -404,7 +405,9 @@ MonoBehaviour:
     m_InternalValue: 0
   MoveCost:
     m_InternalValue: 1
-  Speed:
+  CurrentSpeed:
+    m_InternalValue: 0
+  BaseSpeed:
     m_InternalValue: 0
   IdOwner:
     m_InternalValue: 0
@@ -412,6 +415,8 @@ MonoBehaviour:
     m_InternalValue: 0
   CurrentPositionY:
     m_InternalValue: 0
+  IsOnTop:
+    m_InternalValue: 1
   IdImageCard:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -486,6 +491,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardTableToSpawn: {fileID: 6403154168061667466}
+--- !u!114 &-6224864371635755897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403154168061667466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9e68c6f1833212459258aa18aa067f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8599944745568524656
 GameObject:
   m_ObjectHideFlags: 0

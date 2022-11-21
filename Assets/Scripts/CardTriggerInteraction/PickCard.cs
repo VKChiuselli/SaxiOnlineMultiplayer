@@ -25,50 +25,54 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
-        if (NetworkManager.Singleton.IsClient)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
+            if (NetworkManager.Singleton.IsClient)
             {
-                if (gameObject.transform.parent.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
+
+                if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
                 {
-                    if (gameObject.transform.parent.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                    if (gameObject.transform.parent.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
                     {
-                        TriggerCardSelected();
+                        if (gameObject.transform.parent.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                        {
+                            TriggerCardSelected();
+                        }
                     }
+                    return;
                 }
-                return;
+            }
+
+
+            if (NetworkManager.Singleton.IsClient)
+            {
+
+                if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0 && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)
+                {
+                    if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
+                    {
+                        PickCardFromHand("DeployTileRight");
+                    }
+                    else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
+                    {
+                        PickCardFromHand("DeployTileLeft");
+                    }
+                    else if (gameObject.GetComponent<CardTable>() != null)
+                    {
+                        if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
+                        {
+                            PickCardFromTable();
+                        }
+                        else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
+                        {//la questione è: io clicco la carta, compare un popup in cui ho due possibilità: il merge o select della carta 
+                            PickCardFromTable();
+                        }
+                    }
+
+                }
             }
         }
-
-
-        if (NetworkManager.Singleton.IsClient)
-        {
-
-            if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0 && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)
-            {
-                if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.tag == "RPCH")// RPCH stands for left  player card hand
-                {
-                    PickCardFromHand("DeployTileRight");
-                }
-                else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.tag == "LPCH")// LPCH stands for left player card hand
-                {
-                    PickCardFromHand("DeployTileLeft");
-                }
-                else if (gameObject.GetComponent<CardTable>() != null)
-                {
-                    if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 1 && gameObject.GetComponent<CardTable>().IdOwner.Value == 1)// LPCT stands for left player card table
-                    {
-                        PickCardFromTable();
-                    }
-                    else if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0 && gameObject.GetComponent<CardTable>().IdOwner.Value == 0)// RPCT stands for right player card table
-                    {//la questione è: io clicco la carta, compare un popup in cui ho due possibilità: il merge o select della carta 
-                        PickCardFromTable();
-                    }
-                }
-
-            }
-        }
+     
     }
 
     private Vector3 GetMouseAsWorldPoint()

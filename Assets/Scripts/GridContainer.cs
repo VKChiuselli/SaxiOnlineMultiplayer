@@ -417,13 +417,32 @@ public class GridContainer : NetworkBehaviour
         return nextTile;
     }
 
-    public int GetNextTileType(int xPusher, int yPusher, int xPushed, int yPushed)
+    public int GetTileType(int xPushed, int yPushed)
     {
 
-        int xNext = xPushed - xPusher;
-        int yNext = yPushed - yPusher;
+        GameObject nextTile = GetTile(xPushed, yPushed);
 
-        GameObject nextTile = GetTile(xPusher + xNext, yPusher + yNext);
+        if (nextTile == null)
+        {
+            Debug.Log("Method GetNextTileType: no tile found on next");
+            return 5;//it means no tile avaiable, the VOID
+        }
+
+        if (nextTile.transform.childCount >= 1)
+        {
+            return 2;
+        }//the next tile is filled by a card
+
+        return 1; //the next tile is empty
+    } 
+    
+    public int GetNextTileType(int x1, int y1, int x2, int y2)
+    {
+
+        int finalX = x1 - x2;
+        int finalY = y1 - y2;
+
+        GameObject nextTile = GetTile(x2-finalX, y2-finalY);
 
         if (nextTile == null)
         {
@@ -438,6 +457,7 @@ public class GridContainer : NetworkBehaviour
 
         return 1; //the next tile is empty
     }
+
     public int GetNextTileWeight(int xPusher, int yPusher, int xPushed, int yPushed)
     {
 
@@ -531,7 +551,7 @@ public class GridContainer : NetworkBehaviour
     {
         if (GetTopCardOnTile(x - 1, y) != null)
         {
-            if(GetTopCardOnTile(x - 1, y).GetComponent<CardTable>() != null)
+            if (GetTopCardOnTile(x - 1, y).GetComponent<CardTable>() != null)
             {
                 if (GetTopCardOnTile(x - 1, y).GetComponent<CardTable>().IdOwner.Value != player)
                 {
@@ -542,7 +562,7 @@ public class GridContainer : NetworkBehaviour
 
         if (GetTopCardOnTile(x + 1, y) != null)
         {
-            if(GetTopCardOnTile(x + 1, y).GetComponent<CardTable>() != null)
+            if (GetTopCardOnTile(x + 1, y).GetComponent<CardTable>() != null)
             {
                 if (GetTopCardOnTile(x + 1, y).GetComponent<CardTable>().IdOwner.Value != player)
                 {
@@ -551,24 +571,70 @@ public class GridContainer : NetworkBehaviour
             }
         }
 
-        if (GetTopCardOnTile(x , y + 1) != null)
+        if (GetTopCardOnTile(x, y + 1) != null)
         {
-            if(GetTopCardOnTile(x , y + 1).GetComponent<CardTable>() != null)
+            if (GetTopCardOnTile(x, y + 1).GetComponent<CardTable>() != null)
             {
-                if (GetTopCardOnTile(x , y + 1).GetComponent<CardTable>().IdOwner.Value != player)
+                if (GetTopCardOnTile(x, y + 1).GetComponent<CardTable>().IdOwner.Value != player)
                 {
                     return true;
                 }
             }
         }
 
-        if (GetTopCardOnTile(x , y - 1) != null)
+        if (GetTopCardOnTile(x, y - 1) != null)
         {
-            if(GetTopCardOnTile(x , y - 1).GetComponent<CardTable>() != null)
+            if (GetTopCardOnTile(x, y - 1).GetComponent<CardTable>() != null)
             {
-                if (GetTopCardOnTile(x , y - 1).GetComponent<CardTable>().IdOwner.Value != player)
+                if (GetTopCardOnTile(x, y - 1).GetComponent<CardTable>().IdOwner.Value != player)
                 {
                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<GameObject> GetAdjacentHeavierEnemyCard(int x, int y, int player)
+    {
+        List<GameObject> EnemyHeavierCard = new List<GameObject>();
+        CardTable card = GetTopCardOnTile(x, y).GetComponent<CardTable>();
+        int weightCard = card.MergedWeight.Value == 0 ? card.Weight.Value : card.MergedWeight.Value;
+
+        if (GetHeavierEnemyCard(x - 1, y, player, weightCard))
+        {
+            EnemyHeavierCard.Add(GetTopCardOnTile(x - 1, y));
+        }
+        if (GetHeavierEnemyCard(x + 1, y, player, weightCard))
+        {
+            EnemyHeavierCard.Add(GetTopCardOnTile(x + 1, y));
+        }
+        if (GetHeavierEnemyCard(x, y - 1, player, weightCard))
+        {
+            EnemyHeavierCard.Add(GetTopCardOnTile(x, y - 1));
+        }
+        if (GetHeavierEnemyCard(x, y + 1, player, weightCard))
+        {
+            EnemyHeavierCard.Add(GetTopCardOnTile(x, y + 1));
+        }
+
+
+        return EnemyHeavierCard;
+    }
+
+    private bool GetHeavierEnemyCard(int x, int y, int player, int weightCard)
+    {
+        if (GetTopCardOnTile(x, y) != null)
+        {
+            if (GetTopCardOnTile(x, y).GetComponent<CardTable>() != null)
+            {
+                if (GetTopCardOnTile(x, y).GetComponent<CardTable>().IdOwner.Value != player)
+                {
+                    int enemyCardWeight = GetTopCardOnTile(x, y).GetComponent<CardTable>().MergedWeight.Value == 0 ? GetTopCardOnTile(x, y).GetComponent<CardTable>().Weight.Value : GetTopCardOnTile(x, y).GetComponent<CardTable>().MergedWeight.Value;
+                    if (weightCard < enemyCardWeight)
+                    {
+                        return true;
+                    }
                 }
             }
         }

@@ -254,6 +254,40 @@ public class SpawnCardServer : NetworkBehaviour
             gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         }
     }
+       [ServerRpc(RequireOwnership = false)]
+    public void TeleportCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int costMove, int costSpeed)
+    {
+            if (costMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
+            {
+                Debug.Log("Not enough Move Points");
+                return;
+            }
+            else if (costSpeed == 0)//TODO improve this costSpeed
+            {
+                Debug.Log("Not enough speed/maxMove");
+                return;
+            }
+
+
+
+        GameObject tileWhereToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
+        if (tileWhereToSpawn == null)
+        {//this IF is made for PUSH 
+            Debug.Log("card destroied because no tile found");
+            DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
+            return;
+        }
+        List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
+        foreach (GameObject card in cardsFromTile)
+        {
+            card.transform.SetParent(tileWhereToSpawn.transform, false);
+            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+        }
+
+            RemoveSpeedCard(xNewTile, yNewTile);
+            gameManager.GetComponent<GameManager>().MovePointSpent(costMove);
+    }
 
 
     public int CheckMove(int xOldTile, int yOldTile)
@@ -479,15 +513,15 @@ public class SpawnCardServer : NetworkBehaviour
     {
         int x = xPushed - xPusher;
         int y = yPushed - yPusher;
-        if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
+        if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 5)
         {
             return 400; //400 è VERO
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
+        else if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 1)
         {
             return 400; //400 è VERO
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
+        else if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 2)
         {
             int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
             int totalWeight = nextCardWeight + weightEnemy;
@@ -510,15 +544,15 @@ public class SpawnCardServer : NetworkBehaviour
     {
         int x = xPushed - xPusher;
         int y = yPushed - yPusher;
-        if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 5)
+        if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 5)
         {
             return tilesToPush;
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 1)
+        else if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 1)
         {
             return tilesToPush;
         }
-        else if (gridContainer.GetComponent<GridContainer>().GetNextTileType(xPusher, yPusher, xPushed, yPushed) == 2)
+        else if (gridContainer.GetComponent<GridContainer>().GetTileType(xPushed, yPushed) == 2)
         {
             int nextCardWeight = gridContainer.GetComponent<GridContainer>().GetNextTileWeight(xPusher + x, yPusher + y, xPushed + x, yPushed + y);
             int totalWeight = nextCardWeight + weightEnemy;

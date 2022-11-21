@@ -10,6 +10,7 @@ public enum CardKeyword
     MERGE,
     FUSION,
     DEPLOYCONDITION,
+    ACTIVEEFFECT,
     COSTEFFECT,
     COSTMOVE,
     EFFECT,
