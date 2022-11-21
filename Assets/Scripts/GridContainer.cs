@@ -400,13 +400,13 @@ public class GridContainer : NetworkBehaviour
         return finalCard;
     }
 
-    public GameObject GetNextTile(int xPusher, int yPusher, int xPushed, int yPushed)
+    public GameObject GetNextTile(int x1, int y1, int x2, int y2)
     {
 
-        int xNext = xPushed - xPusher;
-        int yNext = yPushed - yPusher;
+        int finalX = x1 - x2;
+        int finalY = y1 - y2;
 
-        GameObject nextTile = GetTile(xPusher + xNext, yPusher + yNext);
+        GameObject nextTile = GetTile(x2 - finalX, y2 - finalY);
 
         if (nextTile == null)
         {
@@ -424,12 +424,13 @@ public class GridContainer : NetworkBehaviour
 
         if (nextTile == null)
         {
-            Debug.Log("Method GetNextTileType: no tile found on next");
+            Debug.Log("Method GetTileType: no tile found on next");
             return 5;//it means no tile avaiable, the VOID
         }
 
         if (nextTile.transform.childCount >= 1)
         {
+            Debug.Log("Method GetTileType: the next tile is filled by a card");
             return 2;
         }//the next tile is filled by a card
 

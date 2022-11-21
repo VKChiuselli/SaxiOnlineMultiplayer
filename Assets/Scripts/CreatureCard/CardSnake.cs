@@ -52,7 +52,7 @@ public class CardSnake : CardInterface
         foreach (GameObject enemyCard in heavyerCards)
         {
             if (gridContainer.GetComponent<GridContainer>()
-                .GetNextTileType(enemyCard.GetComponent<CardTable>().CurrentPositionX.Value, enemyCard.GetComponent<CardTable>().CurrentPositionY.Value) == 1)
+                .GetNextTileType(x,y,enemyCard.GetComponent<CardTable>().CurrentPositionX.Value, enemyCard.GetComponent<CardTable>().CurrentPositionY.Value) == 1)
             {
                 heavyerCardFreeBehind.Add(enemyCard);
             }
