@@ -6,6 +6,14 @@ using UnityEngine.EventSystems;
 
 public class ActiveCard : MonoBehaviour, IPointerClickHandler
 {
+    PlaceManager placeManager;
+    GameObject gridContainer;
+
+    void Start()
+    {
+        placeManager = FindObjectOfType<PlaceManager>();
+        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -15,6 +23,10 @@ public class ActiveCard : MonoBehaviour, IPointerClickHandler
             {
                 if (gameObject.transform.GetChild(2).GetComponent<CardInterface>().keyword1 == CardKeyword.ACTIVEEFFECT)
                 {
+                    placeManager.ResetCardHand();
+                    placeManager.ResetMergedCardTable();
+                    placeManager.ResetSingleCardTable();
+                    gridContainer.GetComponent<GridContainer>().ResetShowTiles();
                     gameObject.transform.GetChild(2).GetComponent<CardInterface>().MyCardEffect();
                 }
             }

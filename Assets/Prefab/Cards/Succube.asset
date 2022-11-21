@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IdCard: 7
   Copies: 3
-  Weight: 10
-  Speed: 2
+  Weight: 5
+  Speed: 3
   IdOwner: 1
   CardPosition: 3
   IdImageCard: 10_summon_succubus
+  CardDescription: "COSTO EFFETTO: paga 1 punti movimento 1 punto deploy EFFETTO:
+    distruggi la riga in cui si trova questa pedina se ci sono 4 o pi\xF9 pedine"
+  keyword1: 0
+  keyword2: 0
+  keyword3: 0
