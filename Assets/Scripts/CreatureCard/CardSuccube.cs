@@ -11,8 +11,8 @@ public class CardSuccube : CardInterface
     GameObject gridContainer;
     int x = 0;
     int y = 0;
-    //int deployCostEffectCard =1;
-    int moveCostEffectCard = 2;
+    int deployCostEffectCard = 1;
+    int moveCostEffectCard = 1;
     GameObject SpawnManager;
     void Start()
     {
@@ -29,84 +29,34 @@ public class CardSuccube : CardInterface
         {
             return;
         }//IF pass this control, it means we have enough move points
+
+        if (gameManager.GetComponent<GameManager>().GetCurrentPlayerDeployPoint() < deployCostEffectCard)
+        {
+            return;
+        }//IF pass this control, it means we have enough deploy points
+
         UpdateVariable();
-        List<GameObject> heavyerCards = CheckHeavierCardAround();
-        heavyerCards = CheckBehind(x, y, heavyerCards);
-        if (heavyerCards.Count > 0)
-        {
-            gridContainer.GetComponent<GridContainer>().ShowTileToInteract(heavyerCards);
-            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(1);
-            EventsManager.current.SelectCardFromTable(gameObject.transform.parent.gameObject);
-            //now the player will choose the card to go behind
-        }
-        else
-        {
-            return; //DO NOTHING because no cards are there to active the effect
-        }
 
-    }
-
-    private List<GameObject> CheckBehind(int x, int y, List<GameObject> heavyerCards)
-    {
-        List<GameObject> heavyerCardFreeBehind = new List<GameObject>();
-        foreach (GameObject enemyCard in heavyerCards)
+        //TODO destroy card in the column
+        List<GameObject> tilesWithCardsToDestroy = gridContainer.GetComponent<GridContainer>().GetAllTileWithCardInColumn(x);
+        if (tilesWithCardsToDestroy.Count < 4)
         {
-            if (gridContainer.GetComponent<GridContainer>()
-                .GetNextTileType(x, y, enemyCard.GetComponent<CardTable>().CurrentPositionX.Value, enemyCard.GetComponent<CardTable>().CurrentPositionY.Value) == 1)
-            {
-                heavyerCardFreeBehind.Add(enemyCard);
-            }
+            return;
+        }//IF pass this control, it means there are enough cards
+
+        //destroy the cards in the column
+        foreach (GameObject tileToDestroy in tilesWithCardsToDestroy)
+        {
+            SpawnManager.GetComponent<SpawnCardServer>().
+                    DespawnAllCardsFromTileServerRpc(tileToDestroy.GetComponent<CoordinateSystem>().x, tileToDestroy.GetComponent<CoordinateSystem>().y);
         }
 
-
-        return heavyerCardFreeBehind;
-    }
-
-    private List<GameObject> CheckHeavierCardAround()
-    {
-        List<GameObject> heavyerCards = gridContainer.GetComponent<GridContainer>().GetAdjacentHeavierEnemyCard(x, y, gameManager.GetComponent<GameManager>().CurrentTurn.Value);
-        return heavyerCards;
-    }
-
-    public override void MyCardCostEffect(GameObject card)
-    {
-        //TODO you must implement here the card that goes after the other one
-        GameObject newTileJumped = JumpTwoTile(x, y, card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
-        int newX = newTileJumped.GetComponent<CoordinateSystem>().x;
-        int newY = newTileJumped.GetComponent<CoordinateSystem>().y;
-
-
-        SpawnManager.GetComponent<SpawnCardServer>().TeleportCardsToEmptyTileServerRpc(x, y, newX, newY, moveCostEffectCard, 1);
-
-    }
-
-    private GameObject JumpTwoTile(int oldX, int oldY, int newX, int newY)
-    {
-        return gridContainer.GetComponent<GridContainer>().GetNextTile(oldX, oldY, newX, newY);
     }
 
     private void UpdateVariable()
     {
         x = gameObject.transform.parent.gameObject.GetComponent<CardTable>().CurrentPositionX.Value;
         y = gameObject.transform.parent.gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
-    }
-
-
-
-    [ClientRpc] //TODO improve connection with client, I must understand which and how the client is called from the server, we need a specific client, not every client 
-    void MyCardEffectClientRpc()
-    {
-        if (IsClient)
-        {
-            List<GameObject> list = gridContainer.GetComponent<GridContainer>().GetHalfBoardCard(gameManager.GetComponent<GameManager>().CurrentTurn.Value);
-            gridContainer.GetComponent<GridContainer>().ShowTileToInteract(list);
-            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(1);
-            EventsManager.current.SelectCardFromTable(gameObject.transform.parent.gameObject);
-            //          GameObject cardSelectFromTable = WaitingForSelectCard().GetAwaiter().GetResult();
-
-
-            Debug.Log("PICK UR CARD: "); //+ cardSelectFromTable.name);
-        }
     }
 
 }

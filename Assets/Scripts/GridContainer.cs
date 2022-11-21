@@ -50,6 +50,21 @@ public class GridContainer : NetworkBehaviour
         }
     }
 
+    public List<GameObject> GetAllTileWithCardInColumn(int whichColumn)
+    {
+        List<GameObject> tileWithCards = new List<GameObject>();
+
+        for(int i=1; i<7; i++)
+        {
+            if(GetTopCardOnTile(whichColumn, i) != null)
+            {
+                tileWithCards.Add(GetTile(whichColumn, i));
+            }
+        }
+
+        return tileWithCards;
+    }
+
     public void ShowMovementTilesAroundCard(GameObject cardTablePassed)
     {
         if (gridTiles != null)

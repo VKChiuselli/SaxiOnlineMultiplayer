@@ -21,6 +21,6 @@ MonoBehaviour:
   IdImageCard: 10_summon_succubus
   CardDescription: "COSTO EFFETTO: paga 1 punti movimento 1 punto deploy EFFETTO:
     distruggi la riga in cui si trova questa pedina se ci sono 4 o pi\xF9 pedine"
-  keyword1: 0
+  keyword1: 5
   keyword2: 0
   keyword3: 0
