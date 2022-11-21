@@ -148,6 +148,16 @@ public class GridContainer : NetworkBehaviour
             }
         }
     }
+    public void ShowTileToInteractByTile(List<GameObject> tileToInteract)
+    {
+        foreach (GameObject tile in tileToInteract)
+        {
+            if (tile.GetComponent<Highlight>() != null)
+            {
+                tile.GetComponent<Highlight>().ShowTileCanInteract(7);
+            }
+        }
+    }
 
     public void RemoveCardFromTable(int x, int y)
     {
@@ -531,6 +541,24 @@ public class GridContainer : NetworkBehaviour
                     {
                         playerCards.Add(card);
                     }
+                }
+            }
+        }
+
+        return playerCards;
+
+    }
+    public List<GameObject> GetTilesFromPlayer(int player)
+    {
+        List<GameObject> playerCards = new List<GameObject>();
+
+        foreach (GameObject tile in gridTiles)
+        {
+            if (GetTopCardOnTile(tile)!=null)
+            {
+                if (GetTopCardOnTile(tile).GetComponent<CardTable>().IdOwner.Value == player)
+                {
+                    playerCards.Add(tile);
                 }
             }
         }

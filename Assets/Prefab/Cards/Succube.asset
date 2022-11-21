@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IdCard: 7
   Copies: 3
-  Weight: 5
+  Weight: 20
   Speed: 3
   IdOwner: 1
   CardPosition: 3

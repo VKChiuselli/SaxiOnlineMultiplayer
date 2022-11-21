@@ -29,21 +29,27 @@ public class CardImp : CardInterface
 
     void Update()
     {
-        if (gameObject.transform.parent.gameObject.GetComponent<CardTable>() != null)
+        if (gameObject != null)
         {
-            if (gameObject.transform.parent.gameObject.GetComponent<CardTable>().IsOnTop.Value)
+            if (gameObject.transform.parent.gameObject != null)
             {
-                UpdateVariable();
-                conditionVerify = CheckCondition();
-                ResolveCondition(conditionVerify);
+                if (gameObject.transform.parent.gameObject.GetComponent<CardTable>() != null)
+                {
+                    if (gameObject.transform.parent.gameObject.GetComponent<CardTable>().IsOnTop.Value)
+                    {
+                        UpdateVariable();
+                        conditionVerify = CheckCondition();
+                        ResolveCondition(conditionVerify);
+                    }
+                    else
+                    {//in this way, if the card is not in the top, the move cost is 1
+                        PassiveEffect = false;
+                        gameObject.transform.parent.gameObject.GetComponent<CardTable>().ChangeMoveCostServerRpc(1);
+                    }
+                }
             }
-            else
-            {//in this way, if the card is not in the top, the move cost is 1
-                PassiveEffect = false;
-                gameObject.transform.parent.gameObject.GetComponent<CardTable>().ChangeMoveCostServerRpc(1);
-            }
-            
         }
+       
     }
 
     private void ResolveCondition(bool condition)

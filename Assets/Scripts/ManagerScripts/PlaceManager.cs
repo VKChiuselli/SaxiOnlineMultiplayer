@@ -40,6 +40,7 @@ public class PlaceManager : MonoBehaviour {
         if (handCard != null)
         {
             ResetCardHand();
+            ResetTableSelectCard();
         }
         tableMergedCard = cardToPlace;
         Debug.Log("Passing merged card to pick it from table");
@@ -49,6 +50,7 @@ public class PlaceManager : MonoBehaviour {
         if (handCard != null)
         {
             ResetCardHand();
+            ResetTableSelectCard();
         }
         tableSingleCard = cardToPlace;
         Debug.Log("Passing single card to pick it from table");

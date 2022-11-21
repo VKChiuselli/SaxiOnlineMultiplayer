@@ -91,22 +91,4 @@ public class CardSnake : CardInterface
         y = gameObject.transform.parent.gameObject.GetComponent<CardTable>().CurrentPositionY.Value;
     }
 
-
-
-    [ClientRpc] //TODO improve connection with client, I must understand which and how the client is called from the server, we need a specific client, not every client 
-    void MyCardEffectClientRpc()
-    {
-        if (IsClient)
-        {
-            List<GameObject> list = gridContainer.GetComponent<GridContainer>().GetHalfBoardCard(gameManager.GetComponent<GameManager>().CurrentTurn.Value);
-            gridContainer.GetComponent<GridContainer>().ShowTileToInteract(list);
-            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(1);
-            EventsManager.current.SelectCardFromTable(gameObject.transform.parent.gameObject);
-            //          GameObject cardSelectFromTable = WaitingForSelectCard().GetAwaiter().GetResult();
-
-
-            Debug.Log("PICK UR CARD: "); //+ cardSelectFromTable.name);
-        }
-    }
-
 }

@@ -208,6 +208,7 @@ public class SpawnCardServer : NetworkBehaviour
 
         foreach (GameObject card in cardsFromTile)
         {
+            card.transform.GetChild(2).GetComponent<NetworkObject>().Despawn();
             card.GetComponent<NetworkObject>().Despawn();
         }
     }

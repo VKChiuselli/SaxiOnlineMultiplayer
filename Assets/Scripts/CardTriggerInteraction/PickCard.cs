@@ -120,11 +120,10 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
             ResetShowTilesClientRpc();
             var cardInterface = placeManager.GetCardSelectedFromTable(); //il placemanager ha immagazzinato questa carta
             var eventManager = new EventsManager();
+            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(0);
             eventManager.onSelectCard += cardInterface.MyCardCostEffect; //mi metto in ascolto dell'effetto
             eventManager.SelectCard(gameObject); //triggero l'effetto
-            gameManager.GetComponent<GameManager>().SetIsPickingChoosing(0);
             placeManager.ResetMergedCardTable();
-            placeManager.ResetTableSelectCard();
             placeManager.ResetSingleCardTable();
             placeManager.ResetCardHand();
             // eventManager.onSelectCard -= cardInterface.MyCardCostEffect;
