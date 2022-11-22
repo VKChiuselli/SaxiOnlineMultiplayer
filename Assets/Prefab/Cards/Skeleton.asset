@@ -19,7 +19,8 @@ MonoBehaviour:
   IdOwner: 1
   CardPosition: 1
   IdImageCard: 04_summon_skeleton_army
-  CardDescription: STACO
+  CardDescription: 'COSTO EFFETTO: Sacrifica un''altra creatura e 3 punti movimento
+    EFFETTO: distruggi un''altra creatura con peso minore.'
   keyword1: 0
   keyword2: 0
   keyword3: 0

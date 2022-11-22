@@ -19,9 +19,8 @@ MonoBehaviour:
   IdOwner: 1
   CardPosition: 2
   IdImageCard: 4_summon_snake_army
-  CardDescription: 'CONDIZIONE pedina nemica adiacente che pesa almeno 15 kili COSTO
-    EFFETTO: 2 punti movimento EFFETTO: puoi posizionare questa pedina dietro la
-    pedina condizione'
+  CardDescription: "CONDIZIONE pedina nemica adiacente pi\xF9 pesante COSTO EFFETTO:
+    2 punti movimento EFFETTO: puoi posizionare questa pedina dietro la pedina condizione"
   keyword1: 5
   keyword2: 0
   keyword3: 0
