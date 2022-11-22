@@ -159,11 +159,6 @@ public class GridContainer : NetworkBehaviour
         }
     }
 
-    public void RemoveCardFromTable(int x, int y)
-    {
-        GameObject cardToRemove = GetTile(x, y);
-        cardToRemove.transform.GetChild(cardToRemove.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
-    }
 
     public bool ExistHalfBoardCard(int player) //it means if exist a card in the opposite part of the board , in "enemy terrain"
     {
@@ -265,26 +260,11 @@ public class GridContainer : NetworkBehaviour
 
     public void RemoveFirstMergedCardFromTable(int x, int y)
     {
-
         GameObject tile = GetTile(x, y);
-        tile.transform.GetChild(tile.transform.childCount - 1).gameObject.GetComponent<NetworkObject>().Despawn();
+        GameObject tile2 = tile.transform.GetChild(tile.transform.childCount - 1).gameObject;
+        tile2.transform.GetChild(2).gameObject.GetComponent<NetworkObject>().Despawn(); //despawn the child network and than the father
+        tile2.GetComponent<NetworkObject>().Despawn();
     }
-    public void RemoveFirstMergedCardFromTable(GameObject card)
-    {
-        card.GetComponent<NetworkObject>().Despawn();
-    }
-    public void RemoveIndexMergedCardFromTable(int x, int y, int indexCard)
-    {
-        foreach (GameObject tile in gridTiles)
-        {
-            if (tile.GetComponent<CoordinateSystem>().x == x && tile.GetComponent<CoordinateSystem>().y == y)
-            {
-                Debug.Log("RemoveIndexMergedCardFromTable Found!!");
-                //despawn the last children
-                tile.transform.GetChild(indexCard).gameObject.GetComponent<NetworkObject>().Despawn();
-            }
-        }
-    }//TODO convert method using  GetTile
 
     public GameObject GetTopCardOnTile(int x, int y)//do per scontato che qui c'è una carta 
     {
