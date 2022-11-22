@@ -505,9 +505,16 @@ public class SpawnCardServer : NetworkBehaviour
         {
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
-        GameObject cardInterface = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
-        gameManager.GetComponent<TriggerCardManager>().TriggerPushEffect(cardInterface);
+     
+        PushTriggerServerRpc(xNewTile, yNewTile);
         return gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile).transform.childCount;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PushTriggerServerRpc(int xNewTile, int yNewTile)
+    {
+        GameObject cardInterface = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
+        gameManager.GetComponent<TriggerCardManager>().TriggerPushEffect(cardInterface);
     }
 
     private int CheckBehindCard(int xPusher, int yPusher, int xPushed, int yPushed, int weightFriendly, int weightEnemy)
