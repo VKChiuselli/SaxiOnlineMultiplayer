@@ -10,6 +10,13 @@ public class Highlight : NetworkBehaviour
     private Image _highlight;
     private Color trasparency;
 
+
+    public override void OnNetworkSpawn()
+    {
+        transform.localScale = new Vector3(10f, 10f, 10f);
+    }
+
+
     private void Start()
     {
         _highlight = gameObject.GetComponent<Image>();
