@@ -8,6 +8,7 @@ using Unity.Services.Authentication;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// A simple sample showing how to use the Relay Allocation package. As the host, you can authenticate, request a relay allocation, get a join code and join the allocation.
@@ -92,6 +93,7 @@ public class SimpleRelay : MonoBehaviour
         playerId = AuthenticationService.Instance.PlayerId;
 
         UpdateUI();
+        SceneManager.LoadSceneAsync("SoloLobby");
     }
 
     /// <summary>
