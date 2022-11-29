@@ -10,6 +10,8 @@ public class Highlight : NetworkBehaviour
     private Image _highlight;
     private Color trasparency;
 
+    public delegate void TypeOfTileDelegate();
+    public static TypeOfTileDelegate myTypeOfTileDelegate;
 
     public override void OnNetworkSpawn()
     {
@@ -32,6 +34,7 @@ public class Highlight : NetworkBehaviour
     public void ShowTileCanInteract(int typeOfTile)
     {
         gameObject.GetComponent<CoordinateSystem>().typeOfTile = typeOfTile;
+     //   myTypeOfTileDelegate();
         _highlight.color = Color.red;
         _highlight.color = new Color(1f, 1f, 1f, 0.3f);
     }

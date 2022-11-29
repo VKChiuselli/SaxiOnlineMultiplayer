@@ -397,6 +397,68 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &984922159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 984922160}
+  - component: {fileID: 984922161}
+  m_Layer: 0
+  m_Name: AnimationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &984922160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984922159}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1656607163}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &984922161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984922159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e417029ede187c14f8d0fabc409a9524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleEffectsTypeOne:
+  - {fileID: 1050029562203636, guid: b4069a656bda4d940bf63c71279f5c95, type: 3}
+  - {fileID: 1171190231128718, guid: d9467a10b94fb3b428cc539326c9579b, type: 3}
+  - {fileID: 1029683450922114, guid: 911d39b31e356794d971139c547d1e61, type: 3}
+  - {fileID: 1315764361558410, guid: f99c3ed97779c5b4eb026cb91d4e4933, type: 3}
+  - {fileID: 1612411718768874, guid: 4ef343c2fedb6884aac07e8610d65212, type: 3}
+  particleEffectsTypeTwo:
+  - {fileID: 1918476138427834, guid: 3e4e9c6a4ac7e10418454a21dd359975, type: 3}
+  - {fileID: 1761614549529672, guid: 7ee7aea814e67034c991de25882a040b, type: 3}
+  - {fileID: 1434030948986856, guid: d4ea5ac5eb651d54ea256a3765cd608d, type: 3}
+  - {fileID: 1327569613689390, guid: 13a7c7a8d1bb29943ae2fda15a8f1e5c, type: 3}
+  - {fileID: 1775157058538326, guid: 53cc67d1559f30f45945995c620b82df, type: 3}
+  particleEffectsTypeSeven:
+  - {fileID: 1873886433987638, guid: fb2df51e77abde1429eb83c0317784af, type: 3}
+  - {fileID: 1535640691960112, guid: d79f03dd3c9b07c41a430faecdcdf500, type: 3}
+  - {fileID: 1492667978523942, guid: bd76aad308d231743b8d95dd2c02d6b1, type: 3}
+  - {fileID: 1824691927606644, guid: 51f58a7ac453dab48a238fee31899d31, type: 3}
+  - {fileID: 1592372973558972, guid: 721cfe8018b2cd04abd0748143d2a312, type: 3}
 --- !u!1 &1560390391 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1197724498246298794, guid: 4b1cbea7d40b68a40a8a049378cccc8f, type: 3}
@@ -434,6 +496,7 @@ Transform:
   - {fileID: 678149863}
   - {fileID: 213892681}
   - {fileID: 1863154103}
+  - {fileID: 984922160}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
