@@ -32,7 +32,11 @@ namespace HelloWorld
 
         static void StartButtons()
         {
-            if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
+            if (GUILayout.Button("Host"))
+            {
+                NetworkManager.Singleton.StartHost();
+                gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+            }
             if (GUILayout.Button("Client"))
             {
                 NetworkManager.Singleton.StartClient();
@@ -73,7 +77,7 @@ namespace HelloWorld
         {
             if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Pass Turn"))
             {
-                if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
+                if (NetworkManager.Singleton.IsServer && !gameManager.GetComponent<GameManager>().IsRunningPlayer())
                 {
 
                     Debug.Log("se è server e nn cliente fa questo");     //se è server e nn cliente fa questo

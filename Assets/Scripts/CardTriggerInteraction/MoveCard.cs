@@ -27,7 +27,7 @@ public class MoveCard : NetworkBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (NetworkManager.Singleton.IsClient && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
+        if (gameManager.GetComponent<GameManager>().IsRunningPlayer() && placeManager.GetMergedCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
 
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
@@ -49,7 +49,7 @@ public class MoveCard : NetworkBehaviour, IDropHandler
             gameManager.GetComponent<GameManager>().SetUnmergeChoosing(0);
             gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
         }
-        else if (NetworkManager.Singleton.IsClient && placeManager.GetSingleCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
+        else if (gameManager.GetComponent<GameManager>().IsRunningPlayer() && placeManager.GetSingleCardSelectedFromTable() != null) // && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0
         {
 
             if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)

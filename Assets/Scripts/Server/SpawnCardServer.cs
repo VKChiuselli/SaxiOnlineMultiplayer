@@ -216,6 +216,11 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
     {
+        if (xOldTile == 0 && yOldTile == 0)
+        {
+            return;
+        }
+
         int totalMove = CheckMove(xOldTile, yOldTile);
         int totalSpeed = CheckSpeed(xOldTile, yOldTile);
         if (!isPushed)
@@ -255,19 +260,19 @@ public class SpawnCardServer : NetworkBehaviour
             gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         }
     }
-       [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void TeleportCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int costMove, int costSpeed)
     {
-            if (costMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
-            {
-                Debug.Log("Not enough Move Points");
-                return;
-            }
-            else if (costSpeed == 0)//TODO improve this costSpeed
-            {
-                Debug.Log("Not enough speed/maxMove");
-                return;
-            }
+        if (costMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
+        {
+            Debug.Log("Not enough Move Points");
+            return;
+        }
+        else if (costSpeed == 0)//TODO improve this costSpeed
+        {
+            Debug.Log("Not enough speed/maxMove");
+            return;
+        }
 
 
 
@@ -286,13 +291,14 @@ public class SpawnCardServer : NetworkBehaviour
             card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
         }
 
-            RemoveSpeedCard(xNewTile, yNewTile);
-            gameManager.GetComponent<GameManager>().MovePointSpent(costMove);
+        RemoveSpeedCard(xNewTile, yNewTile);
+        gameManager.GetComponent<GameManager>().MovePointSpent(costMove);
     }
 
 
     public int CheckMove(int xOldTile, int yOldTile)
     {
+
         CardInterface cardInterface = gridContainer.GetComponent<GridContainer>()
             .GetTopCardOnTile(xOldTile, yOldTile)
             .GetComponent<CardTable>().transform.GetChild(2).gameObject
@@ -318,6 +324,11 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
+        if (xOldTile == 0 && yOldTile == 0)
+        {
+            return;
+        }
+
         int totalMove = CheckMove(xOldTile, yOldTile);
         int totalSpeed = CheckSpeed(xOldTile, yOldTile);
 
@@ -505,7 +516,7 @@ public class SpawnCardServer : NetworkBehaviour
         {
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
-     
+
         PushTriggerServerRpc(xNewTile, yNewTile);
         return gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile).transform.childCount;
     }
