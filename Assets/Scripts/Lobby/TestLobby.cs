@@ -5,6 +5,7 @@ using Unity.Services.Authentication;
 using UnityEngine;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
+using UnityEngine.SceneManagement;
 
 public class TestLobby : MonoBehaviour
 {
@@ -15,6 +16,21 @@ public class TestLobby : MonoBehaviour
     private float hearthBeatTimer;
     private string randomPlayerName;
 
+    public static TestLobby currentLobby;
+
+    void Awake()
+    {
+        int numGameSessions = FindObjectsOfType<TestLobby>().Length;
+        if (numGameSessions > 1)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        currentLobby = this;
+    }
 
     async void Start()
     {
@@ -150,7 +166,7 @@ public class TestLobby : MonoBehaviour
 
 
 
-    async void CreateLobby()
+  public  async void CreateLobby()
     {
         try
         {
@@ -172,13 +188,18 @@ public class TestLobby : MonoBehaviour
 
             Debug.Log("Create Lobby!!  " + lobby.Name + " " + lobby.MaxPlayers);
 
-            PrintPlayers(hostLobby);
+        //    PrintPlayers(hostLobby);
         }
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
         }
 
+    }
+
+    public void JoinGame()
+    {
+        SceneManager.LoadScene("Game");
     }
 
 
@@ -214,15 +235,16 @@ public class TestLobby : MonoBehaviour
     }
 
 
-    async void JoinLobby()
+   public async void JoinLobby()
     {
         try
         {
 
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync();
 
-            await Lobbies.Instance.JoinLobbyByCodeAsync(queryResponse.Results[0].Id);
-
+            Lobby lobby = await Lobbies.Instance.JoinLobbyByCodeAsync(queryResponse.Results[0].Id);
+            joinLobby = lobby;
+            PrintPlayers(lobby);
         }
         catch (LobbyServiceException e)
         {
@@ -250,7 +272,7 @@ public class TestLobby : MonoBehaviour
     }
 
 
-    async void QuickJoinLobby()
+  public  async void QuickJoinLobby()
     {
 
         try
