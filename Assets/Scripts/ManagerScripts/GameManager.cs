@@ -2,7 +2,9 @@ using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 public class GameManager : NetworkBehaviour
@@ -10,6 +12,7 @@ public class GameManager : NetworkBehaviour
     [SerializeField] GameObject popupChoose;
     GameObject grid;
     GridContainer gridContainer;
+    //TestLobby testLobby;
     GameObject deckManagerRight;
     GameObject deckManagerLeft;
 
@@ -17,20 +20,97 @@ public class GameManager : NetworkBehaviour
     //   PlaceManager placeManager;
     public NetworkVariable<int> IsUnmergeChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> IsPopupChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
+
+    public bool IsRunningPlayer()
+    {
+        if(PlayerZero.Value == AuthenticationService.Instance.PlayerId)
+        {
+            if (CurrentTurn.Value == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if(PlayerOne.Value == AuthenticationService.Instance.PlayerId)
+        {
+            if (CurrentTurn.Value == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        Debug.Log("IsRunningPlayer METHOD MISTAKE");
+        return false;
+    }
+
     public NetworkVariable<int> IsPickingChoosing = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> CurrentTurn = new NetworkVariable<int>(0); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerZeroDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
     public NetworkVariable<int> PlayerOneMP = new NetworkVariable<int>(3); //0 giocatore destra, 1 giocatore sinistra
-
     public NetworkVariable<int> PlayerOneDP = new NetworkVariable<int>(2); //0 giocatore destra, 1 giocatore sinistra
+    public NetworkVariable<FixedString32Bytes> PlayerZero = new NetworkVariable<FixedString32Bytes>("ciao"); //0 giocatore destra, 1 giocatore sinistra
+    public NetworkVariable<FixedString32Bytes> PlayerOne = new NetworkVariable<FixedString32Bytes>("ciao"); //0 giocatore destra, 1 giocatore sinistra
 
     private void Start()
     {
         grid = GameObject.Find("CanvasHandPlayer/GridManager");
         gridContainer = grid.GetComponent<GridContainer>();
+   //    testLobby = grid.GetComponent<TestLobby>();
         deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
         deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
+
+
+        //if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
+        //{
+        //SetPlayerIDServerRpc();
+        //}
+        //else if (NetworkManager.Singleton.IsHost)
+        //{
+        //    SetPlayerID();
+        //}
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetPlayerIDServerRpc()
+    {
+        if (PlayerZero.Value == "ciao")
+        {
+            PlayerZero.Value = AuthenticationService.Instance.PlayerId;
+        }
+        else if (PlayerOne.Value == "ciao")
+        {
+            PlayerOne.Value = AuthenticationService.Instance.PlayerId;
+        }
+        else
+        {
+            Debug.Log("big error");
+        }
+    }
+
+  
+    private void SetPlayerID()
+    {
+        if (PlayerZero.Value == "ciao")
+        {
+            PlayerZero.Value = AuthenticationService.Instance.PlayerId;
+        }
+        else if (PlayerOne.Value == "ciao")
+        {
+            PlayerOne.Value = AuthenticationService.Instance.PlayerId;
+        }
+        else
+        {
+            Debug.Log("big error");
+        }
     }
 
     public void EndTurn()

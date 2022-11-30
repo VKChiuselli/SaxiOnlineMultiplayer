@@ -27,7 +27,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (NetworkManager.Singleton.IsClient)
+            if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
             {
 
                 if (gameManager.GetComponent<GameManager>().IsPickingChoosing.Value == 1)
@@ -44,7 +44,7 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
             }
 
 
-            if (NetworkManager.Singleton.IsClient)
+            if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
             {
 
                 if (gameManager.GetComponent<GameManager>().IsUnmergeChoosing.Value == 0 && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 0)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,7 +21,7 @@ public class ActiveCard : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (NetworkManager.Singleton.IsClient)
+        if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {

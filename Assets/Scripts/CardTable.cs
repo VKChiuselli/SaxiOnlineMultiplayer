@@ -62,11 +62,11 @@ namespace Assets.Scripts
             MoveCost.Value = newMoveCost;
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void UpdateMoveCostServerRpc(int x, int y)
-        {
-            MoveCost.Value = SpawnManager.GetComponent<SpawnCardServer>().CheckMove(x, y);
-        }
+        //[ServerRpc(RequireOwnership = false)]
+        //public void UpdateMoveCostServerRpc(int x, int y)
+        //{
+        //    MoveCost.Value = SpawnManager.GetComponent<SpawnCardServer>().CheckMove(x, y);
+        //}
 
         public void RefreshSpeed()
         {
