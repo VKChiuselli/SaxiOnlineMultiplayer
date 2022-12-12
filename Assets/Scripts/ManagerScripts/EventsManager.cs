@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class EventsManager : MonoBehaviour {
     public static EventsManager current;
+    GameObject gameManager;
     void Awake() {
         int numGameSessions = FindObjectsOfType<EventsManager>().Length;
         if (numGameSessions > 1) {
@@ -16,11 +17,16 @@ public class EventsManager : MonoBehaviour {
         }
         current = this;
     }
-     
+
+    private void Start()
+    {
+        gameManager = GameObject.Find("Managers/GameManager");
+    }
+
     public event Action<GameObject> onPickCardFromHand;
 
     public void PickCardFromHand(GameObject cardPicked) {
-        if (NetworkManager.Singleton.IsClient)
+        if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
         {
             if (onPickCardFromHand != null)
             {

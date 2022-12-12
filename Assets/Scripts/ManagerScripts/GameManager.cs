@@ -96,8 +96,8 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-  
-    private void SetPlayerID()
+
+    public void SetPlayerID()
     {
         if (PlayerZero.Value == "ciao")
         {

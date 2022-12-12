@@ -277,7 +277,9 @@ public class TestLobby : MonoBehaviour
 
         try
         {
-            await LobbyService.Instance.QuickJoinLobbyAsync();
+            Lobby lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+            joinLobby = lobby;
+            PrintPlayers(lobby);
         }
         catch (LobbyServiceException e)
         {
@@ -291,7 +293,7 @@ public class TestLobby : MonoBehaviour
         Debug.Log("Lobby name: " + lobby.Name);
         foreach (Player player in lobby.Players)
         {
-            Debug.Log(player.Id + "Player in lobby: " + player.Data["PlayerName"].Value);
+            Debug.Log(player.Id + "<<< Player in lobby");
         }
     }
 

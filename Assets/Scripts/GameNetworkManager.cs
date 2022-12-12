@@ -7,7 +7,7 @@ namespace HelloWorld
     public class GameNetworkManager : NetworkBehaviour
     {
         public static int playerLogged;
-        static GameObject gameManager;
+  [SerializeField]      static GameObject gameManager;
         public override void OnNetworkSpawn()
         {
             gameManager = GameObject.Find("Managers/GameManager");
@@ -35,15 +35,17 @@ namespace HelloWorld
             if (GUILayout.Button("Host"))
             {
                 NetworkManager.Singleton.StartHost();
-                gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+         //       gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
             }
             if (GUILayout.Button("Client"))
             {
                 NetworkManager.Singleton.StartClient();
+                gameManager.GetComponent<GameManager>().SetPlayerID();
             }
 
-            if (GUILayout.Button("Server")) { 
+            if (GUILayout.Button("Server")) {
                 NetworkManager.Singleton.StartServer();
+                gameManager.GetComponent<GameManager>().SetPlayerID();
             }
         }
 

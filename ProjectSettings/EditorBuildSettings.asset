@@ -6,12 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Samples/Relay/1.0.4/Simple Relay Sample/SimpleRelay.unity
-    guid: 207fcaccdfb642c49ba9e63f57b94b2e
-  - enabled: 0
-    path: Assets/Scenes/GameBoard.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/Lobby.unity
+    guid: 028d0760157fb6943bf56c6c581ed3fa
   - enabled: 1
-    path: Assets/Samples/Relay/1.0.4/Simple Relay Sample/SoloLobby.unity
-    guid: 48a9db39a7a8e144abfc29a75ce42acb
+    path: Assets/Scenes/Game.unity
+    guid: 92abfa574090c60478e8f8a1d2e2117a
   m_configObjects: {}
