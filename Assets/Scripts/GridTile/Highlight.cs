@@ -13,12 +13,6 @@ public class Highlight : NetworkBehaviour
     public delegate void TypeOfTileDelegate();
     public static TypeOfTileDelegate myTypeOfTileDelegate;
 
-    public override void OnNetworkSpawn()
-    {
-        transform.localScale = new Vector3(10f, 10f, 10f);
-    }
-
-
     private void Start()
     {
         _highlight = gameObject.GetComponent<Image>();

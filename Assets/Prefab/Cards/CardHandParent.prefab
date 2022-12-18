@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 38.848495}
-  m_SizeDelta: {x: 100, y: 71.1102}
+  m_AnchoredPosition: {x: 36.3, y: 38.848495}
+  m_SizeDelta: {x: 87.2, y: 71.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5705951275035215862
 CanvasRenderer:
@@ -639,6 +639,10 @@ MonoBehaviour:
     m_InternalValue: 0
   IdOwner:
     m_InternalValue: 0
+  DeployCost:
+    m_InternalValue: 1
+  CardPosition:
+    m_InternalValue: 0
   IdImageCard:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -674,6 +678,10 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  CardDescription: 
+  keyword1: 0
+  keyword2: 0
+  keyword3: 0
 --- !u!1 &6552914060108011787
 GameObject:
   m_ObjectHideFlags: 0

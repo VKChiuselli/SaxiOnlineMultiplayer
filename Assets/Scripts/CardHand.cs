@@ -50,10 +50,7 @@ namespace Assets.Scripts
             Testo_Copie.text = Copies.Value.ToString();
             GetComponent<Image>().sprite = Resources.Load<Sprite>($"CardIllustration/{IdImageCard.Value}");
         }
-        public override void OnNetworkSpawn()
-        {
-            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        }
+
         public void PlayCard()
         {
             if (Copies.Value > 0)
