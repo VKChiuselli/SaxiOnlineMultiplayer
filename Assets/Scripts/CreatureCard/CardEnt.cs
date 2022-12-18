@@ -20,12 +20,24 @@ public class CardEnt : CardInterface
 
     public override void MyCardCostEffect(GameObject card)
     {
+        if (IsServer)
+        {
+            MyCardCostEffec(card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
+        }
+        else
+        {
+            MyCardCostEffectServerRpc(card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
+        }
         //remove card and put in hand
-        MyCardCostEffectServerRpc(card.GetComponent<CardTable>().CurrentPositionX.Value, card.GetComponent<CardTable>().CurrentPositionY.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void MyCardCostEffectServerRpc(int x, int y)
+    {
+        MyCardCostEffec(x, y);
+    }
+
+    private void MyCardCostEffec(int x, int y)
     {
         GameObject card = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
         card.GetComponent<CardTable>().CurrentSpeed.Value = card.GetComponent<CardTable>().CurrentSpeed.Value + 1;

@@ -107,13 +107,6 @@ public class GameManager : NetworkBehaviour
 
     public void EndTurn()
     {//TODO reset cards picked
-        EndTurnServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void EndTurnServerRpc()
-    {
-
         if (CurrentTurn.Value == 0)
         {
             PlayerZeroMP.Value = 3;
@@ -132,6 +125,14 @@ public class GameManager : NetworkBehaviour
 
         CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
                                                             //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void EndTurnServerRpc()
+    {
+        EndTurn();
+
 
     }
 
@@ -165,24 +166,24 @@ public class GameManager : NetworkBehaviour
 
     public void SetIsPickingChoosing(int isPickingChoosing)
     {
-        SetIsPickingChoosingServerRpc(isPickingChoosing);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void SetIsPickingChoosingServerRpc(int isPickingChoosing)
-    {
         IsPickingChoosing.Value = isPickingChoosing;
     }
 
-    public void SetIsPopupChoosing(int IsPopupChoosing)
+    [ServerRpc(RequireOwnership = false)]
+    public void SetIsPickingChoosingServerRpc(int isPickingChoosing)
     {
-        SetIsPopupChoosingServerRpc(IsPopupChoosing);
+        SetIsPickingChoosing(isPickingChoosing);
+    }
+
+    public void SetIsPopupChoosing(int isPopupChoosing)
+    {
+        IsPopupChoosing.Value = isPopupChoosing;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SetIsPopupChoosingServerRpc(int isPopupChoosing)
+    public void SetIsPopupChoosingServerRpc(int isPopupChoosing)
     {
-        IsPopupChoosing.Value = isPopupChoosing;
+        SetIsPopupChoosing(isPopupChoosing);
     }
 
 
@@ -199,13 +200,13 @@ public class GameManager : NetworkBehaviour
 
     public void SetUnmergeChoosing(int unmergeStatus)
     {
-        SetUnmergeChoosingServerRpc(unmergeStatus);
+        IsUnmergeChoosing.Value = unmergeStatus;
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SetUnmergeChoosingServerRpc(int unmergeStatus)
     {
-        IsUnmergeChoosing.Value = unmergeStatus;
+        SetUnmergeChoosing(unmergeStatus);
     }
 
     public int GetCurrentPlayerDeployPoint()
@@ -309,21 +310,5 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    //[ServerRpc(RequireOwnership = false)]
-    //public void MovePointIncreaseServerRpc(int howMuchPoint)
-    //{
-    //    if (CurrentTurn.Value == 0)
-    //    {
-    //        PlayerZeroMP.Value = PlayerZeroMP.Value + howMuchPoint;
-    //    }
-    //    else
-    //    if (CurrentTurn.Value == 1)
-    //    {
-    //        PlayerOneMP.Value = PlayerOneMP.Value + howMuchPoint;
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("ERROR!! Class gameManager, class DeployPointSpentServerRpc. whichplayer is wrong!!");
-    //    }
-    //}
+  
 }

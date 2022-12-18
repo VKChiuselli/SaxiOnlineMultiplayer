@@ -133,8 +133,11 @@ public class SpawnCardServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DeployMergeServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies, int CardPosition) //MyCardStruct cartaDaSpawnare
     {
+        DeployMerge(IdCard, Weight, Speed, IdOwner, IdImageCard, tag, x, y, deployCost, Copies, CardPosition);
+    }
 
-
+    public void DeployMerge(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard, string tag, int x, int y, int deployCost, int Copies, int CardPosition)
+    {
         DeckLoad deckLoad = null;
 
         if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
@@ -198,12 +201,14 @@ public class SpawnCardServer : NetworkBehaviour
         UpdateWeightTopCard(x, y);
     }
 
-
-
     [ServerRpc(RequireOwnership = false)]
     public void DespawnAllCardsFromTileServerRpc(int x, int y)
     {
+        DespawnAllCardsFromTile(x, y);
+    }
 
+    public void DespawnAllCardsFromTile(int x, int y)
+    {
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(x, y);
 
         foreach (GameObject card in cardsFromTile)
@@ -215,6 +220,11 @@ public class SpawnCardServer : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
+    {
+        MoveAllCardsToEmptyTile(xOldTile, yOldTile, xNewTile, yNewTile, isPushed);
+    }
+
+    public void MoveAllCardsToEmptyTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
     {
         if (xOldTile == 0 && yOldTile == 0)
         {
@@ -260,8 +270,14 @@ public class SpawnCardServer : NetworkBehaviour
             gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         }
     }
+
     [ServerRpc(RequireOwnership = false)]
     public void TeleportCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int costMove, int costSpeed)
+    {
+        TeleportCardsToEmptyTile(xOldTile, yOldTile, xNewTile, yNewTile, costMove, costSpeed);
+    }
+
+    public void TeleportCardsToEmptyTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int costMove, int costSpeed)
     {
         if (costMove > gameManager.GetComponent<GameManager>().GetCurrentPlayerMovePoint())
         {
@@ -295,7 +311,6 @@ public class SpawnCardServer : NetworkBehaviour
         gameManager.GetComponent<GameManager>().MovePointSpent(costMove);
     }
 
-
     public int CheckMove(int xOldTile, int yOldTile)
     {
 
@@ -323,6 +338,11 @@ public class SpawnCardServer : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    {
+        MoveToFriendlyTile(xOldTile, yOldTile, xNewTile, yNewTile);
+    }
+
+    public void MoveToFriendlyTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
         if (xOldTile == 0 && yOldTile == 0)
         {
@@ -367,9 +387,13 @@ public class SpawnCardServer : NetworkBehaviour
         RemoveSpeedCard(xNewTile, yNewTile);
     }
 
-
     [ServerRpc(RequireOwnership = false)]
     public void MoveTopCardToAnotherTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
+    {
+        MoveTopCardToAnotherTile(xOldTile, yOldTile, xNewTile, yNewTile);
+    }
+
+    public void MoveTopCardToAnotherTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
         if (xOldTile == 0 && yOldTile == 0)
         {
@@ -523,6 +547,11 @@ public class SpawnCardServer : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     private void PushTriggerServerRpc(int xNewTile, int yNewTile)
+    {
+        PushTrigger(xNewTile, yNewTile);
+    }
+
+    private void PushTrigger(int xNewTile, int yNewTile)
     {
         GameObject cardInterface = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xNewTile, yNewTile);
         gameManager.GetComponent<TriggerCardManager>().TriggerPushEffect(cardInterface);

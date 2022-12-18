@@ -27,9 +27,14 @@ public class CardDragonIce : CardInterface
     [ServerRpc(RequireOwnership = false)]
     public void MyCardCostEffectServerRpc(int x, int y)
     {
-        GameObject card = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x,y);
-     
-        gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(x,y);
+        MyCardCostEffec(x, y);
+    }
+
+    public void MyCardCostEffec(int x, int y)
+    {
+        GameObject card = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(x, y);
+
+        gridContainer.GetComponent<GridContainer>().RemoveFirstMergedCardFromTable(x, y);
         gameManager.GetComponent<GameManager>().AddCardCopyOnHand(card.GetComponent<CardTable>().IdCard.Value, 1);
         Debug.Log("Card added to hand--> " + card.GetComponent<CardTable>().IdCard.Value);
     }

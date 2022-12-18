@@ -199,7 +199,11 @@ false
     [ServerRpc(RequireOwnership = false)]
     public void ChangeOwnerServerRpc()
     {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
+        ChangeOwner();
     }
 
+    public void ChangeOwner()
+    {
+        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
+    }
 }

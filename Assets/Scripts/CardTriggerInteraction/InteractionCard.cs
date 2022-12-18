@@ -261,10 +261,4 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeOwnerServerRpc()
-    {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-    }
-
 }
