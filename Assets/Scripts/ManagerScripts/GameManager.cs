@@ -79,33 +79,25 @@ public class GameManager : NetworkBehaviour
         //}
     }
 
+    //client call this
     [ServerRpc(RequireOwnership = false)]
     public void SetPlayerIDServerRpc()
     {
-        if (PlayerZero.Value == "ciao")
-        {
-            PlayerZero.Value = AuthenticationService.Instance.PlayerId;
-        }
-        else if (PlayerOne.Value == "ciao")
-        {
-            PlayerOne.Value = AuthenticationService.Instance.PlayerId;
-        }
-        else
-        {
-            Debug.Log("big error");
-        }
+        SetPlayerID();
     }
 
-  
-    private void SetPlayerID()
+    //server call this
+    public void SetPlayerID()
     {
         if (PlayerZero.Value == "ciao")
         {
             PlayerZero.Value = AuthenticationService.Instance.PlayerId;
+            Debug.Log("  PlayerZero.Value id:  " + AuthenticationService.Instance.PlayerId);
         }
         else if (PlayerOne.Value == "ciao")
         {
             PlayerOne.Value = AuthenticationService.Instance.PlayerId;
+            Debug.Log("  PlayerOne.Value id:  " + AuthenticationService.Instance.PlayerId);
         }
         else
         {

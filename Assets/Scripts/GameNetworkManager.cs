@@ -1,5 +1,7 @@
 
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 
 namespace HelloWorld
@@ -11,6 +13,24 @@ namespace HelloWorld
         public override void OnNetworkSpawn()
         {
             gameManager = GameObject.Find("Managers/GameManager");
+
+
+
+        }
+
+        async void Start()
+        {
+
+            await UnityServices.InitializeAsync();
+
+            AuthenticationService.Instance.SignedIn += () =>
+            {
+                Debug.Log("Player logged with ID: " + AuthenticationService.Instance.PlayerId);
+
+
+            };
+
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
 
         void OnGUI()
@@ -35,11 +55,12 @@ namespace HelloWorld
             if (GUILayout.Button("Host"))
             {
                 NetworkManager.Singleton.StartHost();
-                gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+                gameManager.GetComponent<GameManager>().SetPlayerID();
             }
             if (GUILayout.Button("Client"))
             {
                 NetworkManager.Singleton.StartClient();
+                gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
             }
 
             if (GUILayout.Button("Server")) { 
