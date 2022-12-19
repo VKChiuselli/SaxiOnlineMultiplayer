@@ -38,6 +38,7 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
             }
 
 
+
             if (gameManager.GetComponent<GameManager>().IsRunningPlayer()
                && placeManager.GetSingleCardSelectedFromTable() != null
                && gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 1) //bisogna mettere molte più condizioni per mettere la carta
@@ -195,6 +196,10 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                                3
                            );
                                 }
+                                else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                                {
+                                    return;
+                                }
                             }
                         }
                     }
@@ -241,6 +246,10 @@ public class InteractionCard : NetworkBehaviour, IPointerDownHandler
                                gameObject.GetComponent<CardTable>().CurrentPositionY.Value,
                                3
                            );
+                                }
+                                else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                                {
+                                    return;
                                 }
                             }
                         }

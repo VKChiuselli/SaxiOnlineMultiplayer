@@ -41,6 +41,23 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
                     }
                     return;
                 }
+            } 
+            
+            if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
+            {
+
+                if (gameManager.GetComponent<GameManager>().IsPopupChoosing.Value == 1)
+                {
+                    if (gameObject.transform.parent.GetComponent<CoordinateSystem>() != null)//it means that is empty tile 
+                    {
+                        if (gameObject.transform.parent.GetComponent<CoordinateSystem>().typeOfTile == 7)
+                        {
+                            gameManager.GetComponent<GameManager>().SetIsPopupChoosing(0);
+                            PickCardFromTable();
+                        }
+                    }
+                    return;
+                }
             }
 
 
