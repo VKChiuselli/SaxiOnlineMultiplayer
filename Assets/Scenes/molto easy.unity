@@ -357,7 +357,7 @@ MonoBehaviour:
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
     Address: 0.0.0.0
-    Port: 169
+    Port: 7777
     ServerListenAddress: 
   DebugSimulator:
     PacketDelayMS: 0
@@ -571,5 +571,34 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 391830481
       objectReference: {fileID: 0}
+    - target: {fileID: 4958048501561492823, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: aaa
+      value: 
+      objectReference: {fileID: 1209657873}
+    - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 4958048501775763782}
+    - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a58364782e625de498d37658febc55a0, type: 3}
+--- !u!1 &4958048501775763782 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4958048501561492811, guid: a58364782e625de498d37658febc55a0, type: 3}
+  m_PrefabInstance: {fileID: 4958048501775763781}
+  m_PrefabAsset: {fileID: 0}
