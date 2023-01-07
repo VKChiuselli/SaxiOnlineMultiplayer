@@ -30,6 +30,6 @@ public class Highlight : NetworkBehaviour
         gameObject.GetComponent<CoordinateSystem>().typeOfTile = typeOfTile;
      //   myTypeOfTileDelegate();
         _highlight.color = Color.red;
-        _highlight.color = new Color(1f, 1f, 1f, 0.3f);
+      //  _highlight.color = new Color(1f, 1f, 1f, 0.3f);
     }
 }

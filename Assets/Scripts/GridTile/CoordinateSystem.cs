@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CoordinateSystem : MonoBehaviour
 {
@@ -164,4 +165,12 @@ public class CoordinateSystem : MonoBehaviour
         this.name = finalString;
     }
 
+
+    //private void Update()
+    //{
+    //    if (typeOfTile == 1)
+    //    {
+    //        GetComponent<Image>().sprite = 
+    //    }
+    //}
 }
