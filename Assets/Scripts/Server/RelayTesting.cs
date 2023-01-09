@@ -159,7 +159,8 @@ namespace Assets.Scripts.Lobby
         IEnumerator Example_ConfigreTransportAndStartNgoAsConnectingPlayer(string RelayJoinCode)
         {
             // Populate RelayJoinCode beforehand through the UI
-            var clientRelayUtilityTask = JoinRelayServerFromJoinCode(RelayJoinCode);
+
+            var clientRelayUtilityTask = JoinRelayServerFromJoinCode(RelayJoinCode.Substring(0,6));
 
             while (!clientRelayUtilityTask.IsCompleted)
             {
