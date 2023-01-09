@@ -6,10 +6,12 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
 {
     [SerializeField] GameObject popupChoose;
+    [SerializeField] GameObject endTurnButton;
     GameObject grid;
     GridContainer gridContainer;
     //TestLobby testLobby;
@@ -23,7 +25,7 @@ public class GameManager : NetworkBehaviour
 
     public bool IsRunningPlayer()
     {
-        if(PlayerZero.Value == AuthenticationService.Instance.PlayerId)
+        if(IsServer || IsHost)
         {
             if (CurrentTurn.Value == 0)
             {
@@ -35,7 +37,7 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        if(PlayerOne.Value == AuthenticationService.Instance.PlayerId)
+        if(IsClient)
         {
             if (CurrentTurn.Value == 1)
             {
@@ -62,6 +64,12 @@ public class GameManager : NetworkBehaviour
 
     private void Start()
     {
+        endTurnButton.GetComponent<Button>().onClick.AddListener(delegate
+        {
+            EndTurn();
+        });
+
+        endTurnButton.SetActive(false);
         grid = GameObject.Find("CanvasHandPlayer/GridManager");
         gridContainer = grid.GetComponent<GridContainer>();
    //    testLobby = grid.GetComponent<TestLobby>();
@@ -89,20 +97,36 @@ public class GameManager : NetworkBehaviour
     //server call this
     public void SetPlayerID()
     {
-        if (PlayerZero.Value == "ciao")
+        if (IsServer || IsHost)
         {
             PlayerZero.Value = AuthenticationService.Instance.PlayerId;
             Debug.Log("  PlayerZero.Value id:  " + AuthenticationService.Instance.PlayerId);
+            IsGameStarted = true;
         }
-        else if (PlayerOne.Value == "ciao")
+        else  
         {
             PlayerOne.Value = AuthenticationService.Instance.PlayerId;
             Debug.Log("  PlayerOne.Value id:  " + AuthenticationService.Instance.PlayerId);
+            IsGameStarted = true;
         }
-        else
+    }
+
+    bool IsGameStarted = false;
+
+    private void Update()
+    {
+        if (IsGameStarted)
         {
-            Debug.Log("big error");
+            if (IsRunningPlayer())
+            {
+                endTurnButton.SetActive(true);
+            }
+            else
+            {
+                endTurnButton.SetActive(false);
+            }
         }
+    
     }
 
     public void EndTurn()
@@ -122,7 +146,7 @@ public class GameManager : NetworkBehaviour
 
         ResetSpeedCards(CurrentTurn.Value);
 
-
+        Debug.Log("endofturn");
         CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
                                                             //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
 
@@ -132,8 +156,6 @@ public class GameManager : NetworkBehaviour
     public void EndTurnServerRpc()
     {
         EndTurn();
-
-
     }
 
 
