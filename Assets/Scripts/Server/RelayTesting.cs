@@ -20,12 +20,13 @@ namespace Assets.Scripts.Lobby
         [SerializeField] TextMeshProUGUI codeToShow;
         [SerializeField] TextMeshProUGUI codeToRetrieve;
         GameObject homePanel;
+           GameObject gameManager;
         void Awake()
         {
             GameObject canvas = GameObject.Find("/Relay/Canvas");
             homePanel = canvas.transform.GetChild(0).gameObject;
 
-
+            gameManager = GameObject.Find("Managers/GameManager");
             Button CreateRelayGameButton = homePanel.transform.GetChild(0).gameObject.GetComponent<Button>();
             Button JoinCodeGameButton = homePanel.transform.GetChild(1).gameObject.GetComponent<Button>();
 
@@ -38,8 +39,9 @@ namespace Assets.Scripts.Lobby
 
             JoinCodeGameButton.onClick.AddListener(delegate
             {
+                StartCoroutine(Example_ConfigreTransportAndStartNgoAsConnectingPlayer(codeToRetrieve.text));
                 //     JoinGame(codeToRetrieve.text);
-           //     JoinCode2();
+                //     JoinCode2();
             });
             //   Example_ConfigureTransportAndStartNgoAsHost();
         }
@@ -63,7 +65,7 @@ namespace Assets.Scripts.Lobby
         }
         const int m_MaxConnections = 4;
 
-        public string RelayJoinCode;
+       // public string RelayJoinCode;
 
         public  async Task<RelayServerData> AllocateRelayServerAndGetJoinCode(int maxConnections, string region = null)
         {
@@ -126,12 +128,58 @@ namespace Assets.Scripts.Lobby
 
             codeToShow.text = $"host:  {relayServerData.HostConnectionData}:{relayServerData.Endpoint}\n ";
 
-
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
+            gameManager.GetComponent<GameManager>().SetPlayerID();
             yield return null;
         }
 
+
+        public  async Task<RelayServerData> JoinRelayServerFromJoinCode(string joinCode)
+        {
+            JoinAllocation allocation;
+            try
+            {
+                allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            }
+            catch
+            {
+                Debug.LogError("Relay create join code request failed");
+                throw;
+            }
+
+            Debug.Log($"client: {allocation.ConnectionData[0]} {allocation.ConnectionData[1]}");
+            Debug.Log($"host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
+            Debug.Log($"client: {allocation.AllocationId}");
+
+            return new RelayServerData(allocation, "udp");
+          //  return new RelayServerData(allocation, "dtls");
+        }
+
+        IEnumerator Example_ConfigreTransportAndStartNgoAsConnectingPlayer(string RelayJoinCode)
+        {
+            // Populate RelayJoinCode beforehand through the UI
+            var clientRelayUtilityTask = JoinRelayServerFromJoinCode(RelayJoinCode);
+
+            while (!clientRelayUtilityTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (clientRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError("Exception thrown when attempting to connect to Relay Server. Exception: " + clientRelayUtilityTask.Exception.Message);
+                yield break;
+            }
+
+            var relayServerData = clientRelayUtilityTask.Result;
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+
+            NetworkManager.Singleton.StartClient();
+            gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+            yield return null;
+        }
 
     }
 }

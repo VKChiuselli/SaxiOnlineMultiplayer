@@ -165,12 +165,13 @@ public class CoordinateSystem : MonoBehaviour
         this.name = finalString;
     }
 
-
-    //private void Update()
-    //{
-    //    if (typeOfTile == 1)
-    //    {
-    //        GetComponent<Image>().sprite = 
-    //    }
-    //}
+    bool oneTime;
+    private void Update()
+    {
+        if (typeOfTile == 1 && !oneTime)
+        {
+            oneTime = true;
+          //  GetComponent<Image>().sprite = 
+        }
+    }
 }
