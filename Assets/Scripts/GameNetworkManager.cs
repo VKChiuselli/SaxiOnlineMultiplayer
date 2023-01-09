@@ -55,12 +55,12 @@ namespace HelloWorld
             if (GUILayout.Button("Host"))
             {
                 NetworkManager.Singleton.StartHost();
-                gameManager.GetComponent<GameManager>().SetPlayerID();
+           //     gameManager.GetComponent<GameManager>().SetPlayerID();
             }
             if (GUILayout.Button("Client"))
             {
                 NetworkManager.Singleton.StartClient();
-                gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+     //           gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
             }
 
             if (GUILayout.Button("Server")) { 
@@ -105,7 +105,7 @@ namespace HelloWorld
                 }
                 else
                 {
-                    gameManager.GetComponent<GameManager>().EndTurn();
+                  //  gameManager.GetComponent<GameManager>().EndTurn();
                     Debug.Log("giocatore corrente: " + gameManager.GetComponent<GameManager>().CurrentTurn.Value);
                     //se è cliente  e nn server fa questo
                 }

@@ -75,23 +75,6 @@ public class GameManager : NetworkBehaviour
    //    testLobby = grid.GetComponent<TestLobby>();
         deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
         deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
-
-
-        //if (gameManager.GetComponent<GameManager>().IsRunningPlayer())
-        //{
-        //SetPlayerIDServerRpc();
-        //}
-        //else if (NetworkManager.Singleton.IsHost)
-        //{
-        //    SetPlayerID();
-        //}
-    }
-
-    //client call this
-    [ServerRpc(RequireOwnership = false)]
-    public void SetPlayerIDServerRpc()
-    {
-        SetPlayerID();
     }
 
     //server call this
@@ -99,24 +82,39 @@ public class GameManager : NetworkBehaviour
     {
         if (IsServer || IsHost)
         {
-            PlayerZero.Value = AuthenticationService.Instance.PlayerId;
-            Debug.Log("  PlayerZero.Value id:  " + AuthenticationService.Instance.PlayerId);
-            IsGameStarted = true;
+            SetPlayerIDServer();
         }
-        else  
+        else  if(IsClient)
         {
-            PlayerOne.Value = AuthenticationService.Instance.PlayerId;
-            Debug.Log("  PlayerOne.Value id:  " + AuthenticationService.Instance.PlayerId);
-            IsGameStarted = true;
+            SetPlayerIDServerRpc();
         }
     }
 
-    bool IsGameStarted = false;
+    //client call this
+    [ServerRpc(RequireOwnership = false)]
+    public void SetPlayerIDServerRpc()
+    {
+        SetPlayerIDClient();
+    }
+
+    public void SetPlayerIDServer()
+    {
+        PlayerZero.Value = AuthenticationService.Instance.PlayerId;
+        Debug.Log("  PlayerZero.Value id:  " + AuthenticationService.Instance.PlayerId);
+    }
+
+
+    public void SetPlayerIDClient()
+    {
+        PlayerOne.Value = AuthenticationService.Instance.PlayerId;
+        Debug.Log("  PlayerOne.Value id:  " + AuthenticationService.Instance.PlayerId);
+    }
+
+
+
 
     private void Update()
     {
-        if (IsGameStarted)
-        {
             if (IsRunningPlayer())
             {
                 endTurnButton.SetActive(true);
@@ -125,11 +123,33 @@ public class GameManager : NetworkBehaviour
             {
                 endTurnButton.SetActive(false);
             }
-        }
-    
     }
 
-    public void EndTurn()
+
+ public   void EndTurn()
+    {
+        if (IsClient)
+        {
+            EndTurnServerRpc();
+        }
+        else if (IsHost || IsServer)
+        {
+            EndTurnLocal();
+        }
+        else
+        {
+            Debug.Log("method wrong is: EndTun");
+        }
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void EndTurnServerRpc()
+    {
+        EndTurnLocal();
+    }
+
+    public void EndTurnLocal()
     {//TODO reset cards picked
         if (CurrentTurn.Value == 0)
         {
@@ -149,15 +169,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log("endofturn");
         CurrentTurn.Value = CurrentTurn.Value == 1 ? 0 : 1; //inverto il turno
                                                             //fare un trigger manager che guarda tutte le carte** e attiva i vari effetti (le carte dovranno avere un parametro TRIGGER che si eseguira una volta trovato e setacciato dal trigger manager
-
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void EndTurnServerRpc()
-    {
-        EndTurn();
-    }
-
 
     public void AddCardCopyOnHand(int idCard, int quantity)
     {
@@ -186,27 +198,66 @@ public class GameManager : NetworkBehaviour
         //TODO implement reset speed card, every card get his own card and reset it as default
     }
 
-    public void SetIsPickingChoosing(int isPickingChoosing)
+
+
+    #region SetIsPickingChoosing
+    public void SetIsPickingChoosing(int isPopupChoosing)
     {
-        IsPickingChoosing.Value = isPickingChoosing;
+        if (IsClient)
+        {
+            SetIsPickingChoosingServerRpc(isPopupChoosing);
+        }
+        else if (IsHost || IsServer)
+        {
+            SetIsPickingChoosingLocal(isPopupChoosing);
+        }
+        else
+        {
+            Debug.Log("method wrong is: SetIsPopupChoosing");
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void SetIsPickingChoosingServerRpc(int isPickingChoosing)
     {
-        SetIsPickingChoosing(isPickingChoosing);
+        SetIsPickingChoosingLocal(isPickingChoosing);
     }
 
+    public void SetIsPickingChoosingLocal(int isPickingChoosing)
+    {
+        IsPickingChoosing.Value = isPickingChoosing;
+    }
+    #endregion
+
+
+    #region SetIsPopupChoosing
     public void SetIsPopupChoosing(int isPopupChoosing)
     {
-        IsPopupChoosing.Value = isPopupChoosing;
+        if (IsClient)
+        {
+            SetIsPopupChoosingServerRpc(isPopupChoosing);
+        }
+        else if(IsHost||IsServer)
+        {
+            SetIsPopupChoosingLocal(isPopupChoosing);
+        }
+        else
+        {
+            Debug.Log("method wrong is: SetIsPopupChoosing");   
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void SetIsPopupChoosingServerRpc(int isPopupChoosing)
     {
-        SetIsPopupChoosing(isPopupChoosing);
+        SetIsPopupChoosingLocal(isPopupChoosing);
     }
+    
+    public void SetIsPopupChoosingLocal(int isPopupChoosing)
+    {
+        IsPopupChoosing.Value = isPopupChoosing;
+    }
+    #endregion
 
 
     public void OpenPopupUI(int xOldTile, int yOldTile, int xNewTile, int yNewTile, int typeOfTile)
@@ -220,16 +271,35 @@ public class GameManager : NetworkBehaviour
         popupChoose.GetComponent<PopupUI>().InitializeVariables(xOldTile, yOldTile, xNewTile, yNewTile, typeOfTile);
     }
 
-    public void SetUnmergeChoosing(int unmergeStatus)
+
+    #region SetUnmergeChoosing
+    public void SetUnmergeChoosing(int isPopupChoosing)
     {
-        IsUnmergeChoosing.Value = unmergeStatus;
+        if (IsClient)
+        {
+            SetUnmergeChoosingServerRpc(isPopupChoosing);
+        }
+        else if (IsHost || IsServer)
+        {
+            SetUnmergeChoosingLocal(isPopupChoosing);
+        }
+        else
+        {
+            Debug.Log("method wrong is: SetIsPopupChoosing");
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SetUnmergeChoosingServerRpc(int unmergeStatus)
     {
-        SetUnmergeChoosing(unmergeStatus);
+        SetUnmergeChoosingLocal(unmergeStatus);
     }
+
+    public void SetUnmergeChoosingLocal(int unmergeStatus)
+    {
+        IsUnmergeChoosing.Value = unmergeStatus;
+    }
+#endregion
 
     public int GetCurrentPlayerDeployPoint()
     {

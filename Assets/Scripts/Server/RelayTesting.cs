@@ -178,7 +178,7 @@ namespace Assets.Scripts.Lobby
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartClient();
-            gameManager.GetComponent<GameManager>().SetPlayerIDServerRpc();
+            gameManager.GetComponent<GameManager>().SetPlayerID();
             yield return null;
         }
 
