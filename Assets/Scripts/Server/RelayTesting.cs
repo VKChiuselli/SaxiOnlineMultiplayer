@@ -27,8 +27,8 @@ namespace Assets.Scripts.Lobby
             homePanel = canvas.transform.GetChild(0).gameObject;
 
             gameManager = GameObject.Find("Managers/GameManager");
-            Button CreateRelayGameButton = homePanel.transform.GetChild(0).gameObject.GetComponent<Button>();
-            Button JoinCodeGameButton = homePanel.transform.GetChild(1).gameObject.GetComponent<Button>();
+            Button CreateRelayGameButton = homePanel.transform.GetChild(1).gameObject.GetComponent<Button>();
+            Button JoinCodeGameButton = homePanel.transform.GetChild(2).gameObject.GetComponent<Button>();
 
             CreateRelayGameButton.onClick.AddListener(delegate
             {
