@@ -17,6 +17,8 @@ public class DeckLoad : NetworkBehaviour
     {//TODO improve network 
         transform.localScale = new Vector3(1f, 1f, 1f);
         netti = FindObjectOfType<NetworkManager>();
+        GetComponent<SpawnCard>().LoadCards();
+
             CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
             CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
             CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
