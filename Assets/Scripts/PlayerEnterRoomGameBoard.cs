@@ -7,7 +7,7 @@ namespace HelloWorld
     public class PlayerEnterRoomGameBoard : NetworkBehaviour
     {
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
-
+   
 
         GameObject PanelPlayerRight;
         public override void OnNetworkSpawn()
@@ -33,9 +33,8 @@ namespace HelloWorld
                 Debug.Log("unavolta");
 
                 LoadCoreGame();
-                LoadCards();
             }
-    
+                LoadCards();
         }
         NetworkObject CoreGameToSpawnNetwork;
         private void LoadCoreGame()
@@ -47,51 +46,47 @@ namespace HelloWorld
 
         public void LoadCards()
         {
-            if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-            {
-                LoadCardsLocals();
+            //if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
+            //{
              
-                Debug.Log("LoadCards method is server loading");
+            //    Debug.Log("LoadCards method is server loading");
 
-            }
-            else if (NetworkManager.Singleton.IsClient)
-            {
-                LoadCardsServerRpca();
-            }
-            else
-            {
-                Debug.Log("LoadCards method is broken");
-            }
+            //}
+            //else if (NetworkManager.Singleton.IsClient)
+            //{
+            //    LoadCardsServerRpca();
+            //}
+            //else
+            //{
+            //    Debug.Log("LoadCards method is broken");
+            //}
+            LoadCardsServerRpc();
+
 
         }
-
-        private void LoadCardsServerRpca()
-        {
-
-            Debug.Log("LoadCardsServerRpca");
-        }
-   
-        private NetworkManager netti;
-        private GameObject deckManagerRight;
-        GameObject cardToSpawn;
-        private void LoadCardsLocals()
+ 
+    
+     
+        [ServerRpc(RequireOwnership = false)]
+        public void LoadCardsServerRpc()
         {
 
             GameObject cardToSpawn = Resources.Load("PrefabToLoad\\Cards\\Dog", typeof(GameObject)) as GameObject;
-     
+            Debug.Log("CoreGameToSpawnNetwork.transform" + CoreGameToSpawnNetwork.name);
+            GameObject serverHand = GameObject.Find("CoreGame(Clone)/CanvasHandPlayer/PanelPlayerRight");
+            NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(), serverHand.transform);
 
-
-            NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>());
-            //     cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            //    netti = FindObjectOfType<NetworkManager>();
+            cardToSpawnNetwork.GetComponent<NetworkObject>().tag = "RPCH";
+            //  cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+            //       cardToSpawnNetwork.transform.SetParent(CoreGameToSpawnNetwork.transform, false);
+            //  netti = FindObjectOfType<NetworkManager>();
             //    netti.AddNetworkPrefab(cardToSpawn);
-              cardToSpawnNetwork.transform.SetParent(CoreGameToSpawnNetwork.transform, false);
-    //        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
-          //  deckManagerRight.GetComponent<DeckLoad>().TriggerLoadDeck(cardToSpawn);
-            Debug.Log("LoadCardsLocals");
+            //        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+            //  deckManagerRight.GetComponent<DeckLoad>().TriggerLoadDeck(cardToSpawn);
+            Debug.Log("LoadCardsLocals n== " + cardToSpawn.transform.childCount);
+
+            serverHand.GetComponent<DeckLoad>().LoadCards();
         }
-
-
 
         [ServerRpc]
         void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
@@ -99,15 +94,7 @@ namespace HelloWorld
 
         }
 
-        [ClientRpc] //il giocatore è questo client. QUando fa qualsiasi cosa, chiama il ServerRpc e fa quella cosa. Chiaramente deve controllare se può funzionare, ad esempiop spostare un oggetto 
-        void TestClientRpc(int value)
-        {
-            if (IsClient)
-            {
-                Debug.Log("Client Received the RPC #" + value);
-                //spostaPedinaServer
-            }
-        }
+      
 
 
 

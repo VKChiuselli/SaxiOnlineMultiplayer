@@ -460,6 +460,14 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4958048500720842765, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_Name
+      value: ShareCode
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958048500720842767, guid: a58364782e625de498d37658febc55a0, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4958048501251535681, guid: a58364782e625de498d37658febc55a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -518,7 +526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4958048501561492821, guid: a58364782e625de498d37658febc55a0, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2924884506
+      value: 47418421
       objectReference: {fileID: 0}
     - target: {fileID: 4958048501667418109, guid: a58364782e625de498d37658febc55a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target

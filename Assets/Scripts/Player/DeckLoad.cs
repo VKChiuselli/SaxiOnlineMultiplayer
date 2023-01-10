@@ -9,7 +9,7 @@ using UnityEngine;
 public class DeckLoad : NetworkBehaviour
 {
 
-  [SerializeField]  private GameObject CardOne;
+    private GameObject CardOne;
     private GameObject CardTwo;
     private GameObject CardThree;
     private GameObject CardFour;
@@ -18,7 +18,7 @@ public class DeckLoad : NetworkBehaviour
     public  override void OnNetworkSpawn()
     {//TODO improve network 
         transform.localScale = new Vector3(1f, 1f, 1f);
-        netti = FindObjectOfType<NetworkManager>();
+    
   //      GetComponent<SpawnCard>().LoadCards();
       
 
@@ -46,47 +46,33 @@ public class DeckLoad : NetworkBehaviour
 
     public   void LoadCards()
     {
-        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-        {
-            LoadCardsLocals();
+        CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
+        netti = FindObjectOfType<NetworkManager>();
+        netti.AddNetworkPrefab(CardOne);
 
-        //    CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
-            //     CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
-            //     CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
-            //     CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
-        //    netti.AddNetworkPrefab(CardOne);
-            //   netti.AddNetworkPrefab(CardTwo);
-            //   netti.AddNetworkPrefab(CardThree);
-            //   netti.AddNetworkPrefab(CardFour);
-            Debug.Log("LoadCards method is server loading");
+        //if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
+        //{
+        //    LoadCardsLocals();
+
        
-        }
-        else if (NetworkManager.Singleton.IsClient)
-        {
-            LoadCardsServerRpca();
-        }
-        else
-        {
-            Debug.Log("LoadCards method is broken");
-        }
+        //    //     CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
+        //    //     CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
+        //    //     CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
+        //    //   netti.AddNetworkPrefab(CardTwo);
+        //    //   netti.AddNetworkPrefab(CardThree);
+        //    //   netti.AddNetworkPrefab(CardFour);
+        //    Debug.Log("LoadCards method is server loading111");
+       
+        //}
+        //else if (NetworkManager.Singleton.IsClient)
+        //{ 
+        //}
+        //else
+        //{
+        //    Debug.Log("LoadCards method is broken");
+        //}
          
-    }
-
-    private void LoadCardsServerRpca()
-    {
-
-        Debug.Log("LoadCardsServerRpca");
-    }
-    //bool ok = false;
-    //private void FixedUpdate()
-    //{
-    //    if (gameObject.transform.childCount == 0 && !ok)
-    //    {
-    //        ok = true;
-    //        LoadCards();
-    //        Debug.Log("shabu");
-    //    }
-    //}
+    } 
 
     private void LoadCardsLocals()
     {
@@ -121,16 +107,6 @@ public class DeckLoad : NetworkBehaviour
         return cardHand;
     }
 
-    public void TriggerLoadDeck(GameObject asdg)
-    {
-        //CardOne = gameObject.transform.GetChild(0).gameObject;
-        if (CardOne != null)
-        {
-            Debug.Log("TriggerLoadDeck1");
-            CardOne = asdg;
-            Debug.Log("TriggerLoadDeck2");
-        }
-    }
 
     public CardHand GetCardHand(int IdCard)
     {

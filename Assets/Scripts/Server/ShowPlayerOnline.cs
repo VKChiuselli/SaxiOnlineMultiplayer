@@ -6,15 +6,15 @@ using Unity.Netcode;
 
 public class ShowPlayerOnline : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI codeToShow;
-
+   [SerializeField] GameObject relayCode;
+ 
 
     // Update is called once per frame
     void Update()
     {
-        if (GetComponent<TextMeshProUGUI>()!=null)
+        if (relayCode != null)
         {
-            GetComponent<TextMeshProUGUI>().text = codeToShow.text;
+            GetComponent<TextMeshProUGUI>().text = relayCode.GetComponent<TextMeshProUGUI>().text;
         }
     }
 }
