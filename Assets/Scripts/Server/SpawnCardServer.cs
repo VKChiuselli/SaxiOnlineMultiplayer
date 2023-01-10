@@ -12,7 +12,7 @@ public class SpawnCardServer : NetworkBehaviour
     GameObject gameManager;
     GameObject deckManagerRight;
     GameObject deckManagerLeft;
-    [SerializeField] GameObject CardTableToSpawn;
+    GameObject CardTableToSpawn;
 
     void Start()
     {
@@ -20,6 +20,7 @@ public class SpawnCardServer : NetworkBehaviour
         gameManager = GameObject.Find("Managers/GameManager");
         deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
         deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
+        CardTableToSpawn = Resources.Load("CardInTable", typeof(GameObject)) as GameObject;
     }
 
 
@@ -61,7 +62,6 @@ public class SpawnCardServer : NetworkBehaviour
         {
             return;
         }
-
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
         NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
         transform.position, Quaternion.identity);

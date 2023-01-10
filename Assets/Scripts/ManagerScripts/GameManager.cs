@@ -48,8 +48,7 @@ public class GameManager : NetworkBehaviour
                 return false;
             }
         }
-
-        Debug.Log("IsRunningPlayer METHOD MISTAKE");
+         
         return false;
     }
 
