@@ -1,32 +1,29 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
 public class DeckLoad : NetworkBehaviour
 {
 
-    private GameObject CardOne;
+  [SerializeField]  private GameObject CardOne;
     private GameObject CardTwo;
     private GameObject CardThree;
     private GameObject CardFour;
  private NetworkManager netti;
 
-    public override void OnNetworkSpawn()
+    public  override void OnNetworkSpawn()
     {//TODO improve network 
         transform.localScale = new Vector3(1f, 1f, 1f);
         netti = FindObjectOfType<NetworkManager>();
-        GetComponent<SpawnCard>().LoadCards();
+  //      GetComponent<SpawnCard>().LoadCards();
+      
 
-            CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
-            CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
-            CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
-            CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
-            netti.AddNetworkPrefab(CardOne);
-            netti.AddNetworkPrefab(CardTwo);
-            netti.AddNetworkPrefab(CardThree);
-            netti.AddNetworkPrefab(CardFour);
+       
+    
 
         //gameObject.transform.GetChild(0).gameObject.GetComponent<CardHand>().CardPosition.Value = 0;
         //gameObject.transform.GetChild(1).gameObject.GetComponent<CardHand>().CardPosition.Value = 1;
@@ -45,6 +42,62 @@ public class DeckLoad : NetworkBehaviour
         //{
         //    CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
         //}
+    }
+
+    public   void LoadCards()
+    {
+        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
+        {
+            LoadCardsLocals();
+
+        //    CardOne = gameObject.transform.GetChild(0).gameObject.transform.GetChild(8).gameObject;
+            //     CardTwo = gameObject.transform.GetChild(1).gameObject.transform.GetChild(8).gameObject;
+            //     CardThree = gameObject.transform.GetChild(2).gameObject.transform.GetChild(8).gameObject;
+            //     CardFour = gameObject.transform.GetChild(3).gameObject.transform.GetChild(8).gameObject;
+        //    netti.AddNetworkPrefab(CardOne);
+            //   netti.AddNetworkPrefab(CardTwo);
+            //   netti.AddNetworkPrefab(CardThree);
+            //   netti.AddNetworkPrefab(CardFour);
+            Debug.Log("LoadCards method is server loading");
+       
+        }
+        else if (NetworkManager.Singleton.IsClient)
+        {
+            LoadCardsServerRpca();
+        }
+        else
+        {
+            Debug.Log("LoadCards method is broken");
+        }
+         
+    }
+
+    private void LoadCardsServerRpca()
+    {
+
+        Debug.Log("LoadCardsServerRpca");
+    }
+    //bool ok = false;
+    //private void FixedUpdate()
+    //{
+    //    if (gameObject.transform.childCount == 0 && !ok)
+    //    {
+    //        ok = true;
+    //        LoadCards();
+    //        Debug.Log("shabu");
+    //    }
+    //}
+
+    private void LoadCardsLocals()
+    {
+
+        GameObject cardToSpawn =  Resources.Load("PrefabToLoad\\Cards\\Dog", typeof(GameObject)) as GameObject;
+
+        NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
+       transform.position, Quaternion.identity);
+        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+        cardToSpawnNetwork.transform.SetParent(transform, false);
+        Debug.Log("LoadCardsLocals");
     }
 
     public GameObject GetCardGameObject(int IdCard)
@@ -67,6 +120,18 @@ public class DeckLoad : NetworkBehaviour
 
         return cardHand;
     }
+
+    public void TriggerLoadDeck(GameObject asdg)
+    {
+        //CardOne = gameObject.transform.GetChild(0).gameObject;
+        if (CardOne != null)
+        {
+            Debug.Log("TriggerLoadDeck1");
+            CardOne = asdg;
+            Debug.Log("TriggerLoadDeck2");
+        }
+    }
+
     public CardHand GetCardHand(int IdCard)
     {
         CardHand cardHand = null;

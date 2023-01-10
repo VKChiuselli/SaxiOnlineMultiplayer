@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca764bde583c804bbe8707df395939e, type: 3}
-  m_Name: SnakeSO
+  m_Name: Dog
   m_EditorClassIdentifier: 
-  IdCard: 6
-  Copies: 4
-  Weight: 5
-  Speed: 3
-  IdOwner: 1
-  CardPosition: 2
-  IdImageCard: 4_summon_snake_army
-  CardDescription: "CONDIZIONE pedina nemica adiacente pi\xF9 pesante COSTO EFFETTO:
-    2 punti movimento EFFETTO: puoi posizionare questa pedina dietro la pedina condizione"
-  keyword1: 5
+  IdCard: 1
+  Copies: 2
+  Weight: 15
+  Speed: 2
+  IdOwner: 0
+  CardPosition: 0
+  IdImageCard: 14_summon_dogs
+  CardDescription: 'ETB: guadagni un punto movimento'
+  keyword1: 1
   keyword2: 0
   keyword3: 0

@@ -6,20 +6,33 @@ using TMPro;
 public class InfoGame : MonoBehaviour
 {
 
-    [SerializeField] GameObject GM;
+     GameObject gameManager;
+    string info = "";
+
+    private void Start()
+    {
+        gameManager = GameObject.Find("Managers/GameManager");
+
+    }
 
     private void Update()
     {
-        string info = "";
-
-        if (GM.GetComponent<GameManager>().CurrentTurn.Value == 0)
+        if (gameManager != null)
         {
-            info = $"CURRENT PLAYER: RIGHT\n DEPLOY POINTS: {GM.GetComponent<GameManager>().PlayerZeroDP.Value}\n MOVE POINTS:  {GM.GetComponent<GameManager>().PlayerZeroMP.Value}";
+            if (gameManager.GetComponent<GameManager>().CurrentTurn.Value == 0)
+            {
+                info = $"CURRENT PLAYER: RIGHT\n DEPLOY POINTS: {gameManager.GetComponent<GameManager>().PlayerZeroDP.Value}\n MOVE POINTS:  {gameManager.GetComponent<GameManager>().PlayerZeroMP.Value}";
+            }
+            else
+            {
+                info = $"CURRENT PLAYER: LEFT\n DEPLOY POINTS: {gameManager.GetComponent<GameManager>().PlayerOneDP.Value}\n MOVE POINTS:  {gameManager.GetComponent<GameManager>().PlayerOneMP.Value}";
+            }
         }
         else
         {
-            info = $"CURRENT PLAYER: LEFT\n DEPLOY POINTS: {GM.GetComponent<GameManager>().PlayerOneDP.Value}\n MOVE POINTS:  {GM.GetComponent<GameManager>().PlayerOneMP.Value}";
+            gameManager = GameObject.Find("Managers/GameManager");
         }
+       
         gameObject.GetComponent<TextMeshProUGUI>().text = info;
       
     }

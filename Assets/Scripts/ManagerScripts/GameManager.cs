@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
 {
-    [SerializeField] GameObject popupChoose;
-    [SerializeField] GameObject endTurnButton;
+    GameObject popupChoose;
+   GameObject PassButton;
     GameObject grid;
     GridContainer gridContainer;
     //TestLobby testLobby;
@@ -48,8 +48,7 @@ public class GameManager : NetworkBehaviour
                 return false;
             }
         }
-
-        Debug.Log("IsRunningPlayer METHOD MISTAKE");
+         
         return false;
     }
 
@@ -64,13 +63,17 @@ public class GameManager : NetworkBehaviour
 
     private void Start()
     {
-        endTurnButton.GetComponent<Button>().onClick.AddListener(delegate
+        popupChoose = GameObject.Find("CanvasHandPlayer/POPUPCHOOSE");
+        PassButton = GameObject.Find("CanvasHandPlayer/PassButton");
+
+        PassButton.GetComponent<Button>().onClick.AddListener(delegate
         {
             EndTurn();
         });
 
-        endTurnButton.SetActive(false);
+        PassButton.SetActive(false);
         grid = GameObject.Find("CanvasHandPlayer/GridManager");
+    
         gridContainer = grid.GetComponent<GridContainer>();
    //    testLobby = grid.GetComponent<TestLobby>();
         deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
@@ -80,11 +83,11 @@ public class GameManager : NetworkBehaviour
     //server call this
     public void SetPlayerID()
     {
-        if (IsServer || IsHost)
+        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
         {
             SetPlayerIDServer();
         }
-        else  if(IsClient)
+        else  if (NetworkManager.Singleton.IsClient)
         {
             SetPlayerIDServerRpc();
         }
@@ -117,11 +120,11 @@ public class GameManager : NetworkBehaviour
     {
             if (IsRunningPlayer())
             {
-                endTurnButton.SetActive(true);
+            PassButton.SetActive(true);
             }
             else
             {
-                endTurnButton.SetActive(false);
+            PassButton.SetActive(false);
             }
     }
 

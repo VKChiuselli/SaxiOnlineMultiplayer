@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca764bde583c804bbe8707df395939e, type: 3}
-  m_Name: DragonIceSO
+  m_Name: Ent
   m_EditorClassIdentifier: 
-  IdCard: 2
-  Copies: 1
-  Weight: 20
+  IdCard: 3
+  Copies: 2
+  Weight: 15
   Speed: 2
   IdOwner: 0
-  CardPosition: 2
-  IdImageCard: dragon_coldbreath
-  CardDescription: 'CONDIZIONE DEPLOY: puoi giocare questa carta solo se hai almeno
-    1 creatura nel campo nemico ETB: ritorna una creatura amica dal campo nemico'
-  keyword1: 4
+  CardPosition: 3
+  IdImageCard: 5_summon_ent
+  CardDescription: 'MERGIATO: aumenta di 1 il MaxMov di una qualsiasi pedina amica
+    fino alla fine del turno '
+  keyword1: 0
   keyword2: 0
   keyword3: 0

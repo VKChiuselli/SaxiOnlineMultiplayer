@@ -10,7 +10,7 @@ public class SpawnCard : NetworkBehaviour
     [SerializeField] GameObject whereLoadCardsLeftPlayer;
 
 
-    public void LoadCards()
+     void LoadCards()
     {
         if (IsServer || IsHost)
         {
@@ -36,7 +36,18 @@ public class SpawnCard : NetworkBehaviour
 
     private void LoadCardsLocals()
     {
-        GameObject instance = Instantiate(Resources.Load("Hatchet", typeof(GameObject))) as GameObject;
+        if (whereLoadCardsRightPlayer != null)
+        {
+            GameObject cardToSpawn = Instantiate(Resources.Load("PrefabToLoad\\Cards\\Dog", typeof(GameObject))) as GameObject;
+
+            NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(),
+           transform.position, Quaternion.identity);
+           cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+         cardToSpawnNetwork.transform.SetParent(whereLoadCardsRightPlayer.transform, false);
+
+            Debug.Log("ARRIVO");
+        }
+       
     }
 
     //public override void OnNetworkSpawn()

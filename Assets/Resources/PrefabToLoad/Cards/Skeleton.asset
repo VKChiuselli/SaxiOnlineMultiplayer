@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca764bde583c804bbe8707df395939e, type: 3}
-  m_Name: SuccubeSO
+  m_Name: Skeleton
   m_EditorClassIdentifier: 
-  IdCard: 7
+  IdCard: 5
   Copies: 3
-  Weight: 5
-  Speed: 3
+  Weight: 10
+  Speed: 2
   IdOwner: 1
-  CardPosition: 3
-  IdImageCard: 10_summon_succubus
-  CardDescription: "COSTO EFFETTO: paga 1 punti movimento 1 punto deploy EFFETTO:
-    distruggi la riga in cui si trova questa pedina se ci sono 4 o pi\xF9 pedine"
-  keyword1: 5
+  CardPosition: 1
+  IdImageCard: 04_summon_skeleton_army
+  CardDescription: 'COSTO EFFETTO: Sacrifica un''altra creatura e 3 punti movimento
+    EFFETTO: distruggi un''altra creatura con peso minore.'
+  keyword1: 0
   keyword2: 0
   keyword3: 0

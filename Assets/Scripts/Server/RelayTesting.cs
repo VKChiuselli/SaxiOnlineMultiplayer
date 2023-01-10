@@ -130,7 +130,8 @@ namespace Assets.Scripts.Lobby
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
-            gameManager.GetComponent<GameManager>().SetPlayerID();
+      //      gameManager.GetComponent<GameManager>().SetPlayerID();
+        
             yield return null;
         }
 

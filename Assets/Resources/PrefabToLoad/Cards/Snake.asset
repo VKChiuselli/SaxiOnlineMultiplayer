@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca764bde583c804bbe8707df395939e, type: 3}
-  m_Name: TraitorSO
+  m_Name: Snake
   m_EditorClassIdentifier: 
-  IdCard: 8
-  Copies: 3
-  Weight: 10
-  Speed: 2
-  IdOwner: 0
-  CardPosition: 1
-  IdImageCard: 25_secret_community
-  CardDescription: 'PUSH: guadagni un punto movimento '
-  keyword1: 7
+  IdCard: 6
+  Copies: 4
+  Weight: 5
+  Speed: 3
+  IdOwner: 1
+  CardPosition: 2
+  IdImageCard: 4_summon_snake_army
+  CardDescription: "CONDIZIONE pedina nemica adiacente pi\xF9 pesante COSTO EFFETTO:
+    2 punti movimento EFFETTO: puoi posizionare questa pedina dietro la pedina condizione"
+  keyword1: 5
   keyword2: 0
   keyword3: 0
