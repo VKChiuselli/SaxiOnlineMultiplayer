@@ -19,8 +19,8 @@ public class PickCard : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
         placeManager = FindObjectOfType<PlaceManager>();
         PlayerActions.current = FindObjectOfType<PlayerActions>();
         TriggerManager.current = FindObjectOfType<TriggerManager>();
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        gameManager = GameObject.Find("Managers/GameManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
     }
 
     public void OnPointerDown(PointerEventData eventData)

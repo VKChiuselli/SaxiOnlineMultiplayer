@@ -81,24 +81,7 @@ public class GameManager : NetworkBehaviour
     }
 
     //server call this
-    public void SetPlayerID()
-    {
-        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-        {
-            SetPlayerIDServer();
-        }
-        else  if (NetworkManager.Singleton.IsClient)
-        {
-            SetPlayerIDServerRpc();
-        }
-    }
-
-    //client call this
-    [ServerRpc(RequireOwnership = false)]
-    public void SetPlayerIDServerRpc()
-    {
-        SetPlayerIDClient();
-    }
+  
 
     public void SetPlayerIDServer()
     {
@@ -278,18 +261,19 @@ public class GameManager : NetworkBehaviour
     #region SetUnmergeChoosing
     public void SetUnmergeChoosing(int isPopupChoosing)
     {
-        if (IsClient)
-        {
-            SetUnmergeChoosingServerRpc(isPopupChoosing);
-        }
-        else if (IsHost || IsServer)
-        {
-            SetUnmergeChoosingLocal(isPopupChoosing);
-        }
-        else
-        {
-            Debug.Log("method wrong is: SetIsPopupChoosing");
-        }
+        //if (IsClient)
+        //{
+        //    SetUnmergeChoosingServerRpc(isPopupChoosing);
+        //}
+        //else if (IsHost || IsServer)
+        //{
+        //    SetUnmergeChoosingLocal(isPopupChoosing);
+        //}
+        //else
+        //{
+        //    Debug.Log("method wrong is: SetIsPopupChoosing");
+        //}
+        SetUnmergeChoosingLocal(isPopupChoosing);
     }
 
     [ServerRpc(RequireOwnership = false)]

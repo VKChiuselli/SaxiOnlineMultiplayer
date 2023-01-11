@@ -55,14 +55,14 @@ public class PopupUI : MonoBehaviour
         if (numberAction == 1)
         {
             Debug.Log("TODO move all cards");
-            SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
+            SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTile(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
             gameObject.SetActive(false);
         }
         else
         if (numberAction == 2)
         {
             Debug.Log("TODO move top card");
-            SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTileServerRpc(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
+            SpawnManager.GetComponent<SpawnCardServer>().MoveTopCardToAnotherTile(_xOldTile, _yOldTile, _xNewTile, _yNewTile);
             gameObject.SetActive(false);
         }
         else

@@ -122,10 +122,9 @@ public class MoveCard : NetworkBehaviour, IDropHandler
         if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 2) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                                                      //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
-            ChangeOwnerServerRpc();
             if (cardTableToMove.GetComponent<CardTable>() != null)
             {
-                SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTileServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().MoveToFriendlyTile(
                        cardTableToMove.GetComponent<CardTable>().CurrentPositionX.Value,
 cardTableToMove.GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().x,
@@ -142,7 +141,6 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
         }
         else if (gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().typeOfTile == 3)                                                     //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
-            ChangeOwnerServerRpc();
             if (cardTableToMove.GetComponent<CardTable>() != null)
             {
                 SpawnManager.GetComponent<SpawnCardServer>().PushCardFromTable(
@@ -173,10 +171,9 @@ gameObject.transform.parent.gameObject.GetComponent<CoordinateSystem>().y
         if (gameObject.GetComponent<CoordinateSystem>().typeOfTile == 1) //RPCT stands for RIGHT PLAYER CARD TABLE
                                                                          //togliere ai move points  .GetComponent<CoordinateSystem>().typeOfTile, per questo è maggiore uguale di uno il check
         {
-            ChangeOwnerServerRpc();
             if (cardTableToMove.GetComponent<CardTable>() != null)
             {
-                SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTileServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().MoveAllCardsToEmptyTile(
 cardTableToMove.GetComponent<CardTable>().CurrentPositionX.Value,
 cardTableToMove.GetComponent<CardTable>().CurrentPositionY.Value,
 gameObject.GetComponent<CoordinateSystem>().x,
@@ -195,15 +192,6 @@ false
         else
             return false;
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeOwnerServerRpc()
-    {
-        ChangeOwner();
-    }
-
-    public void ChangeOwner()
-    {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-    }
+ 
+ 
 }

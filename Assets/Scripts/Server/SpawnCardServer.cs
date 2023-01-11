@@ -22,15 +22,8 @@ public class SpawnCardServer : NetworkBehaviour
         deckManagerLeft = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerLeft");
     }
 
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeOwnerServerRpc()
-    {
-        GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void DeployServerRpc(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard,
+   
+    public void Deploy(int IdCard, int Weight, int Speed, int IdOwner, string IdImageCard,
         string tag, int x, int y, int deployCost, int Copies, int CardPosition)
     {
 
@@ -63,10 +56,9 @@ public class SpawnCardServer : NetworkBehaviour
         }
 
         GameObject cardToSpawn = gridContainer.GetComponent<GridContainer>().GetTile(x, y);
-        NetworkObject cardToSpawnNetwork = Instantiate(CardTableToSpawn.GetComponent<NetworkObject>(),
-        transform.position, Quaternion.identity);
-        cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
+        GameObject cardToSpawnNetwork = Instantiate(CardTableToSpawn,cardToSpawn.transform);
+    //    cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+       // cardToSpawnNetwork.transform.SetParent(cardToSpawn.transform, false);
 
         cardToSpawnNetwork.GetComponent<CardTable>().IdCard.Value = IdCard;
         cardToSpawnNetwork.GetComponent<CardTable>().Weight.Value = Weight;
@@ -76,21 +68,23 @@ public class SpawnCardServer : NetworkBehaviour
         cardToSpawnNetwork.GetComponent<CardTable>().IdImageCard.Value = IdImageCard;
         cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = x;
         cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = y;
-        cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tag;
+        cardToSpawnNetwork.GetComponent<CardTable>().tag = tag;
         cardToSpawnNetwork.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         cardToSpawnNetwork.transform.localPosition = new Vector3(0.5f, 0.5f, 1f);
 
 
 
-        NetworkObject cardInterfaceNetwork = Instantiate(cardInterface.GetComponent<NetworkObject>(),
-          cardToSpawnNetwork.transform.position, Quaternion.identity);
-        cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-        cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
+        GameObject cardInterfaceNetwork = Instantiate(cardInterface ,
+          cardToSpawnNetwork.transform );
+      //  cardInterfaceNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+     //   cardInterfaceNetwork.transform.SetParent(cardToSpawnNetwork.transform, false);
         CardHand cardToRemoveCopy = deckLoad.GetCardHand(IdCard);
         cardToRemoveCopy.PlayCard();
         gameManager.GetComponent<GameManager>().DeployPointSpent(deployCost);
 
         gameManager.GetComponent<TriggerCardManager>().TriggerETBEffect(cardInterface);
+
+        Debug.Log(" carta creata");
     }
 
     private bool CheckEnoughCopies(int copies)
@@ -201,11 +195,7 @@ public class SpawnCardServer : NetworkBehaviour
         UpdateWeightTopCard(x, y);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void DespawnAllCardsFromTileServerRpc(int x, int y)
-    {
-        DespawnAllCardsFromTile(x, y);
-    }
+   
 
     public void DespawnAllCardsFromTile(int x, int y)
     {
@@ -213,16 +203,11 @@ public class SpawnCardServer : NetworkBehaviour
 
         foreach (GameObject card in cardsFromTile)
         {
-            card.transform.GetChild(2).GetComponent<NetworkObject>().Despawn();
-            card.GetComponent<NetworkObject>().Despawn();
+            Destroy (card);
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void MoveAllCardsToEmptyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
-    {
-        MoveAllCardsToEmptyTile(xOldTile, yOldTile, xNewTile, yNewTile, isPushed);
-    }
+    
 
     public void MoveAllCardsToEmptyTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile, bool isPushed)
     {
@@ -253,15 +238,17 @@ public class SpawnCardServer : NetworkBehaviour
         if (tileWhereToSpawn == null)
         {//this IF is made for PUSH 
             Debug.Log("card destroied because no tile found");
-            DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
+            DespawnAllCardsFromTile(xOldTile, yOldTile);
             return;
         }
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
         foreach (GameObject card in cardsFromTile)
         {
-            card.transform.SetParent(tileWhereToSpawn.transform, false);
-            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            GameObject cardToSpawnNetwork = Instantiate(card, tileWhereToSpawn.transform);
+            //   card.transform.SetParent(tileWhereToSpawn.transform, false);
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            Destroy(card);
         }
 
         if (!isPushed)
@@ -296,15 +283,17 @@ public class SpawnCardServer : NetworkBehaviour
         if (tileWhereToSpawn == null)
         {//this IF is made for PUSH 
             Debug.Log("card destroied because no tile found");
-            DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
+            DespawnAllCardsFromTile(xOldTile, yOldTile);
             return;
         }
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
         foreach (GameObject card in cardsFromTile)
         {
-            card.transform.SetParent(tileWhereToSpawn.transform, false);
-            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            //    card.transform.SetParent(tileWhereToSpawn.transform, false);
+            GameObject cardToSpawnNetwork = Instantiate(card, tileWhereToSpawn.transform);
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            Destroy(card);
         }
 
         RemoveSpeedCard(xNewTile, yNewTile);
@@ -313,12 +302,12 @@ public class SpawnCardServer : NetworkBehaviour
 
     public int CheckMove(int xOldTile, int yOldTile)
     {
-
+     
         CardInterface cardInterface = gridContainer.GetComponent<GridContainer>()
             .GetTopCardOnTile(xOldTile, yOldTile)
             .GetComponent<CardTable>().transform.GetChild(2).gameObject
             .GetComponent<CardInterface>();
-
+     
         if (cardInterface != null)
         {
             if (cardInterface.keyword3 == CardKeyword.SPECIALMOVECOST)
@@ -336,11 +325,7 @@ public class SpawnCardServer : NetworkBehaviour
         return gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile).GetComponent<CardTable>().MoveCost.Value;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void MoveToFriendlyTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
-    {
-        MoveToFriendlyTile(xOldTile, yOldTile, xNewTile, yNewTile);
-    }
+   
 
     public void MoveToFriendlyTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
@@ -368,15 +353,16 @@ public class SpawnCardServer : NetworkBehaviour
         if (tileWhereToSpawn == null)
         {
             Debug.Log("card destroied because no tile found");
-            DespawnAllCardsFromTileServerRpc(xOldTile, yOldTile);
+            DespawnAllCardsFromTile(xOldTile, yOldTile);
             return;
         }
         List<GameObject> cardsFromTile = gridContainer.GetComponent<GridContainer>().GetAllCardsFromTile(xOldTile, yOldTile);
         foreach (GameObject card in cardsFromTile)
         {
-            card.transform.SetParent(tileWhereToSpawn.transform, false);
-            card.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-            card.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            GameObject cardToSpawnNetwork = Instantiate(card, tileWhereToSpawn.transform);
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+            cardToSpawnNetwork.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+            Destroy(card);
         }
 
         UpdateWeightTopCard(xNewTile, yNewTile);
@@ -387,11 +373,7 @@ public class SpawnCardServer : NetworkBehaviour
         RemoveSpeedCard(xNewTile, yNewTile);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void MoveTopCardToAnotherTileServerRpc(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
-    {
-        MoveTopCardToAnotherTile(xOldTile, yOldTile, xNewTile, yNewTile);
-    }
+   
 
     public void MoveTopCardToAnotherTile(int xOldTile, int yOldTile, int xNewTile, int yNewTile)
     {
@@ -415,15 +397,17 @@ public class SpawnCardServer : NetworkBehaviour
         //TODO improve code with cards here
         GameObject topCard = gridContainer.GetComponent<GridContainer>().GetTopCardOnTile(xOldTile, yOldTile);
         GameObject newTile = gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile);
-        topCard.transform.SetParent(newTile.transform, false);
-        topCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
-        topCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
+       // topCard.transform.SetParent(newTile.transform, false);
+        GameObject newtopCard = Instantiate(topCard, newTile.transform);
+        newtopCard.GetComponent<CardTable>().CurrentPositionX.Value = xNewTile;
+        newtopCard.GetComponent<CardTable>().CurrentPositionY.Value = yNewTile;
 
         UpdateWeightTopCard(xOldTile, yOldTile);
         UpdateWeightTopCard(xNewTile, yNewTile);
 
         gameManager.GetComponent<GameManager>().MovePointSpent(totalMove);
         RemoveSpeedCard(xNewTile, yNewTile);
+        Destroy(topCard);
     }
 
     private void UpdateWeightTopCard(int x, int y)
@@ -521,14 +505,14 @@ public class SpawnCardServer : NetworkBehaviour
             //I push the cards less the pusher
             foreach (GameObject tile in tilesToPush)
             {
-                MoveAllCardsToEmptyTileServerRpc(
+                MoveAllCardsToEmptyTile(
                    tile.GetComponent<CoordinateSystem>().x, tile.GetComponent<CoordinateSystem>().y,
                    tile.GetComponent<CoordinateSystem>().x + x, tile.GetComponent<CoordinateSystem>().y + y,
                    true
                    );
             }
             //I move the card that pushed the other cards
-            MoveAllCardsToEmptyTileServerRpc(
+            MoveAllCardsToEmptyTile(
                    xOldTile,
                    yOldTile,
                    xNewTile,
@@ -541,15 +525,11 @@ public class SpawnCardServer : NetworkBehaviour
             Debug.Log("ERROR! no card added in the list to be pushed!");
         }
 
-        PushTriggerServerRpc(xNewTile, yNewTile);
+        PushTrigger(xNewTile, yNewTile);
         return gridContainer.GetComponent<GridContainer>().GetTile(xNewTile, yNewTile).transform.childCount;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void PushTriggerServerRpc(int xNewTile, int yNewTile)
-    {
-        PushTrigger(xNewTile, yNewTile);
-    }
+    
 
     private void PushTrigger(int xNewTile, int yNewTile)
     {

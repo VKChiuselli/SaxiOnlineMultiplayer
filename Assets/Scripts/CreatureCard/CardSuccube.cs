@@ -48,7 +48,7 @@ public class CardSuccube : CardInterface
         foreach (GameObject tileToDestroy in tilesWithCardsToDestroy)
         {
             SpawnManager.GetComponent<SpawnCardServer>().
-                    DespawnAllCardsFromTileServerRpc(tileToDestroy.GetComponent<CoordinateSystem>().x, tileToDestroy.GetComponent<CoordinateSystem>().y);
+                    DespawnAllCardsFromTile(tileToDestroy.GetComponent<CoordinateSystem>().x, tileToDestroy.GetComponent<CoordinateSystem>().y);
         }
 
     }

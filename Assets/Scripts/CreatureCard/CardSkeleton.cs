@@ -100,7 +100,7 @@ public class CardSkeleton : CardInterface
 
             //se esiste almeno una, despawno la carta amica
             Debug.Log("Card sacrificed from skeleton");
-            SpawnManager.GetComponent<SpawnCardServer>().DespawnAllCardsFromTileServerRpc
+            SpawnManager.GetComponent<SpawnCardServer>().DespawnAllCardsFromTile
                          (cardTable.GetComponent<CardTable>().CurrentPositionX.Value,
                          cardTable.GetComponent<CardTable>().CurrentPositionY.Value);
 
@@ -114,7 +114,7 @@ public class CardSkeleton : CardInterface
         {
             gameManager.GetComponent<GameManager>().MovePointSpent(moveCostEffectCard);
             Debug.Log("Card destroyed from skeleton");
-            SpawnManager.GetComponent<SpawnCardServer>().DespawnAllCardsFromTileServerRpc
+            SpawnManager.GetComponent<SpawnCardServer>().DespawnAllCardsFromTile
                        (cardTable.GetComponent<CardTable>().CurrentPositionX.Value,
                        cardTable.GetComponent<CardTable>().CurrentPositionY.Value);
         }

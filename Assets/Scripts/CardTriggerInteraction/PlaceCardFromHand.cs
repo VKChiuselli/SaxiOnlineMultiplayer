@@ -89,7 +89,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
     {//placing into empty space
         if (gameObject.tag == deploy)
         {
-            ChangeOwnerServerRpc();
+         //   ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
                 if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value == 0)
@@ -98,7 +98,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
                     placeManager.ResetCardHand();
                     return false;
                 }
-                SpawnManager.GetComponent<SpawnCardServer>().DeployServerRpc(
+                SpawnManager.GetComponent<SpawnCardServer>().Deploy (
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().IdCard.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Weight.Value,
           placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Speed.Value,
@@ -120,7 +120,7 @@ public class PlaceCardFromHand : NetworkBehaviour, IDropHandler
         }
         else if (gameObject.transform.parent.tag == deploy)
         {//placing into filled space, so it is a merge
-            ChangeOwnerServerRpc();
+          //  ChangeOwnerServerRpc();
             if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>() != null)
             {
                 if (placeManager.GetCardSelectedFromHand().GetComponent<CardHand>().Copies.Value == 0)
