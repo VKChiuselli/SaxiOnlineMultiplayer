@@ -21,16 +21,13 @@ namespace Assets.Scripts.Player
 
         public void PickCardCollection(GameObject cardCollection)
         {
-            Debug.Log("entro1");
             if (cardCollection.GetComponent<CollectionInteractionCard>().IsSelectedCard == 0)
             {
                 CardCountHand++;
-                Debug.Log("entro2");
             }
             else if (cardCollection.GetComponent<CollectionInteractionCard>().IsSelectedCard == 1)
             {
                 CardCountHand--;
-                Debug.Log("entro3");
             }
         }
 
