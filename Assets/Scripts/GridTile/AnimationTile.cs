@@ -13,7 +13,7 @@ namespace Assets.Scripts.GridTile
 
         private void Start()
         {
-            GameObject atm = GameObject.Find("Managers/AnimationManager");
+            GameObject atm = GameObject.Find("CoreGame/Managers/AnimationManager");
             animationTileManager = atm.GetComponent<AnimationTileManager>();
         }
 

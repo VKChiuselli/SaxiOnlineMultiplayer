@@ -11,7 +11,7 @@ public class InfoGame : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameObject.Find("Managers/GameManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
 
     }
 
@@ -30,7 +30,7 @@ public class InfoGame : MonoBehaviour
         }
         else
         {
-            gameManager = GameObject.Find("Managers/GameManager");
+            gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         }
        
         gameObject.GetComponent<TextMeshProUGUI>().text = info;

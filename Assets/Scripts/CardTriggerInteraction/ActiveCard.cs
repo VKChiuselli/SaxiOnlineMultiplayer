@@ -14,8 +14,8 @@ public class ActiveCard : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         placeManager = FindObjectOfType<PlaceManager>();
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        gameManager = GameObject.Find("Managers/GameManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
 
     }
 

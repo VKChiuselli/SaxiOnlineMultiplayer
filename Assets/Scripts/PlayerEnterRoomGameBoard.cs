@@ -12,7 +12,7 @@ namespace HelloWorld
         GameObject PanelPlayerRight;
         public override void OnNetworkSpawn()
         {
-            if (IsServer)
+            if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
             {
                
                 Debug.Log("Giocatore server loggato " + NetworkManager.Singleton.ConnectedClients.Count);
@@ -30,11 +30,20 @@ namespace HelloWorld
                 }
                 Debug.Log("NetworkManager.Singleton.LocalClientId: " + NetworkManager.Singleton.LocalClientId);
 
-                Debug.Log("unavolta");
-
-                LoadCoreGame();
+                Debug.Log("sono server");
             }
-                LoadCards();
+            else
+            {
+                Debug.Log("sono client");
+                //GameObject IsCoreGameSpawned = GameObject.Find($"CoreGame(Clone)");
+                //if (IsCoreGameSpawned == null)
+                //{
+                //    LoadCoreGame();
+                //    LoadCards("PanelPlayerRight", "RPCH");
+                //}
+                // LoadCards("PanelPlayerLeft", "LPCH");
+       //   LoadCards("PanelPlayerRight", "RPCH");
+            }
         }
         NetworkObject CoreGameToSpawnNetwork;
         private void LoadCoreGame()
@@ -44,11 +53,11 @@ namespace HelloWorld
             CoreGameToSpawnNetwork = Instantiate(CoreGame.GetComponent<NetworkObject>());
         }
 
-        public void LoadCards()
+        public void LoadCards(string panelName, string tagName)
         {
             //if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
             //{
-             
+
             //    Debug.Log("LoadCards method is server loading");
 
             //}
@@ -60,31 +69,27 @@ namespace HelloWorld
             //{
             //    Debug.Log("LoadCards method is broken");
             //}
-            LoadCardsServerRpc();
+             GameObject serverHand = GameObject.Find($"CoreGame/CanvasHandPlayer/{panelName}/Dog(Clone)");
+            if (serverHand == null)
+            {
+            LoadCardsServerRpc(panelName, tagName);
+            }
 
 
         }
+      
  
     
      
         [ServerRpc(RequireOwnership = false)]
-        public void LoadCardsServerRpc()
+        public void LoadCardsServerRpc(string panelName, string tagName)
         {
 
             GameObject cardToSpawn = Resources.Load("PrefabToLoad\\Cards\\Dog", typeof(GameObject)) as GameObject;
-            Debug.Log("CoreGameToSpawnNetwork.transform" + CoreGameToSpawnNetwork.name);
-            GameObject serverHand = GameObject.Find("CoreGame(Clone)/CanvasHandPlayer/PanelPlayerRight");
+            //GameObject serverHand = GameObject.Find($"CoreGame(Clone)/CanvasHandPlayer/{panelName}");
+            GameObject serverHand = GameObject.Find($"CoreGame/CanvasHandPlayer/{panelName}");
             NetworkObject cardToSpawnNetwork = Instantiate(cardToSpawn.GetComponent<NetworkObject>(), serverHand.transform);
-
-            cardToSpawnNetwork.GetComponent<NetworkObject>().tag = "RPCH";
-            //  cardToSpawnNetwork.SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
-            //       cardToSpawnNetwork.transform.SetParent(CoreGameToSpawnNetwork.transform, false);
-            //  netti = FindObjectOfType<NetworkManager>();
-            //    netti.AddNetworkPrefab(cardToSpawn);
-            //        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
-            //  deckManagerRight.GetComponent<DeckLoad>().TriggerLoadDeck(cardToSpawn);
-            Debug.Log("LoadCardsLocals n== " + cardToSpawn.transform.childCount);
-
+            cardToSpawnNetwork.GetComponent<NetworkObject>().tag = tagName;
             serverHand.GetComponent<DeckLoad>().LoadCards();
         }
 

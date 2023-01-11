@@ -63,8 +63,8 @@ public class GameManager : NetworkBehaviour
 
     private void Start()
     {
-        popupChoose = GameObject.Find("CanvasHandPlayer/POPUPCHOOSE");
-        PassButton = GameObject.Find("CanvasHandPlayer/PassButton");
+        popupChoose = GameObject.Find("CoreGame/CanvasHandPlayer/POPUPCHOOSE");
+        PassButton = GameObject.Find("CoreGame/CanvasHandPlayer/PassButton");
 
         PassButton.GetComponent<Button>().onClick.AddListener(delegate
         {
@@ -72,12 +72,12 @@ public class GameManager : NetworkBehaviour
         });
 
         PassButton.SetActive(false);
-        grid = GameObject.Find("CanvasHandPlayer/GridManager");
+        grid = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
     
         gridContainer = grid.GetComponent<GridContainer>();
    //    testLobby = grid.GetComponent<TestLobby>();
-        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
-        deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
+        deckManagerRight = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerRight");
+        deckManagerLeft = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerLeft");
     }
 
     //server call this

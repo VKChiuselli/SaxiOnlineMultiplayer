@@ -28,13 +28,13 @@ public class PlayerDeck : NetworkBehaviour
 
             if (NetworkManager.Singleton.ConnectedClients.Count == 1)
             {
-                handZone = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+                handZone = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerRight");
                 Debug.Log("handzone name: " + handZone.name);
               //  SpawnCardOnPanel();
             }
             else if (NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
-                handZone = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
+                handZone = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerLeft");
            //     SpawnCardOnPanel();
             }
 

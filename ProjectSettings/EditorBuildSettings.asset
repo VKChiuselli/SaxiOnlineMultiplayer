@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/GameBoard.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/molto easy.unity
     guid: 309972d32b4c3ee40ae0e84e369d89cd
+  - enabled: 1
+    path: Assets/Scenes/GameBoardTry.unity
+    guid: 88b05f56b69f3e24b8662557f808a396
   m_configObjects: {}

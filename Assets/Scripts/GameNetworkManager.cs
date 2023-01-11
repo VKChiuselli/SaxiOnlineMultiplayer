@@ -12,7 +12,7 @@ namespace HelloWorld
         static GameObject gameManager;
         public override void OnNetworkSpawn()
         {
-            gameManager = GameObject.Find("Managers/GameManager");
+            gameManager = GameObject.Find("CoreGame/Managers/GameManager");
 
 
 

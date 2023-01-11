@@ -15,10 +15,10 @@ public class CardSkeleton : CardInterface
     GameObject SpawnManager;
     void Start()
     {
-        SpawnManager = GameObject.Find("Managers/SpawnManager");
-        gameManager = GameObject.Find("Managers/GameManager");
+        SpawnManager = GameObject.Find("CoreGame/Managers/SpawnManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         keyword1 = CardKeyword.ACTIVEEFFECT;
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
     }
 
     public override void MyCardEffect()

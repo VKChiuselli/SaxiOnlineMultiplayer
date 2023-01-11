@@ -8,7 +8,7 @@ public class CardTraitor : CardInterface
 
     void Start()
     {
-        gameManager = GameObject.Find("Managers/GameManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         keyword1 = CardKeyword.PUSH;
 
     }

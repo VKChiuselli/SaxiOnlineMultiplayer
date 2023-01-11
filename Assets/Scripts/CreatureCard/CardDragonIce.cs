@@ -11,10 +11,10 @@ public class CardDragonIce : CardInterface
 
     void Start()
     {
-        gameManager = GameObject.Find("Managers/GameManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         keyword1 = CardKeyword.DEPLOYCONDITION;
         keyword2 = CardKeyword.ETB;
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
         placeManager = FindObjectOfType<PlaceManager>();
     }
 

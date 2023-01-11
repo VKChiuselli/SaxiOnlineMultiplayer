@@ -20,13 +20,11 @@ namespace Assets.Scripts.Lobby
         [SerializeField] TextMeshProUGUI codeToShow;
         [SerializeField] TextMeshProUGUI codeToRetrieve;
         GameObject homePanel;
-           GameObject gameManager;
         void Awake()
         {
             GameObject canvas = GameObject.Find("/Relay/Canvas");
             homePanel = canvas.transform.GetChild(0).gameObject;
 
-            gameManager = GameObject.Find("Managers/GameManager");
             Button CreateRelayGameButton = homePanel.transform.GetChild(1).gameObject.GetComponent<Button>();
             Button JoinCodeGameButton = homePanel.transform.GetChild(2).gameObject.GetComponent<Button>();
 
@@ -43,14 +41,12 @@ namespace Assets.Scripts.Lobby
                 //     JoinGame(codeToRetrieve.text);
                 //     JoinCode2();
             });
-            //   Example_ConfigureTransportAndStartNgoAsHost();
         }
 
 
 
         async void Start()
         {
-            //   gameManager = GameObject.Find("Managers/GameManager");
 
             await UnityServices.InitializeAsync();
 
@@ -65,7 +61,6 @@ namespace Assets.Scripts.Lobby
         }
         const int m_MaxConnections = 4;
 
-       // public string RelayJoinCode;
 
         public  async Task<RelayServerData> AllocateRelayServerAndGetJoinCode(int maxConnections, string region = null)
         {
@@ -130,7 +125,7 @@ namespace Assets.Scripts.Lobby
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
-      //      gameManager.GetComponent<GameManager>().SetPlayerID();
+      
         
             yield return null;
         }
@@ -179,7 +174,7 @@ namespace Assets.Scripts.Lobby
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartClient();
-            gameManager.GetComponent<GameManager>().SetPlayerID();
+          
             yield return null;
         }
 

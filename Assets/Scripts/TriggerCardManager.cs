@@ -8,7 +8,7 @@ public class TriggerCardManager : MonoBehaviour
 
     void Start()
     {
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
     }
 
     public void TriggerPushEffect(GameObject card)

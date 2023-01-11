@@ -11,10 +11,10 @@ public class CardEnt : CardInterface
 
     void Start()
     {
-        gameManager = GameObject.Find("Managers/GameManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         keyword1 = CardKeyword.MERGE;
         keyword2 = CardKeyword.EFFECT;
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
         placeManager = FindObjectOfType<PlaceManager>();
     }
 

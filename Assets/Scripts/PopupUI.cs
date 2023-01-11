@@ -22,7 +22,7 @@ public class PopupUI : MonoBehaviour
 
     void Start()
     {
-        SpawnManager = GameObject.Find("Managers/SpawnManager");
+        SpawnManager = GameObject.Find("CoreGame/Managers/SpawnManager");
     }
 
 

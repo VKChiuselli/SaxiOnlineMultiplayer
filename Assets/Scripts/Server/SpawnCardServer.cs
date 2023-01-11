@@ -16,10 +16,10 @@ public class SpawnCardServer : NetworkBehaviour
 
     void Start()
     {
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        gameManager = GameObject.Find("Managers/GameManager");
-        deckManagerRight = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
-        deckManagerLeft = GameObject.Find("CanvasHandPlayer/PanelPlayerLeft");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
+        deckManagerRight = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerRight");
+        deckManagerLeft = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerLeft");
     }
 
 

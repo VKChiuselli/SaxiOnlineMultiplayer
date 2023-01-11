@@ -19,10 +19,10 @@ public class MoveCard : NetworkBehaviour, IDropHandler
     void Start()
     {
         placeManager = FindObjectOfType<PlaceManager>();
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
-        gameManager = GameObject.Find("Managers/GameManager");
-        SpawnManager = GameObject.Find("Managers/SpawnManager");
-        deckManager = GameObject.Find("CanvasHandPlayer/PanelPlayerRight");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
+          gameManager = GameObject.Find("CoreGame/Managers/GameManager");
+         SpawnManager = GameObject.Find("CoreGame/Managers/SpawnManager");
+          deckManager = GameObject.Find("CoreGame/CanvasHandPlayer/PanelPlayerRight");
     }
 
     public void OnDrop(PointerEventData eventData)

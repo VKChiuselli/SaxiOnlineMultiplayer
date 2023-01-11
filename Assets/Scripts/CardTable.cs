@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            SpawnManager = GameObject.Find("Managers/SpawnManager");
+            SpawnManager = GameObject.Find("CoreGame/Managers/SpawnManager");
         }
 
         //public void ConvertCardFromHandToTable(MyCardStruct cardHandToConvert)

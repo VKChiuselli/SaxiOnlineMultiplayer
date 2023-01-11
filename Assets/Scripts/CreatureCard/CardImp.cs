@@ -13,11 +13,11 @@ public class CardImp : CardInterface
     bool conditionVerify = false;
     void Start()
     {
-        gameManager = GameObject.Find("Managers/GameManager");
+        gameManager = GameObject.Find("CoreGame/Managers/GameManager");
         keyword1 = CardKeyword.CONDITION;
         keyword2 = CardKeyword.EFFECT;
         keyword3 = CardKeyword.SPECIALMOVECOST;
-        gridContainer = GameObject.Find("CanvasHandPlayer/GridManager");
+        gridContainer = GameObject.Find("CoreGame/CanvasHandPlayer/GridManager");
     }
 
     public override void MyCardEffect()
